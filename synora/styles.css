@@ -269,3 +269,12 @@ body.cherry-theme .desktop-nav.menu-open{background:rgba(255,249,251,.98);border
 body.cherry-theme .desktop-nav.menu-open a{color:#775367}
 body.cherry-theme .settings-panel p,body.cherry-theme .settings-note{color:#896a7b}
 body.cherry-theme .setting-control select{background:#fff;color:#432337;border-color:#e9b8ca}
+
+
+/* Settings is a separate view, not part of the home page */
+.settings-section{display:none}
+body.settings-view main>.section:not(.settings-section){display:none}
+body.settings-view .settings-section{display:block;min-height:65vh;padding-top:28px}
+body.settings-view footer{display:none}
+.settings-back{display:inline-flex;align-items:center;gap:8px;margin:0 0 22px;padding:10px 15px;border:1px solid var(--line);border-radius:12px;color:var(--text);text-decoration:none;background:var(--surface)}
+.settings-back:hover{border-color:var(--purple);color:var(--purple)}
