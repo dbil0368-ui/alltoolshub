@@ -111,14 +111,22 @@
   populateTemplates(activeStudio);
 
   const themeSelect = $('themeSelect');
-  const savedTheme = localStorage.getItem('synora.theme') || 'dark';
-  themeSelect.value = savedTheme;
-  if (savedTheme === 'midnight') document.body.classList.add('midnight-theme');
-  themeSelect.addEventListener('change', () => {
-    const theme = themeSelect.value;
-    document.body.classList.toggle('midnight-theme', theme === 'midnight');
+  const themeClasses = ['midnight-theme', 'white-glow-theme', 'ocean-theme', 'emerald-theme'];
+  function applyTheme(theme) {
+    document.body.classList.remove(...themeClasses);
+    const classByTheme = {
+      midnight: 'midnight-theme',
+      'white-glow': 'white-glow-theme',
+      ocean: 'ocean-theme',
+      emerald: 'emerald-theme'
+    };
+    if (classByTheme[theme]) document.body.classList.add(classByTheme[theme]);
+    themeSelect.value = theme;
     localStorage.setItem('synora.theme', theme);
-  });
+  }
+  const savedTheme = localStorage.getItem('synora.theme') || 'dark';
+  applyTheme(['dark', 'midnight', 'white-glow', 'ocean', 'emerald'].includes(savedTheme) ? savedTheme : 'dark');
+  themeSelect.addEventListener('change', () => applyTheme(themeSelect.value));
 
   const menuToggle = $('menuToggle');
   const mainNav = $('mainNav');
