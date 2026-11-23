@@ -35,3 +35,41 @@ footer{border-top:1px solid var(--line);margin-top:52px;padding:27px 0 32px;disp
 @media(max-width:850px){.shell{padding:0 22px}.hero{grid-template-columns:1fr;padding:58px 0 48px}.hero-art{height:310px;max-width:520px;width:100%;margin:0 auto}.studio-grid{grid-template-columns:repeat(2,1fr)}.editor{grid-template-columns:1fr}.editor-aside{display:none}.project-list{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.topbar{height:65px;padding:0 16px}.desktop-nav{display:none}.status{display:none}.shell{padding:0 17px}.hero{padding-top:47px;gap:12px}.hero h1{font-size:clamp(46px,13vw,59px);letter-spacing:-2.8px}.hero-copy>p{font-size:13px}.hero-art{height:255px}.orb{width:170px;height:170px}.orb span{font-size:50px}.orbit-a{width:275px}.orbit-b{height:245px;width:230px}.float-card{padding:10px 12px}.float-top{right:0;top:15px}.float-bottom{left:0;bottom:13px}.section{padding:34px 0}.section-head{align-items:center}.section-head h2{font-size:25px}.section-head>.muted{display:none}.studio-grid{gap:9px}.studio-card{padding:15px;min-height:198px;border-radius:15px}.card-icon{width:39px;height:39px;margin-bottom:15px}.studio-card h3{font-size:15px}.studio-card p{font-size:10px;min-height:45px}.workspace{padding-top:40px}.editor-main{padding:18px}.editor-foot{align-items:flex-start;flex-direction:column}.editor-foot .primary-btn{width:100%}.project-list{grid-template-columns:1fr}.plan-grid{grid-template-columns:1fr}.plan-card{padding:22px}footer{gap:12px;flex-wrap:wrap}footer>span:last-child{width:100%}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+/* Ultra identity, navigation menu and project sorting controls */
+.ultra-label{font:800 8px 'DM Sans',sans-serif;letter-spacing:1.5px;padding:5px 7px;border-radius:6px;color:#f2eaff;background:linear-gradient(110deg,#8d5be8,#d29cff 55%,#8d5be8);box-shadow:0 0 18px #a77bff55;border:1px solid #e5d5ff77;vertical-align:middle}
+.topbar{gap:18px}
+.menu-toggle{width:40px;height:40px;display:grid;align-content:center;justify-items:center;gap:5px;border:1px solid #a88aff55;border-radius:12px;background:linear-gradient(145deg,#211733,#100d1c);cursor:pointer;box-shadow:0 5px 20px #0004;transition:.2s}
+.menu-toggle:hover{border-color:#c8afff;box-shadow:0 0 22px #a88aff33}
+.menu-toggle span{width:17px;height:2px;border-radius:4px;background:#e8dcff;transition:transform .2s,opacity .2s}
+.menu-toggle[aria-expanded="true"] span:first-child{transform:translateY(7px) rotate(45deg)}
+.menu-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+.menu-toggle[aria-expanded="true"] span:last-child{transform:translateY(-7px) rotate(-45deg)}
+.desktop-nav{align-items:center}
+.desktop-nav a{padding:10px 12px;border-radius:9px}
+.desktop-nav a:hover{background:#a88aff14}
+.project-tools{display:flex;align-items:center;gap:10px}
+.sort-btn{display:inline-flex;align-items:center;gap:8px;border:1px solid #a88aff55;border-radius:10px;padding:10px 13px;background:linear-gradient(145deg,#211733,#110e1d);color:#e9ddff;font-size:11px;font-weight:600;cursor:pointer;transition:.2s}
+.sort-btn:hover{border-color:#c9b0ff;background:#2a1c42;box-shadow:0 0 20px #a88aff20}
+.sort-icon{font-size:16px;color:#c8adff;line-height:10px}
+@media(min-width:561px){
+ .desktop-nav{display:flex}
+ .desktop-nav.menu-closed{display:none}
+}
+@media(max-width:560px){
+ .topbar{gap:9px}
+ .brand{gap:8px;font-size:16px;letter-spacing:1.5px}
+ .brand-mark{width:31px;height:31px}
+ .ultra-label{font-size:7px;padding:4px 5px;letter-spacing:1px}
+ .top-actions{gap:9px;margin-left:auto}
+ .desktop-nav{display:none;position:absolute;top:calc(100% + 8px);right:14px;left:14px;padding:10px;flex-direction:column;align-items:stretch;gap:4px;border:1px solid #a88aff55;border-radius:15px;background:rgba(17,13,29,.97);box-shadow:0 18px 45px #000b;backdrop-filter:blur(20px)}
+ .desktop-nav.menu-open{display:flex}
+ .desktop-nav a{padding:13px 14px;border-radius:9px}
+ .desktop-nav a:hover{background:#a88aff20}
+ .profile{width:33px;height:33px}
+ .menu-toggle{width:37px;height:37px}
+ .project-tools{gap:7px}
+ .sort-btn{padding:9px 10px;font-size:10px}
+ .text-btn{padding:9px 10px;font-size:10px}
+}
+@media(max-width:380px){.brand{font-size:14px}.ultra-label{font-size:6px}.project-tools{gap:5px}.sort-btn,.text-btn{padding:8px}}
