@@ -110,18 +110,14 @@
 
   populateTemplates(activeStudio);
 
-  const themeSelect = $('themeSelect');
   const themeNames = ['midnight','white-glow','ocean','emerald','rose','ruby','sunset','gold','sky','cyan','lavender','mint','cherry','amoled'];
   const themeClasses = themeNames.map(name => name + '-theme');
   function applyTheme(theme) {
     document.body.classList.remove(...themeClasses);
     if (theme !== 'dark' && themeNames.includes(theme)) document.body.classList.add(theme + '-theme');
-    themeSelect.value = theme;
-    localStorage.setItem('synora.theme', theme);
   }
   const savedTheme = localStorage.getItem('synora.theme') || 'dark';
   applyTheme(['dark', ...themeNames].includes(savedTheme) ? savedTheme : 'dark');
-  themeSelect.addEventListener('change', () => applyTheme(themeSelect.value));
 
   const menuToggle = $('menuToggle');
   const mainNav = $('mainNav');
@@ -143,21 +139,9 @@
     mainNav.classList.toggle('menu-open', open);
     mainNav.classList.toggle('menu-closed', !open);
   });
-  mainNav.querySelectorAll('a').forEach(link => link.addEventListener('click', event => {
+  mainNav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
     closeMenu();
-    if (link.getAttribute('href') === '#settings') {
-      event.preventDefault();
-      document.body.classList.add('settings-view');
-      $('settings').scrollIntoView({behavior:'instant', block:'start'});
-    } else {
-      document.body.classList.remove('settings-view');
-    }
   }));
-  $('settingsBack').addEventListener('click', event => {
-    event.preventDefault();
-    document.body.classList.remove('settings-view');
-    window.scrollTo({top:0, behavior:'smooth'});
-  });
   document.addEventListener('keydown', event => { if (event.key === 'Escape') closeMenu(); });
   $('projectSearch').addEventListener('input', () => { searchTerm = $('projectSearch').value.trim().toLowerCase(); renderProjects(); });
   $('newProject').addEventListener('click', () => { editingId = null; title.value = ''; prompt.value = ''; activeStudio = 'Creative Studio'; populateTemplates(activeStudio); $('workspaceTitle').textContent = 'Start creating'; $('charCount').textContent = '0 / 2000'; showNotice('New brief ready. Add a title and describe your idea.'); $('workspace').scrollIntoView({behavior:'smooth'}); title.focus({preventScroll:true}); });
