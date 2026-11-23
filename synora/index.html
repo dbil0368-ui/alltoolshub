@@ -75,6 +75,16 @@
       </div>
     </section>
 
+    <section class="section ai-assistant-section" id="ai-assistant">
+      <div class="section-head"><div><div class="eyebrow">YOUR CREATIVE COPILOT</div><h2>SYNORA AI Assistant</h2></div><span class="demo-pill">TEXT AI · SERVER REQUIRED</span></div>
+      <div class="chat-panel">
+        <div class="chat-intro"><div class="aside-icon">✦</div><div><h3>Ask, plan, and refine ideas</h3><p>Get help with scripts, prompts, concepts and writing. This chat connects to the secure server when SYNORA is deployed on Vercel and its AI key is configured.</p></div></div>
+        <div class="chat-messages" id="chatMessages" aria-live="polite"><div class="chat-bubble assistant-bubble">Hello! I’m SYNORA AI. I can help you develop creative ideas and prompts. What would you like to make?</div></div>
+        <form class="chat-form" id="chatForm"><label class="sr-only" for="chatInput">Message SYNORA AI</label><textarea id="chatInput" rows="2" maxlength="5000" placeholder="Ask SYNORA AI to help with an idea..." required></textarea><button class="primary-btn" id="chatSend" type="submit">Send ↗</button></form>
+        <p class="notice" id="chatNotice" role="status">AI chat is not connected on GitHub Pages. Deploy the repository to Vercel and configure OPENROUTER_API_KEY to enable it.</p>
+      </div>
+    </section>
+
     <section class="section" id="projects">
       <div class="section-head"><div><div class="eyebrow">PICK UP WHERE YOU LEFT OFF</div><h2>My projects</h2></div><div class="project-tools"><input id="projectSearch" class="project-search" type="search" placeholder="Search projects" aria-label="Search projects"><button class="sort-btn" id="sortBtn" type="button" aria-label="Sort projects, newest first"><span class="sort-icon">⇅</span><span id="sortLabel">Newest</span></button><button class="text-btn" id="importBtn" type="button">Import ↑</button><input id="importFile" type="file" accept="application/json,.json" hidden><button class="text-btn" id="exportBtn" type="button">Export ↓</button></div></div>
       <div id="projectList" class="project-list"><div class="empty-state"><span>✧</span><b>Your ideas will live here</b><p>Save your first project from any studio.</p></div></div>
