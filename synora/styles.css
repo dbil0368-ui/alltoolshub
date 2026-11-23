@@ -231,3 +231,41 @@ body.ocean-theme .chat-messages{background:#071a2a}
 body.emerald-theme .chat-panel{background:linear-gradient(145deg,#122a20,#0a1912)}
 body.emerald-theme .chat-messages{background:#081b12}
 @media(max-width:600px){.chat-panel{padding:16px}.chat-form{align-items:stretch;flex-direction:column}.chat-form .primary-btn{width:100%;justify-content:center}.chat-bubble{max-width:96%}}
+
+
+/* SYNORA colour themes: shared component surfaces */
+body.rose-theme{--bg:#1b0b16;--surface:#2b1022;--surface2:#3b1730;--line:#ff9bc733;--text:#fff0f7;--muted:#d8a9c0;--purple:#ff82bd;background:radial-gradient(ellipse at 50% -20%,#8e285b 0,transparent 55%),#1b0b16}
+body.ruby-theme{--bg:#19090d;--surface:#2b1018;--surface2:#3b1722;--line:#ff829033;--text:#fff0f1;--muted:#d9a9b0;--purple:#ff647c;background:radial-gradient(ellipse at 50% -20%,#8f2038 0,transparent 55%),#19090d}
+body.sunset-theme{--bg:#1d100b;--surface:#302016;--surface2:#432a1c;--line:#ffb16a33;--text:#fff4e9;--muted:#d8b59b;--purple:#ff9a57;background:radial-gradient(ellipse at 50% -20%,#a34d20 0,transparent 55%),#1d100b}
+body.gold-theme{--bg:#191407;--surface:#2b230e;--surface2:#3d3214;--line:#f5d47740;--text:#fff8df;--muted:#d8c99c;--purple:#f2c75c;background:radial-gradient(ellipse at 50% -20%,#80601b 0,transparent 55%),#191407}
+body.sky-theme{--bg:#081625;--surface:#10263b;--surface2:#17344f;--line:#8bcaff33;--text:#eff8ff;--muted:#abc5da;--purple:#7ccaff;background:radial-gradient(ellipse at 50% -20%,#235c91 0,transparent 55%),#081625}
+body.cyan-theme{--bg:#041719;--surface:#0a282b;--surface2:#10393d;--line:#61f4ee33;--text:#eaffff;--muted:#a8d8d7;--purple:#53e6df;background:radial-gradient(ellipse at 50% -20%,#087a7a 0,transparent 55%),#041719}
+body.lavender-theme{--bg:#171126;--surface:#251a3a;--surface2:#34254d;--line:#c5a5ff33;--text:#f7f0ff;--muted:#c4b2d9;--purple:#c29aff;background:radial-gradient(ellipse at 50% -20%,#65419a 0,transparent 55%),#171126}
+body.mint-theme{--bg:#071913;--surface:#10291f;--surface2:#183a2c;--line:#8df0bd33;--text:#edfff5;--muted:#add4bd;--purple:#78e5ad;background:radial-gradient(ellipse at 50% -20%,#24764c 0,transparent 55%),#071913}
+body.cherry-theme{color-scheme:light;--bg:#fff3f7;--surface:#fff;--surface2:#ffedf3;--line:#e9b8ca88;--text:#432337;--muted:#896a7b;--purple:#d95d91;background:radial-gradient(ellipse at 50% -20%,#ffd2e2 0,transparent 58%),#fff3f7;color:#432337}
+body.amoled-theme{--bg:#000;--surface:#080808;--surface2:#111;--line:#ffffff24;--text:#f7f7f7;--muted:#aaa;--purple:#b58aff;background:#000}
+body.rose-theme .primary-btn,body.cherry-theme .primary-btn{background:linear-gradient(110deg,#ff82bd,#b84283);border-color:#ffb8d8aa}
+body.ruby-theme .primary-btn{background:linear-gradient(110deg,#ff647c,#a91e43)}
+body.sunset-theme .primary-btn{background:linear-gradient(110deg,#ffad65,#d45a32)}
+body.gold-theme .primary-btn{background:linear-gradient(110deg,#f7d779,#b88925);color:#241a05}
+body.sky-theme .primary-btn{background:linear-gradient(110deg,#7ccaff,#317ac1)}
+body.cyan-theme .primary-btn{background:linear-gradient(110deg,#53e6df,#138d91);color:#032021}
+body.lavender-theme .primary-btn{background:linear-gradient(110deg,#c29aff,#7652c9)}
+body.mint-theme .primary-btn{background:linear-gradient(110deg,#78e5ad,#24885d)}
+body.amoled-theme .primary-btn{background:linear-gradient(110deg,#b58aff,#6941b5)}
+body.rose-theme .desktop-nav.menu-open,body.ruby-theme .desktop-nav.menu-open,body.sunset-theme .desktop-nav.menu-open,body.gold-theme .desktop-nav.menu-open,body.sky-theme .desktop-nav.menu-open,body.cyan-theme .desktop-nav.menu-open,body.lavender-theme .desktop-nav.menu-open,body.mint-theme .desktop-nav.menu-open,body.amoled-theme .desktop-nav.menu-open{background:color-mix(in srgb,var(--bg) 94%,transparent);border-color:var(--line)}
+body.rose-theme .studio-card,body.ruby-theme .studio-card,body.sunset-theme .studio-card,body.gold-theme .studio-card,body.sky-theme .studio-card,body.cyan-theme .studio-card,body.lavender-theme .studio-card,body.mint-theme .studio-card,body.amoled-theme .studio-card,body.cherry-theme .studio-card{background:linear-gradient(145deg,var(--surface),var(--surface2));border-color:var(--line);color:var(--text)}
+body.rose-theme .studio-card h3,body.ruby-theme .studio-card h3,body.sunset-theme .studio-card h3,body.gold-theme .studio-card h3,body.sky-theme .studio-card h3,body.cyan-theme .studio-card h3,body.lavender-theme .studio-card h3,body.mint-theme .studio-card h3,body.amoled-theme .studio-card h3,body.cherry-theme .studio-card h3{color:var(--text)}
+body.rose-theme .studio-card p,body.ruby-theme .studio-card p,body.sunset-theme .studio-card p,body.gold-theme .studio-card p,body.sky-theme .studio-card p,body.cyan-theme .studio-card p,body.lavender-theme .studio-card p,body.mint-theme .studio-card p,body.amoled-theme .studio-card p,body.cherry-theme .studio-card p{color:var(--muted)}
+body.rose-theme .editor,body.ruby-theme .editor,body.sunset-theme .editor,body.gold-theme .editor,body.sky-theme .editor,body.cyan-theme .editor,body.lavender-theme .editor,body.mint-theme .editor,body.amoled-theme .editor,body.cherry-theme .editor{background:var(--surface);border-color:var(--line)}
+body.rose-theme .editor input,body.rose-theme .editor textarea,body.ruby-theme .editor input,body.ruby-theme .editor textarea,body.sunset-theme .editor input,body.sunset-theme .editor textarea,body.gold-theme .editor input,body.gold-theme .editor textarea,body.sky-theme .editor input,body.sky-theme .editor textarea,body.cyan-theme .editor input,body.cyan-theme .editor textarea,body.lavender-theme .editor input,body.lavender-theme .editor textarea,body.mint-theme .editor input,body.mint-theme .editor textarea,body.amoled-theme .editor input,body.amoled-theme .editor textarea,body.cherry-theme .editor input,body.cherry-theme .editor textarea{background:var(--surface2);color:var(--text);border-color:var(--line)}
+body.rose-theme .project-item,body.ruby-theme .project-item,body.sunset-theme .project-item,body.gold-theme .project-item,body.sky-theme .project-item,body.cyan-theme .project-item,body.lavender-theme .project-item,body.mint-theme .project-item,body.amoled-theme .project-item,body.cherry-theme .project-item,body.rose-theme .plan-card,body.ruby-theme .plan-card,body.sunset-theme .plan-card,body.gold-theme .plan-card,body.sky-theme .plan-card,body.cyan-theme .plan-card,body.lavender-theme .plan-card,body.mint-theme .plan-card,body.amoled-theme .plan-card,body.cherry-theme .plan-card{background:linear-gradient(145deg,var(--surface),var(--surface2));border-color:var(--line);color:var(--text)}
+body.rose-theme .project-item h3,body.ruby-theme .project-item h3,body.sunset-theme .project-item h3,body.gold-theme .project-item h3,body.sky-theme .project-item h3,body.cyan-theme .project-item h3,body.lavender-theme .project-item h3,body.mint-theme .project-item h3,body.amoled-theme .project-item h3,body.cherry-theme .project-item h3,body.rose-theme .plan-card h3,body.ruby-theme .plan-card h3,body.sunset-theme .plan-card h3,body.gold-theme .plan-card h3,body.sky-theme .plan-card h3,body.cyan-theme .plan-card h3,body.lavender-theme .plan-card h3,body.mint-theme .plan-card h3,body.amoled-theme .plan-card h3,body.cherry-theme .plan-card h3{color:var(--text)}
+body.rose-theme .settings-panel,body.ruby-theme .settings-panel,body.sunset-theme .settings-panel,body.gold-theme .settings-panel,body.sky-theme .settings-panel,body.cyan-theme .settings-panel,body.lavender-theme .settings-panel,body.mint-theme .settings-panel,body.amoled-theme .settings-panel,body.cherry-theme .settings-panel{background:linear-gradient(145deg,var(--surface),var(--surface2));border-color:var(--line);color:var(--text)}
+body.cherry-theme .topbar{background:rgba(255,243,247,.9);border-color:#e9b8ca}
+body.cherry-theme .brand,body.cherry-theme .settings-panel b,body.cherry-theme .trend-hub-copy h2{color:#432337}
+body.cherry-theme .desktop-nav a{color:#775367}
+body.cherry-theme .desktop-nav.menu-open{background:rgba(255,249,251,.98);border-color:#e9b8ca}
+body.cherry-theme .desktop-nav.menu-open a{color:#775367}
+body.cherry-theme .settings-panel p,body.cherry-theme .settings-note{color:#896a7b}
+body.cherry-theme .setting-control select{background:#fff;color:#432337;border-color:#e9b8ca}
