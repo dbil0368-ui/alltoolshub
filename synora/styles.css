@@ -89,3 +89,8 @@ footer{border-top:1px solid var(--line);margin-top:52px;padding:27px 0 32px;disp
 .menu-toggle{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;}
 .menu-toggle span{display:block!important;width:19px!important;min-width:19px!important;height:2px!important;min-height:2px!important;flex:0 0 2px!important;border-radius:3px!important;background:#f0e7ff!important;opacity:1!important;}
 .menu-toggle[aria-expanded="true"] span:nth-child(2){opacity:0!important;}
+
+
+/* Text-based hamburger icon: reliable rendering on narrow Android screens */
+.menu-toggle{font-family:Arial,sans-serif!important;font-size:27px!important;font-weight:700!important;line-height:1!important;letter-spacing:0!important;color:#f0e7ff!important;text-align:center!important;padding:0!important;}
+.menu-toggle[aria-expanded="true"]{font-size:25px!important;}
