@@ -22,6 +22,46 @@
   function showNotice(message) {
     $('notice').textContent = message;
   }
+
+  const templateSets = {
+    'Video Studio': [
+      ['cinematic','Create a cinematic video about [TOPIC]. Audience: [AUDIENCE]. Mood: [MOOD]. Visual style: [STYLE]. Include an engaging opening, clear story progression, scene-by-scene direction, suggested camera movement, sound design, and a memorable ending.'],
+      ['short-form','Create a short vertical video about [TOPIC] for [PLATFORM]. Start with a strong 2-second hook, keep the pacing energetic, add concise narration and on-screen text ideas, and finish with a clear call to action.'],
+      ['explainer','Create an easy-to-understand explainer video about [TOPIC]. Break the subject into simple scenes, use everyday examples, suggest visuals for each point, and end with a short recap.']
+    ],
+    'Image Studio': [
+      ['photoreal','Create a detailed photorealistic image of [SUBJECT] in [SETTING]. Composition: [COMPOSITION]. Lighting: [LIGHTING]. Color palette: [COLORS]. Camera perspective: [ANGLE]. High detail, coherent anatomy and materials, clean background, no text or watermark.'],
+      ['poster','Design a polished poster for [EVENT/IDEA]. Main subject: [SUBJECT]. Visual mood: [MOOD]. Layout: clear focal point, balanced negative space, strong contrast, and an uncluttered area for a title.'],
+      ['product','Create a premium product image featuring [PRODUCT]. Use a clean studio setup, soft controlled lighting, realistic materials, elegant composition, and a refined background that complements the product.']
+    ],
+    'Voice Studio': [
+      ['narration','Write a natural voiceover script about [TOPIC] for [AUDIENCE]. Tone: [TONE]. Use conversational language, short speakable sentences, clear pauses, and a strong opening and closing.'],
+      ['podcast','Create a podcast episode outline about [TOPIC]. Include a welcoming introduction, 4–6 discussion points, questions for the host, natural transitions, and a concise closing.'],
+      ['advert','Write a concise audio advertisement for [PRODUCT/SERVICE]. Audience: [AUDIENCE]. Tone: [TONE]. Highlight the main benefit, use memorable wording, and finish with a clear call to action.']
+    ],
+    'Writing Studio': [
+      ['article','Write a well-structured article about [TOPIC] for [AUDIENCE]. Use a compelling headline, engaging introduction, clear section headings, practical examples, and a concise conclusion. Keep the tone [TONE].'],
+      ['social','Create 5 original social media post ideas about [TOPIC] for [PLATFORM]. Each should have a distinct angle, an engaging first line, concise body copy, and a relevant call to action.'],
+      ['story','Develop an original story about [PREMISE]. Main character: [CHARACTER]. Setting: [SETTING]. Genre: [GENRE]. Establish a clear conflict, meaningful character choices, and a satisfying ending.']
+    ],
+    'Creative Studio': [
+      ['idea','Help develop this idea: [IDEA]. Define the goal, intended audience, key message, creative direction, and practical next steps.'],
+      ['campaign','Create a creative campaign concept for [PRODUCT/CAUSE]. Define the target audience, central message, visual direction, content ideas, and a simple rollout plan.']
+    ]
+  };
+  function populateTemplates(studio) {
+    const select = $('templateSelect');
+    if (!select) return;
+    select.replaceChildren();
+    const placeholder = document.createElement('option');
+    placeholder.value = ''; placeholder.textContent = 'Choose a starter…';
+    select.append(placeholder);
+    (templateSets[studio] || templateSets['Creative Studio']).forEach(([key]) => {
+      const option = document.createElement('option');
+      option.value = key; option.textContent = key.replace(/-/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+      select.append(option);
+    });
+  }
   function renderProjects() {
     const items = readProjects().filter(item => (item.title + ' ' + item.prompt + ' ' + (item.studio || '')).toLowerCase().includes(searchTerm));
     if (!items.length) {
@@ -43,7 +83,7 @@
       const actions = document.createElement('div'); actions.className = 'project-actions';
       const open = document.createElement('button'); open.textContent = 'Open brief';
       open.addEventListener('click', () => {
-        title.value = item.title; prompt.value = item.prompt; activeStudio = item.studio || 'Creative Studio'; editingId = item.id;
+        title.value = item.title; prompt.value = item.prompt; activeStudio = item.studio || 'Creative Studio'; editingId = item.id; populateTemplates(activeStudio);
         $('workspaceTitle').textContent = activeStudio;
         $('charCount').textContent = prompt.value.length + ' / 2000';
         showNotice('Project opened. You can continue editing this brief.');
@@ -67,6 +107,8 @@
       list.append(card);
     });
   }
+
+  populateTemplates(activeStudio);
 
   const themeSelect = $('themeSelect');
   const savedTheme = localStorage.getItem('synora.theme') || 'dark';
@@ -93,7 +135,7 @@
     mainNav.classList.remove('menu-open', 'menu-closed');
   }));
   $('projectSearch').addEventListener('input', () => { searchTerm = $('projectSearch').value.trim().toLowerCase(); renderProjects(); });
-  $('newProject').addEventListener('click', () => { editingId = null; title.value = ''; prompt.value = ''; activeStudio = 'Creative Studio'; $('workspaceTitle').textContent = 'Start creating'; $('charCount').textContent = '0 / 2000'; showNotice('New brief ready. Add a title and describe your idea.'); $('workspace').scrollIntoView({behavior:'smooth'}); title.focus({preventScroll:true}); });
+  $('newProject').addEventListener('click', () => { editingId = null; title.value = ''; prompt.value = ''; activeStudio = 'Creative Studio'; populateTemplates(activeStudio); $('workspaceTitle').textContent = 'Start creating'; $('charCount').textContent = '0 / 2000'; showNotice('New brief ready. Add a title and describe your idea.'); $('workspace').scrollIntoView({behavior:'smooth'}); title.focus({preventScroll:true}); });
   $('sortBtn').addEventListener('click', () => {
     const index = sortModes.indexOf(sortMode);
     sortMode = sortModes[(index + 1) % sortModes.length];
@@ -109,12 +151,42 @@
       activeStudio = button.dataset.studio;
       editingId = null;
       $('workspaceTitle').textContent = activeStudio;
+      populateTemplates(activeStudio);
       showNotice(activeStudio + ' is a planning workspace in this preview. Live AI generation is not connected yet.');
       $('workspace').scrollIntoView({behavior:'smooth'});
       title.focus({preventScroll:true});
     });
   });
 
+  $('insertTemplate').addEventListener('click', () => {
+    const key = $('templateSelect').value;
+    const selected = (templateSets[activeStudio] || templateSets['Creative Studio']).find(item => item[0] === key);
+    if (!selected) {
+      showNotice('Choose a prompt starter first.');
+      $('templateSelect').focus();
+      return;
+    }
+    const starter = selected[1];
+    prompt.value = prompt.value.trim() ? prompt.value.trim() + '\n\n' + starter : starter;
+    $('charCount').textContent = prompt.value.length + ' / 2000';
+    prompt.focus();
+    showNotice('Starter added. Replace the [BRACKETED] notes with your own details.');
+  });
+  $('copyPrompt').addEventListener('click', async () => {
+    if (!prompt.value.trim()) {
+      showNotice('There is no brief to copy yet.');
+      prompt.focus();
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(prompt.value);
+      showNotice('Brief copied to clipboard.');
+    } catch {
+      showNotice('Clipboard access is unavailable. Select the brief text and copy it manually.');
+      prompt.focus();
+      prompt.select();
+    }
+  });
   prompt.addEventListener('input', () => $('charCount').textContent = prompt.value.length + ' / 2000');
   $('saveProject').addEventListener('click', () => {
     const projectTitle = title.value.trim();
