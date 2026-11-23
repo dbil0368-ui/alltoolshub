@@ -121,3 +121,12 @@ body.midnight-theme .topbar{background:rgba(16,8,32,.88)}
 /* Import/export project controls */
 #projectSearch{max-width:190px}
 @media(max-width:560px){.project-tools{display:flex;align-items:center}.project-tools .text-btn{flex:1 1 auto}.project-tools .sort-btn{flex:0 0 auto}}
+
+
+/* Studio prompt starter controls */
+.prompt-tools{margin:-5px 0 19px}
+.prompt-tools>label{margin-bottom:8px}
+.prompt-tool-row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.prompt-tool-row select{flex:1 1 180px;min-width:0;margin:0;background:#0a0812;color:#f4efff;border:1px solid #a88aff55;border-radius:9px;padding:11px 12px;font:11px 'DM Sans',sans-serif}
+.prompt-tool-row .text-btn{white-space:nowrap}
+@media(max-width:560px){.prompt-tool-row{display:grid;grid-template-columns:1fr 1fr}.prompt-tool-row select{grid-column:1/-1;width:100%}.prompt-tool-row .text-btn{width:100%}}
