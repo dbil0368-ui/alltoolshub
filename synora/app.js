@@ -7,11 +7,16 @@
   let activeStudio = 'Creative Studio';
 
   function readProjects() {
-    try { return JSON.parse(localStorage.getItem(storageKey) || '[]'); }
-    catch { return []; }
+    try {
+      const value = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      return Array.isArray(value) ? value.filter(item => item && typeof item.title === 'string' && typeof item.prompt === 'string') : [];
+    } catch { return []; }
   }
   function writeProjects(items) {
     localStorage.setItem(storageKey, JSON.stringify(items));
+  }
+  function showNotice(message) {
+    $('notice').textContent = message;
   }
   function renderProjects() {
     const items = readProjects();
@@ -25,15 +30,24 @@
       card.className = 'project-item';
       const h = document.createElement('h3'); h.textContent = item.title;
       const p = document.createElement('p'); p.textContent = item.prompt;
-      const meta = document.createElement('small'); meta.textContent = item.studio + ' · ' + new Date(item.updatedAt).toLocaleDateString();
+      const meta = document.createElement('small'); meta.textContent = (item.studio || 'Creative Studio') + ' · ' + new Date(item.updatedAt || Date.now()).toLocaleDateString();
+      const actions = document.createElement('div'); actions.className = 'project-actions';
       const open = document.createElement('button'); open.textContent = 'Open brief';
       open.addEventListener('click', () => {
-        title.value = item.title; prompt.value = item.prompt; activeStudio = item.studio;
-        $('workspaceTitle').textContent = item.studio;
+        title.value = item.title; prompt.value = item.prompt; activeStudio = item.studio || 'Creative Studio';
+        $('workspaceTitle').textContent = activeStudio;
         $('charCount').textContent = prompt.value.length + ' / 2000';
+        showNotice('Project opened. You can continue editing this brief.');
         $('workspace').scrollIntoView({behavior:'smooth'});
       });
-      card.append(h,p,meta,document.createElement('br'),open);
+      const remove = document.createElement('button'); remove.className = 'delete-project'; remove.textContent = 'Delete';
+      remove.addEventListener('click', () => {
+        const remaining = readProjects().filter(project => project.id !== item.id);
+        try { writeProjects(remaining); renderProjects(); showNotice('Project deleted from this browser.'); }
+        catch { showNotice('Could not update browser storage.'); }
+      });
+      actions.append(open, remove);
+      card.append(h,p,meta,actions);
       list.append(card);
     });
   }
@@ -42,8 +56,9 @@
     button.addEventListener('click', () => {
       activeStudio = button.dataset.studio;
       $('workspaceTitle').textContent = activeStudio;
+      showNotice(activeStudio + ' is a planning workspace in this preview. Live AI generation is not connected yet.');
       $('workspace').scrollIntoView({behavior:'smooth'});
-      $('notice').textContent = activeStudio + ' is a planning workspace in this preview. Live AI generation is not connected yet.';
+      title.focus({preventScroll:true});
     });
   });
 
@@ -52,28 +67,27 @@
     const projectTitle = title.value.trim();
     const projectPrompt = prompt.value.trim();
     if (!projectTitle || !projectPrompt) {
-      $('notice').textContent = 'Please add a project name and describe your idea before saving.';
+      showNotice('Please add a project name and describe your idea before saving.');
+      (!projectTitle ? title : prompt).focus();
       return;
     }
     const items = readProjects();
     items.push({id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())), title: projectTitle, prompt: projectPrompt, studio: activeStudio, updatedAt: new Date().toISOString()});
     try {
       writeProjects(items);
-      $('notice').textContent = 'Project saved on this device. No AI media has been generated.';
+      showNotice('Project saved on this device. No AI media has been generated.');
       renderProjects();
-    } catch {
-      $('notice').textContent = 'Could not save. Your browser storage may be full or disabled.';
-    }
+    } catch { showNotice('Could not save. Your browser storage may be full or disabled.'); }
   });
   $('exportBtn').addEventListener('click', () => {
     const data = JSON.stringify(readProjects(), null, 2);
     const blob = new Blob([data], {type:'application/json'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url; a.download = 'synora-projects.json'; a.click();
-    URL.revokeObjectURL(url);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   });
   $('profileBtn').addEventListener('click', () => {
-    $('notice').textContent = 'Account sign-in is not connected in this preview. A secure authentication backend is needed.';
+    showNotice('Account sign-in is not connected in this preview. A secure authentication backend is needed.');
     $('workspace').scrollIntoView({behavior:'smooth'});
   });
   renderProjects();
