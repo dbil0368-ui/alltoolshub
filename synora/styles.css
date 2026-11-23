@@ -116,3 +116,8 @@ body.midnight-theme .topbar{background:rgba(16,8,32,.88)}
 .trend-hub-copy p{font-size:12px;line-height:1.8;color:var(--muted);margin:0 0 19px}
 .trend-hub-symbol{width:112px;height:112px;flex:0 0 112px;display:grid;place-items:center;border:1px solid #d3baff55;border-radius:30px;background:linear-gradient(145deg,#a98aff44,#6b3fb522);color:#e6d8ff;font:500 58px 'Space Grotesk';box-shadow:0 0 55px #9c6cff22}
 @media(max-width:560px){.trend-hub-panel{padding:22px;gap:10px}.trend-hub-symbol{width:64px;height:64px;flex-basis:64px;border-radius:19px;font-size:34px}.trend-hub-copy h2{font-size:25px}.trend-hub-copy p{font-size:11px}}
+
+
+/* Import/export project controls */
+#projectSearch{max-width:190px}
+@media(max-width:560px){.project-tools{display:flex;align-items:center}.project-tools .text-btn{flex:1 1 auto}.project-tools .sort-btn{flex:0 0 auto}}
