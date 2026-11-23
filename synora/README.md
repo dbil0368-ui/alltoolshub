@@ -9,7 +9,10 @@ SYNORA is a responsive, mobile-first creative workspace prototype for video, ima
 - Video, Image, Voice and Writing studio entry points
 - Creative brief editor with a 2,000-character limit
 - Save project briefs locally in the current browser
-- Reopen saved briefs
+- Reopen and update saved briefs
+- Search saved projects by title, brief text or studio
+- Start a fresh brief without losing existing projects
+- Switch between Ultra Dark and Midnight Purple themes
 - Export saved project data as JSON
 - Responsive layout for Android and desktop browsers
 - GitHub Actions workflow to publish only this `synora/` folder to GitHub Pages
