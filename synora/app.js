@@ -5,6 +5,8 @@
   const list = $('projectList');
   const storageKey = 'synora.projects.v1';
   let activeStudio = 'Creative Studio';
+  let editingId = null;
+  let searchTerm = '';
   const sortModes = ['newest', 'oldest', 'az'];
   let sortMode = 'newest';
 
@@ -21,9 +23,9 @@
     $('notice').textContent = message;
   }
   function renderProjects() {
-    const items = readProjects();
+    const items = readProjects().filter(item => (item.title + ' ' + item.prompt + ' ' + (item.studio || '')).toLowerCase().includes(searchTerm));
     if (!items.length) {
-      list.innerHTML = '<div class="empty-state"><span>✧</span><b>Your ideas will live here</b><p>Save your first project from any studio.</p></div>';
+      list.innerHTML = '<div class="empty-state"><span>✧</span><b>' + (searchTerm ? 'No matching projects' : 'Your ideas will live here') + '</b><p>' + (searchTerm ? 'Try another search term.' : 'Save your first project from any studio.') + '</p></div>';
       return;
     }
     list.replaceChildren();
@@ -41,7 +43,7 @@
       const actions = document.createElement('div'); actions.className = 'project-actions';
       const open = document.createElement('button'); open.textContent = 'Open brief';
       open.addEventListener('click', () => {
-        title.value = item.title; prompt.value = item.prompt; activeStudio = item.studio || 'Creative Studio';
+        title.value = item.title; prompt.value = item.prompt; activeStudio = item.studio || 'Creative Studio'; editingId = item.id;
         $('workspaceTitle').textContent = activeStudio;
         $('charCount').textContent = prompt.value.length + ' / 2000';
         showNotice('Project opened. You can continue editing this brief.');
@@ -83,6 +85,8 @@
     menuToggle.setAttribute('aria-label', 'Open navigation menu');
     mainNav.classList.remove('menu-open', 'menu-closed');
   }));
+  $('projectSearch').addEventListener('input', () => { searchTerm = $('projectSearch').value.trim().toLowerCase(); renderProjects(); });
+  $('newProject').addEventListener('click', () => { editingId = null; title.value = ''; prompt.value = ''; activeStudio = 'Creative Studio'; $('workspaceTitle').textContent = 'Start creating'; $('charCount').textContent = '0 / 2000'; showNotice('New brief ready. Add a title and describe your idea.'); $('workspace').scrollIntoView({behavior:'smooth'}); title.focus({preventScroll:true}); });
   $('sortBtn').addEventListener('click', () => {
     const index = sortModes.indexOf(sortMode);
     sortMode = sortModes[(index + 1) % sortModes.length];
@@ -113,10 +117,13 @@
       return;
     }
     const items = readProjects();
-    items.push({id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())), title: projectTitle, prompt: projectPrompt, studio: activeStudio, updatedAt: new Date().toISOString()});
+    const record = {id: editingId || (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())), title: projectTitle, prompt: projectPrompt, studio: activeStudio, updatedAt: new Date().toISOString()};
+    const existingIndex = items.findIndex(item => item.id === editingId);
+    if (existingIndex >= 0) items[existingIndex] = record; else items.push(record);
+    editingId = record.id;
     try {
       writeProjects(items);
-      showNotice('Project saved on this device. No AI media has been generated.');
+      showNotice('Project ' + (existingIndex >= 0 ? 'updated' : 'saved') + ' on this device. No AI media has been generated.');
       renderProjects();
     } catch { showNotice('Could not save. Your browser storage may be full or disabled.'); }
   });
