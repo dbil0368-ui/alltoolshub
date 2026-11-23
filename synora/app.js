@@ -135,6 +135,39 @@
       renderProjects();
     } catch { showNotice('Could not save. Your browser storage may be full or disabled.'); }
   });
+  $('importBtn').addEventListener('click', () => $('importFile').click());
+  $('importFile').addEventListener('change', async (event) => {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      showNotice('Import file is too large. Choose a JSON file under 2 MB.');
+      event.target.value = '';
+      return;
+    }
+    try {
+      const parsed = JSON.parse(await file.text());
+      if (!Array.isArray(parsed)) throw new Error('Expected a project list.');
+      const valid = parsed.filter(item => item && typeof item.title === 'string' && typeof item.prompt === 'string')
+        .map(item => ({
+          id: typeof item.id === 'string' ? item.id : (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2)),
+          title: item.title.slice(0, 70),
+          prompt: item.prompt.slice(0, 2000),
+          studio: typeof item.studio === 'string' ? item.studio.slice(0, 60) : 'Creative Studio',
+          updatedAt: typeof item.updatedAt === 'string' && !Number.isNaN(Date.parse(item.updatedAt)) ? item.updatedAt : new Date().toISOString()
+        }));
+      if (!valid.length) throw new Error('No valid projects were found.');
+      const existing = readProjects();
+      const byId = new Map(existing.map(item => [item.id, item]));
+      valid.forEach(item => byId.set(item.id, item));
+      writeProjects(Array.from(byId.values()));
+      renderProjects();
+      showNotice(valid.length + ' project(s) imported. Matching IDs were updated; other projects were kept.');
+    } catch {
+      showNotice('Could not import this file. Choose a valid SYNORA projects JSON export.');
+    } finally {
+      event.target.value = '';
+    }
+  });
   $('exportBtn').addEventListener('click', () => {
     const data = JSON.stringify(readProjects(), null, 2);
     const blob = new Blob([data], {type:'application/json'});
