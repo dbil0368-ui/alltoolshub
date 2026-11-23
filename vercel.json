@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/", "destination": "/synora/index.html" },
+    { "source": "/styles.css", "destination": "/synora/styles.css" },
+    { "source": "/app.js", "destination": "/synora/app.js" }
+  ]
+}
