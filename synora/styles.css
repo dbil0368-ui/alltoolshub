@@ -105,3 +105,5 @@ footer{border-top:1px solid var(--line);margin-top:52px;padding:27px 0 32px;disp
 body.midnight-theme{--bg:#100820;--surface:#1a1030;--surface2:#24163d;--line:rgba(194,160,255,.16);background:radial-gradient(ellipse at 50% -20%,#39205e 0,transparent 50%),#100820}
 body.midnight-theme .topbar{background:rgba(16,8,32,.88)}
 @media(max-width:560px){.project-search{width:100%;flex:1 1 100%}.project-tools{flex-wrap:wrap;width:100%}}
+
+.editor-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
