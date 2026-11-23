@@ -122,6 +122,17 @@
 
   const menuToggle = $('menuToggle');
   const mainNav = $('mainNav');
+  // Keep navigation links hidden until the visitor opens the menu.
+  menuToggle.setAttribute('aria-expanded', 'false');
+  menuToggle.setAttribute('aria-label', 'Open navigation menu');
+  mainNav.classList.remove('menu-open');
+  mainNav.classList.add('menu-closed');
+  function closeMenu() {
+    menuToggle.setAttribute('aria-expanded', 'false');
+    menuToggle.setAttribute('aria-label', 'Open navigation menu');
+    mainNav.classList.remove('menu-open');
+    mainNav.classList.add('menu-closed');
+  }
   menuToggle.addEventListener('click', () => {
     const open = menuToggle.getAttribute('aria-expanded') !== 'true';
     menuToggle.setAttribute('aria-expanded', String(open));
@@ -129,11 +140,8 @@
     mainNav.classList.toggle('menu-open', open);
     mainNav.classList.toggle('menu-closed', !open);
   });
-  mainNav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
-    menuToggle.setAttribute('aria-expanded', 'false');
-    menuToggle.setAttribute('aria-label', 'Open navigation menu');
-    mainNav.classList.remove('menu-open', 'menu-closed');
-  }));
+  mainNav.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
+  document.addEventListener('keydown', event => { if (event.key === 'Escape') closeMenu(); });
   $('projectSearch').addEventListener('input', () => { searchTerm = $('projectSearch').value.trim().toLowerCase(); renderProjects(); });
   $('newProject').addEventListener('click', () => { editingId = null; title.value = ''; prompt.value = ''; activeStudio = 'Creative Studio'; populateTemplates(activeStudio); $('workspaceTitle').textContent = 'Start creating'; $('charCount').textContent = '0 / 2000'; showNotice('New brief ready. Add a title and describe your idea.'); $('workspace').scrollIntoView({behavior:'smooth'}); title.focus({preventScroll:true}); });
   $('sortBtn').addEventListener('click', () => {
