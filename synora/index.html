@@ -60,6 +60,14 @@
         <div class="editor-main">
           <label for="projectTitle">Project name</label><input id="projectTitle" maxlength="70" placeholder="Give your idea a name">
           <label for="prompt">What would you like to create?</label><textarea id="prompt" rows="5" maxlength="2000" placeholder="Describe your idea, mood, style or story..."></textarea>
+          <div class="prompt-tools">
+            <label for="templateSelect">Prompt starter</label>
+            <div class="prompt-tool-row">
+              <select id="templateSelect" aria-label="Choose a prompt starter"><option value="">Choose a starter…</option></select>
+              <button class="text-btn" id="insertTemplate" type="button">Use starter</button>
+              <button class="text-btn" id="copyPrompt" type="button">Copy brief</button>
+            </div>
+          </div>
           <div class="editor-foot"><span id="charCount">0 / 2000</span><div class="editor-actions"><button class="text-btn" id="newProject" type="button">New brief</button><button class="primary-btn" id="saveProject" type="button">Save project <span>＋</span></button></div></div>
           <p class="notice" id="notice" role="status">This demo saves your project in this browser. It does not generate AI media yet.</p>
         </div>
