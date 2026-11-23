@@ -10,23 +10,7 @@
   const sortModes = ['newest', 'oldest', 'az'];
   let sortMode = 'newest';
 
-  // Initialize navigation immediately so unrelated app features cannot block MENU.
-  const menuToggle = $('menuToggle');
-  const mainNav = $('mainNav');
-  if (menuToggle && mainNav) {
-    const setMenuOpen = (open) => {
-      menuToggle.setAttribute('aria-expanded', String(open));
-      menuToggle.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
-      mainNav.classList.toggle('menu-open', open);
-      mainNav.classList.toggle('menu-closed', !open);
-    };
-    setMenuOpen(false);
-    menuToggle.addEventListener('click', () => {
-      setMenuOpen(menuToggle.getAttribute('aria-expanded') !== 'true');
-    });
-    mainNav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => setMenuOpen(false)));
-    document.addEventListener('keydown', event => { if (event.key === 'Escape') setMenuOpen(false); });
-  }
+  // Navigation uses native HTML <details>, so it works without JavaScript.
 
   function readProjects() {
     try {
