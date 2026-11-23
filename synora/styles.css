@@ -98,3 +98,10 @@ footer{border-top:1px solid var(--line);margin-top:52px;padding:27px 0 32px;disp
 
 /* Clear, wide mobile menu button */
 .menu-toggle{display:inline-flex!important;flex-direction:row!important;align-items:center!important;justify-content:center!important;width:68px!important;min-width:68px!important;height:38px!important;flex:0 0 68px!important;padding:0 8px!important;border:1px solid #b99aff!important;border-radius:10px!important;background:#24163c!important;color:#ffffff!important;font-family:Arial,sans-serif!important;font-size:12px!important;font-weight:800!important;letter-spacing:1.2px!important;line-height:1!important;white-space:nowrap!important;}
+
+
+/* Project search and Midnight Purple theme */
+.project-search{width:170px;min-width:0;padding:10px 12px;border:1px solid #a88aff55;border-radius:10px;background:#100d1b;color:#f8f6ff;font:11px 'DM Sans',sans-serif;outline:none}.project-search:focus{border-color:#c3aaff;box-shadow:0 0 0 3px #a88aff18}
+body.midnight-theme{--bg:#100820;--surface:#1a1030;--surface2:#24163d;--line:rgba(194,160,255,.16);background:radial-gradient(ellipse at 50% -20%,#39205e 0,transparent 50%),#100820}
+body.midnight-theme .topbar{background:rgba(16,8,32,.88)}
+@media(max-width:560px){.project-search{width:100%;flex:1 1 100%}.project-tools{flex-wrap:wrap;width:100%}}
