@@ -94,3 +94,7 @@ footer{border-top:1px solid var(--line);margin-top:52px;padding:27px 0 32px;disp
 /* Text-based hamburger icon: reliable rendering on narrow Android screens */
 .menu-toggle{font-family:Arial,sans-serif!important;font-size:27px!important;font-weight:700!important;line-height:1!important;letter-spacing:0!important;color:#f0e7ff!important;text-align:center!important;padding:0!important;}
 .menu-toggle[aria-expanded="true"]{font-size:25px!important;}
+
+
+/* Clear, wide mobile menu button */
+.menu-toggle{display:inline-flex!important;flex-direction:row!important;align-items:center!important;justify-content:center!important;width:68px!important;min-width:68px!important;height:38px!important;flex:0 0 68px!important;padding:0 8px!important;border:1px solid #b99aff!important;border-radius:10px!important;background:#24163c!important;color:#ffffff!important;font-family:Arial,sans-serif!important;font-size:12px!important;font-weight:800!important;letter-spacing:1.2px!important;line-height:1!important;white-space:nowrap!important;}
