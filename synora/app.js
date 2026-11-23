@@ -59,6 +59,16 @@
     });
   }
 
+  const themeSelect = $('themeSelect');
+  const savedTheme = localStorage.getItem('synora.theme') || 'dark';
+  themeSelect.value = savedTheme;
+  if (savedTheme === 'midnight') document.body.classList.add('midnight-theme');
+  themeSelect.addEventListener('change', () => {
+    const theme = themeSelect.value;
+    document.body.classList.toggle('midnight-theme', theme === 'midnight');
+    localStorage.setItem('synora.theme', theme);
+  });
+
   const menuToggle = $('menuToggle');
   const mainNav = $('mainNav');
   menuToggle.addEventListener('click', () => {
