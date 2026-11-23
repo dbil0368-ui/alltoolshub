@@ -10,6 +10,24 @@
   const sortModes = ['newest', 'oldest', 'az'];
   let sortMode = 'newest';
 
+  // Initialize navigation immediately so unrelated app features cannot block MENU.
+  const menuToggle = $('menuToggle');
+  const mainNav = $('mainNav');
+  if (menuToggle && mainNav) {
+    const setMenuOpen = (open) => {
+      menuToggle.setAttribute('aria-expanded', String(open));
+      menuToggle.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+      mainNav.classList.toggle('menu-open', open);
+      mainNav.classList.toggle('menu-closed', !open);
+    };
+    setMenuOpen(false);
+    menuToggle.addEventListener('click', () => {
+      setMenuOpen(menuToggle.getAttribute('aria-expanded') !== 'true');
+    });
+    mainNav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => setMenuOpen(false)));
+    document.addEventListener('keydown', event => { if (event.key === 'Escape') setMenuOpen(false); });
+  }
+
   function readProjects() {
     try {
       const value = JSON.parse(localStorage.getItem(storageKey) || '[]');
@@ -119,30 +137,6 @@
   const savedTheme = localStorage.getItem('synora.theme') || 'dark';
   applyTheme(['dark', ...themeNames].includes(savedTheme) ? savedTheme : 'dark');
 
-  const menuToggle = $('menuToggle');
-  const mainNav = $('mainNav');
-  // Keep navigation links hidden until the visitor opens the menu.
-  menuToggle.setAttribute('aria-expanded', 'false');
-  menuToggle.setAttribute('aria-label', 'Open navigation menu');
-  mainNav.classList.remove('menu-open');
-  mainNav.classList.add('menu-closed');
-  function closeMenu() {
-    menuToggle.setAttribute('aria-expanded', 'false');
-    menuToggle.setAttribute('aria-label', 'Open navigation menu');
-    mainNav.classList.remove('menu-open');
-    mainNav.classList.add('menu-closed');
-  }
-  menuToggle.addEventListener('click', () => {
-    const open = menuToggle.getAttribute('aria-expanded') !== 'true';
-    menuToggle.setAttribute('aria-expanded', String(open));
-    menuToggle.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
-    mainNav.classList.toggle('menu-open', open);
-    mainNav.classList.toggle('menu-closed', !open);
-  });
-  mainNav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
-    closeMenu();
-  }));
-  document.addEventListener('keydown', event => { if (event.key === 'Escape') closeMenu(); });
   $('projectSearch').addEventListener('input', () => { searchTerm = $('projectSearch').value.trim().toLowerCase(); renderProjects(); });
   $('newProject').addEventListener('click', () => { editingId = null; title.value = ''; prompt.value = ''; activeStudio = 'Creative Studio'; populateTemplates(activeStudio); $('workspaceTitle').textContent = 'Start creating'; $('charCount').textContent = '0 / 2000'; showNotice('New brief ready. Add a title and describe your idea.'); $('workspace').scrollIntoView({behavior:'smooth'}); title.focus({preventScroll:true}); });
   $('sortBtn').addEventListener('click', () => {
