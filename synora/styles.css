@@ -130,3 +130,13 @@ body.midnight-theme .topbar{background:rgba(16,8,32,.88)}
 .prompt-tool-row select{flex:1 1 180px;min-width:0;margin:0;background:#0a0812;color:#f4efff;border:1px solid #a88aff55;border-radius:9px;padding:11px 12px;font:11px 'DM Sans',sans-serif}
 .prompt-tool-row .text-btn{white-space:nowrap}
 @media(max-width:560px){.prompt-tool-row{display:grid;grid-template-columns:1fr 1fr}.prompt-tool-row select{grid-column:1/-1;width:100%}.prompt-tool-row .text-btn{width:100%}}
+
+
+/* Navigation stays tucked away until the MENU control is opened, on all screen sizes */
+.desktop-nav.menu-closed{display:none!important}
+.desktop-nav.menu-open{display:flex!important;position:absolute;top:calc(100% + 8px);right: max(5vw,22px);left:auto;min-width:220px;padding:10px;flex-direction:column;align-items:stretch;gap:4px;border:1px solid #a88aff66;border-radius:15px;background:rgba(17,13,29,.98);box-shadow:0 18px 45px #000b;backdrop-filter:blur(20px)}
+.desktop-nav.menu-open a{padding:13px 14px;border-radius:9px}
+.desktop-nav.menu-open a:hover{background:#a88aff20}
+@media(max-width:560px){
+  .desktop-nav.menu-open{right:14px;left:14px;min-width:0}
+}
