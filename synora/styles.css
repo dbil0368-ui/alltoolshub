@@ -140,3 +140,66 @@ body.midnight-theme .topbar{background:rgba(16,8,32,.88)}
 @media(max-width:560px){
   .desktop-nav.menu-open{right:14px;left:14px;min-width:0}
 }
+
+
+/* Additional SYNORA themes */
+body.ocean-theme{--bg:#061321;--surface:#0c2032;--surface2:#123047;--line:rgba(111,207,255,.2);--muted:#a9c4d8;--purple:#70d7ff;background:radial-gradient(ellipse at 50% -20%,#124c70 0,transparent 52%),#061321}
+body.ocean-theme .topbar{background:rgba(6,19,33,.9)}
+body.ocean-theme .primary-btn{background:linear-gradient(110deg,#36b9e8,#1767ad);border-color:#8ce5ff66;box-shadow:0 10px 35px #168bc744}
+body.ocean-theme .desktop-nav.menu-open{background:rgba(7,27,45,.98);border-color:#56c8f277}
+body.ocean-theme .studio-card,body.ocean-theme .project-item,body.ocean-theme .plan-card{background:linear-gradient(145deg,#10283b,#091a2a)}
+body.ocean-theme .editor{background:rgba(8,28,44,.94)}
+body.ocean-theme .editor-aside{background:radial-gradient(circle at 100% 0,#12618b66,transparent 45%),linear-gradient(145deg,#10344b,#0b1c2b)}
+body.ocean-theme .trend-hub-panel{background:radial-gradient(circle at 90% 30%,#167ca944,transparent 36%),linear-gradient(120deg,#10344b,#091a2a)}
+body.emerald-theme{--bg:#071510;--surface:#0d2119;--surface2:#153326;--line:rgba(117,235,177,.18);--muted:#a9c8b8;--purple:#83e7b3;background:radial-gradient(ellipse at 50% -20%,#164c36 0,transparent 52%),#071510}
+body.emerald-theme .topbar{background:rgba(7,21,16,.9)}
+body.emerald-theme .primary-btn{background:linear-gradient(110deg,#49c98b,#167b58);border-color:#a0f0c766;box-shadow:0 10px 35px #15945c44}
+body.emerald-theme .desktop-nav.menu-open{background:rgba(8,30,21,.98);border-color:#69dca477}
+body.emerald-theme .studio-card,body.emerald-theme .project-item,body.emerald-theme .plan-card{background:linear-gradient(145deg,#122a20,#0a1912)}
+body.emerald-theme .editor{background:rgba(9,29,20,.94)}
+body.emerald-theme .editor-aside{background:radial-gradient(circle at 100% 0,#17684466,transparent 45%),linear-gradient(145deg,#153b2a,#0b1c13)}
+body.emerald-theme .trend-hub-panel{background:radial-gradient(circle at 90% 30%,#19865a44,transparent 36%),linear-gradient(120deg,#153b2a,#0b1c13)}
+body.white-glow-theme{color-scheme:light;--bg:#f4f5fb;--surface:#ffffff;--surface2:#edf0f8;--text:#171526;--muted:#62647a;--line:rgba(37,35,65,.14);--purple:#7652c9;--glow:rgba(125,91,210,.16);background:radial-gradient(ellipse at 50% -20%,#e5dcff 0,transparent 52%),#f4f5fb;color:#171526}
+body.white-glow-theme:before{opacity:.28;background-image:linear-gradient(rgba(65,52,110,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(65,52,110,.055) 1px,transparent 1px)}
+body.white-glow-theme .topbar{background:rgba(255,255,255,.88);border-color:#dcd9e9}
+body.white-glow-theme .brand{color:#241b3d}
+body.white-glow-theme .brand-mark{color:#fff;background:linear-gradient(145deg,#a98aff,#7652c9);box-shadow:0 0 28px #a98aff55}
+body.white-glow-theme .desktop-nav a{color:#55536a}
+body.white-glow-theme .desktop-nav a:hover{color:#241b3d;background:#8d6bd51a}
+body.white-glow-theme .status{color:#4c4a60;background:#fff;border-color:#dedbea}
+body.white-glow-theme .profile{background:linear-gradient(145deg,#8e70d6,#5b3caa);color:#fff}
+body.white-glow-theme .hero h1 span{background:linear-gradient(100deg,#6543b1,#a27ce8 55%,#7652c9);background-clip:text;color:transparent}
+body.white-glow-theme .studio-card{color:#211b35;background:linear-gradient(145deg,#fff,#f1eff9);border-color:#dfd9ee;box-shadow:0 12px 35px #4c3a7b0d}
+body.white-glow-theme .studio-card h3,body.white-glow-theme .project-item h3,body.white-glow-theme .plan-card h3{color:#211b35}
+body.white-glow-theme .studio-card p,body.white-glow-theme .project-item p,body.white-glow-theme .plan-card p,body.white-glow-theme .plan-card li{color:#66627a}
+body.white-glow-theme .card-tag,body.white-glow-theme .muted{color:#716d83}
+body.white-glow-theme .editor{background:#fff;border-color:#dedbea;box-shadow:0 18px 55px #44356c12}
+body.white-glow-theme .editor label{color:#4e4964}
+body.white-glow-theme .editor input,body.white-glow-theme .editor textarea,body.white-glow-theme .prompt-tool-row select{background:#f7f6fb;color:#211b35;border-color:#ded9eb}
+body.white-glow-theme .editor-aside{background:radial-gradient(circle at 100% 0,#d8c8ff,transparent 48%),linear-gradient(145deg,#eee8fb,#e7e4f2);color:#241b3d}
+body.white-glow-theme .editor-aside p,body.white-glow-theme .editor-aside small{color:#625a78}
+body.white-glow-theme .project-item,body.white-glow-theme .plan-card{background:linear-gradient(145deg,#fff,#f4f2fa);border-color:#dedbea}
+body.white-glow-theme .empty-state{border-color:#d1c9e3;background:#ffffffaa;color:#66627a}
+body.white-glow-theme .empty-state b{color:#29213f}
+body.white-glow-theme .trend-hub-panel{background:radial-gradient(circle at 90% 30%,#cbb9f755,transparent 36%),linear-gradient(120deg,#fff,#f0ecfa);border-color:#d8cdec}
+body.white-glow-theme .trend-hub-copy h2,body.white-glow-theme .settings-panel b{color:#211b35}
+body.white-glow-theme .trend-hub-copy p,body.white-glow-theme .settings-panel p,body.white-glow-theme .settings-note{color:#66627a}
+body.white-glow-theme .settings-panel{background:linear-gradient(145deg,#fff,#f1eef9);border-color:#dedbea}
+body.white-glow-theme .setting-control{color:#4e4964}
+body.white-glow-theme .setting-control select{background:#fff;color:#211b35;border-color:#d7d0e6}
+body.white-glow-theme .text-btn,body.white-glow-theme .sort-btn{color:#6548a8;border-color:#b9a8df}
+body.white-glow-theme .sort-btn{background:#f5f1fc}
+body.white-glow-theme .project-search{background:#fff;color:#211b35;border-color:#d7d0e6}
+body.white-glow-theme .menu-toggle{background:#f2edfc;color:#543b91!important;border-color:#b9a8df!important}
+body.white-glow-theme .desktop-nav.menu-open{background:rgba(255,255,255,.98);border-color:#d7cdec;box-shadow:0 18px 45px #38275a22}
+body.white-glow-theme .desktop-nav.menu-open a{color:#4e4964}
+body.white-glow-theme .desktop-nav.menu-open a:hover{background:#8d6bd51a}
+body.white-glow-theme .plan-card.featured{background:radial-gradient(circle at 100% 0,#dfd2ff,transparent 45%),linear-gradient(145deg,#fff,#eee9f8)}
+body.white-glow-theme footer{border-color:#dedbea;color:#66627a}
+body.white-glow-theme .footer-brand{color:#241b3d}
+body.white-glow-theme .float-card{background:rgba(255,255,255,.94);border-color:#dedbea;color:#241b3d;box-shadow:0 18px 50px #44356c1c}
+body.white-glow-theme .float-card small{color:#716d83}
+body.white-glow-theme .trend-hub-symbol{color:#7652c9;border-color:#b9a8df;background:linear-gradient(145deg,#e7dcff,#f8f5ff)}
+body.white-glow-theme .notice{color:#66627a}
+body.white-glow-theme .plan-action,body.white-glow-theme .card-link,body.white-glow-theme .project-item button{color:#6548a8}
+body.white-glow-theme .project-item button.delete-project{color:#b44f72}
