@@ -73,3 +73,13 @@ footer{border-top:1px solid var(--line);margin-top:52px;padding:27px 0 32px;disp
  .text-btn{padding:9px 10px;font-size:10px}
 }
 @media(max-width:380px){.brand{font-size:14px}.ultra-label{font-size:6px}.project-tools{gap:5px}.sort-btn,.text-btn{padding:8px}}
+
+/* Settings panel and clearer mobile navigation */
+.menu-toggle{flex:0 0 40px;display:grid!important;visibility:visible!important;position:relative;z-index:22}
+.top-actions{flex-shrink:0}
+.settings-panel{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:22px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,#1b1530,#100e19)}
+.settings-panel b{font:600 15px 'Space Grotesk';color:#f5efff}
+.settings-panel p,.settings-note{font-size:11px;line-height:1.6;color:var(--muted)}
+.setting-control{display:flex;align-items:center;gap:12px;color:#d9caff;font-size:11px}
+.setting-control select{background:#0b0914;color:#f5efff;border:1px solid #a88aff66;border-radius:9px;padding:10px}
+@media(max-width:560px){.menu-toggle{width:39px;height:39px;flex-basis:39px}.settings-panel{align-items:flex-start;flex-direction:column}.setting-control{width:100%;justify-content:space-between}.setting-control select{min-width:145px}}
