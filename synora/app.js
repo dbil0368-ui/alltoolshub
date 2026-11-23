@@ -5,6 +5,8 @@
   const list = $('projectList');
   const storageKey = 'synora.projects.v1';
   let activeStudio = 'Creative Studio';
+  const sortModes = ['newest', 'oldest', 'az'];
+  let sortMode = 'newest';
 
   function readProjects() {
     try {
@@ -25,7 +27,12 @@
       return;
     }
     list.replaceChildren();
-    items.slice().reverse().forEach((item) => {
+    const sortedItems = items.slice().sort((a, b) => {
+      if (sortMode === 'oldest') return new Date(a.updatedAt || 0) - new Date(b.updatedAt || 0);
+      if (sortMode === 'az') return a.title.localeCompare(b.title);
+      return new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0);
+    });
+    sortedItems.forEach((item) => {
       const card = document.createElement('article');
       card.className = 'project-item';
       const h = document.createElement('h3'); h.textContent = item.title;
@@ -51,6 +58,30 @@
       list.append(card);
     });
   }
+
+  const menuToggle = $('menuToggle');
+  const mainNav = $('mainNav');
+  menuToggle.addEventListener('click', () => {
+    const open = menuToggle.getAttribute('aria-expanded') !== 'true';
+    menuToggle.setAttribute('aria-expanded', String(open));
+    menuToggle.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+    mainNav.classList.toggle('menu-open', open);
+    mainNav.classList.toggle('menu-closed', !open);
+  });
+  mainNav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+    menuToggle.setAttribute('aria-expanded', 'false');
+    menuToggle.setAttribute('aria-label', 'Open navigation menu');
+    mainNav.classList.remove('menu-open', 'menu-closed');
+  }));
+  $('sortBtn').addEventListener('click', () => {
+    const index = sortModes.indexOf(sortMode);
+    sortMode = sortModes[(index + 1) % sortModes.length];
+    const labels = {newest:'Newest', oldest:'Oldest', az:'A–Z'};
+    const descriptions = {newest:'Sort projects, newest first', oldest:'Sort projects, oldest first', az:'Sort projects alphabetically'};
+    $('sortLabel').textContent = labels[sortMode];
+    $('sortBtn').setAttribute('aria-label', descriptions[sortMode]);
+    renderProjects();
+  });
 
   document.querySelectorAll('[data-studio]').forEach((button) => {
     button.addEventListener('click', () => {
