@@ -143,7 +143,21 @@
     mainNav.classList.toggle('menu-open', open);
     mainNav.classList.toggle('menu-closed', !open);
   });
-  mainNav.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
+  mainNav.querySelectorAll('a').forEach(link => link.addEventListener('click', event => {
+    closeMenu();
+    if (link.getAttribute('href') === '#settings') {
+      event.preventDefault();
+      document.body.classList.add('settings-view');
+      $('settings').scrollIntoView({behavior:'instant', block:'start'});
+    } else {
+      document.body.classList.remove('settings-view');
+    }
+  }));
+  $('settingsBack').addEventListener('click', event => {
+    event.preventDefault();
+    document.body.classList.remove('settings-view');
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
   document.addEventListener('keydown', event => { if (event.key === 'Escape') closeMenu(); });
   $('projectSearch').addEventListener('input', () => { searchTerm = $('projectSearch').value.trim().toLowerCase(); renderProjects(); });
   $('newProject').addEventListener('click', () => { editingId = null; title.value = ''; prompt.value = ''; activeStudio = 'Creative Studio'; populateTemplates(activeStudio); $('workspaceTitle').textContent = 'Start creating'; $('charCount').textContent = '0 / 2000'; showNotice('New brief ready. Add a title and describe your idea.'); $('workspace').scrollIntoView({behavior:'smooth'}); title.focus({preventScroll:true}); });
