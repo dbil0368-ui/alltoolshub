@@ -251,5 +251,18 @@
     showNotice('Account sign-in is not connected in this preview. A secure authentication backend is needed.');
     $('workspace').scrollIntoView({behavior:'smooth'});
   });
+  const languageSelect = $('languageSelect');
+  if (languageSelect) {
+    languageSelect.value = localStorage.getItem('synora.language') || '';
+    languageSelect.addEventListener('change', () => {
+      const language = languageSelect.value;
+      if (!language) return;
+      localStorage.setItem('synora.language', language);
+      const target = 'https://translate.google.com/translate?sl=auto&tl=' + encodeURIComponent(language) + '&u=' + encodeURIComponent(location.href);
+      window.open(target, '_blank', 'noopener');
+      showNotice('Opening a translated view. Automatic translation is provided by Google Translate.');
+    });
+  }
+
   renderProjects();
 })();
