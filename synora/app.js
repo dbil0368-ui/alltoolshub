@@ -52,7 +52,14 @@
       const remove = document.createElement('button'); remove.className = 'delete-project'; remove.textContent = 'Delete';
       remove.addEventListener('click', () => {
         const remaining = readProjects().filter(project => project.id !== item.id);
-        try { writeProjects(remaining); renderProjects(); showNotice('Project deleted from this browser.'); }
+        try {
+          writeProjects(remaining);
+          if (editingId === item.id) {
+            editingId = null; title.value = ''; prompt.value = ''; activeStudio = 'Creative Studio';
+            $('workspaceTitle').textContent = 'Start creating'; $('charCount').textContent = '0 / 2000';
+          }
+          renderProjects(); showNotice('Project deleted from this browser.');
+        }
         catch { showNotice('Could not update browser storage.'); }
       });
       actions.append(open, remove);
@@ -100,6 +107,7 @@
   document.querySelectorAll('[data-studio]').forEach((button) => {
     button.addEventListener('click', () => {
       activeStudio = button.dataset.studio;
+      editingId = null;
       $('workspaceTitle').textContent = activeStudio;
       showNotice(activeStudio + ' is a planning workspace in this preview. Live AI generation is not connected yet.');
       $('workspace').scrollIntoView({behavior:'smooth'});
