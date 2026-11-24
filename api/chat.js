@@ -1,4 +1,5 @@
 // Vercel serverless endpoint: /api/chat
+export const config = { api: { bodyParser: { sizeLimit: "5mb" } } };
 // Proxies chat requests to the SYNORA Cloudflare Workers AI endpoint.
 // Configure SYNORA_AI_URL in Vercel Environment Variables.
 // Keep the Worker URL on the server; do not call it from public browser code.
