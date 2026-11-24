@@ -1,84 +1,96 @@
 (() => {
-  const button = document.getElementById('plusMenuButton');
-  const menu = document.getElementById('plusMenu');
-  const photoInput = document.getElementById('chatImage');
-  const cameraInput = document.getElementById('chatCamera');
-  const videoInput = document.getElementById('chatVideo');
-  const documentInput = document.getElementById('chatDocument');
-  const choosePhoto = document.getElementById('choosePhoto');
-  const takePhoto = document.getElementById('takePhoto');
-  const chooseVideo = document.getElementById('chooseVideo');
-  const chooseDocument = document.getElementById('chooseDocument');
-  const notice = document.getElementById('chatNotice');
-  if (!button || !menu || !photoInput || !cameraInput) return;
+  const byId = (id) => document.getElementById(id);
 
-  function closeMenu() {
-    menu.hidden = true;
-    button.setAttribute('aria-expanded', 'false');
+  // Chat attachment popover
+  const plusButton = byId('plusMenuButton');
+  const plusMenu = byId('plusMenu');
+  const photoInput = byId('chatImage');
+  const cameraInput = byId('chatCamera');
+  const videoInput = byId('chatVideo');
+  const documentInput = byId('chatDocument');
+  const notice = byId('chatNotice');
+
+  function closePlusMenu() {
+    if (plusMenu) plusMenu.hidden = true;
+    if (plusButton) plusButton.setAttribute('aria-expanded', 'false');
   }
-  button.addEventListener('click', (event) => {
-    event.stopPropagation();
-    menu.hidden = !menu.hidden;
-    button.setAttribute('aria-expanded', String(!menu.hidden));
-  });
-  if (choosePhoto) choosePhoto.addEventListener('click', () => { closeMenu(); photoInput.click(); });
-  if (takePhoto) takePhoto.addEventListener('click', () => { closeMenu(); cameraInput.click(); });
-  if (chooseVideo && videoInput) chooseVideo.addEventListener('click', () => {
-    closeMenu();
-    videoInput.click();
-  });
-  if (chooseDocument && documentInput) chooseDocument.addEventListener('click', () => {
-    closeMenu();
-    documentInput.click();
-  });
-  cameraInput.addEventListener('change', () => {
-    if (!cameraInput.files || !cameraInput.files.length) return;
-    const transfer = new DataTransfer();
-    transfer.items.add(cameraInput.files[0]);
-    photoInput.files = transfer.files;
-    photoInput.dispatchEvent(new Event('change', { bubbles: true }));
-    cameraInput.value = '';
-  });
+  if (plusButton && plusMenu) {
+    plusButton.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const opening = plusMenu.hidden;
+      plusMenu.hidden = !opening;
+      plusButton.setAttribute('aria-expanded', String(opening));
+    });
+    const bindPicker = (buttonId, input) => {
+      const trigger = byId(buttonId);
+      if (trigger && input) trigger.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        closePlusMenu();
+        input.click();
+      });
+    };
+    bindPicker('choosePhoto', photoInput);
+    bindPicker('takePhoto', cameraInput);
+    bindPicker('chooseVideo', videoInput);
+    bindPicker('chooseDocument', documentInput);
+    document.addEventListener('click', (event) => {
+      if (!plusMenu.hidden && !plusMenu.contains(event.target) && event.target !== plusButton) closePlusMenu();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closePlusMenu();
+    });
+  }
+
+  // Camera selections use the same validated image-preview flow as Photos.
+  if (cameraInput && photoInput) {
+    cameraInput.addEventListener('change', () => {
+      const file = cameraInput.files && cameraInput.files[0];
+      if (!file) return;
+      try {
+        const transfer = new DataTransfer();
+        transfer.items.add(file);
+        photoInput.files = transfer.files;
+        photoInput.dispatchEvent(new Event('change', { bubbles: true }));
+      } catch {
+        if (notice) notice.textContent = 'Camera photo selected. If it does not attach, use Photos to choose it.';
+      }
+      cameraInput.value = '';
+    });
+  }
   if (videoInput) videoInput.addEventListener('change', () => {
     const file = videoInput.files && videoInput.files[0];
-    if (file && notice) notice.textContent = 'Video selected: ' + file.name + '. This preview can select videos, but AI video analysis is not connected yet.';
+    if (file && notice) notice.textContent = 'Video selected: ' + file.name + '. Video analysis is not connected yet.';
   });
   if (documentInput) documentInput.addEventListener('change', () => {
     const file = documentInput.files && documentInput.files[0];
-    if (file && notice) notice.textContent = 'File selected: ' + file.name + '. This preview can select documents, but AI document reading is not connected yet.';
-  });
-  document.addEventListener('click', (event) => {
-    if (!menu.hidden && !menu.contains(event.target) && event.target !== button) closeMenu();
+    if (file && notice) notice.textContent = 'File selected: ' + file.name + '. Document analysis is not connected yet.';
   });
 
-  const navButton = document.getElementById('menuToggle');
-  const navMenu = document.getElementById('navDropdown');
+  // Three-line navigation dropdown
+  const navButton = byId('menuToggle');
+  const navMenu = byId('navDropdown');
+  function closeNavMenu() {
+    if (navMenu) navMenu.hidden = true;
+    if (navButton) navButton.setAttribute('aria-expanded', 'false');
+  }
   if (navButton && navMenu) {
     navButton.addEventListener('click', (event) => {
+      event.preventDefault();
       event.stopPropagation();
-      navMenu.hidden = !navMenu.hidden;
-      navButton.setAttribute('aria-expanded', String(!navMenu.hidden));
+      const opening = navMenu.hidden;
+      navMenu.hidden = !opening;
+      navButton.setAttribute('aria-expanded', String(opening));
     });
     navMenu.addEventListener('click', (event) => {
-      if (event.target.closest('a')) {
-        navMenu.hidden = true;
-        navButton.setAttribute('aria-expanded', 'false');
-      }
+      if (event.target.closest('a')) closeNavMenu();
     });
     document.addEventListener('click', (event) => {
-      if (!navMenu.hidden && !navMenu.contains(event.target) && event.target !== navButton) {
-        navMenu.hidden = true;
-        navButton.setAttribute('aria-expanded', 'false');
-      }
+      if (!navMenu.hidden && !navMenu.contains(event.target) && event.target !== navButton) closeNavMenu();
     });
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') {
-        navMenu.hidden = true;
-        navButton.setAttribute('aria-expanded', 'false');
-      }
+      if (event.key === 'Escape') closeNavMenu();
     });
   }
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') closeMenu();
-  });
 })();
