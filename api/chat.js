@@ -3,7 +3,7 @@
 // Configure SYNORA_AI_URL in Vercel Environment Variables.
 // Keep the Worker URL on the server; do not call it from public browser code.
 
-const MAX_BODY_BYTES = 18000;
+const MAX_BODY_BYTES = 4 * 1024 * 1024;
 const MAX_MESSAGES = 12;
 const MAX_CHARS_PER_MESSAGE = 5000;
 
@@ -55,6 +55,19 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "A message is invalid or too long." });
     }
     messages.push({ role: item.role, content: item.content });
+  }
+
+  const image = typeof raw.image === "string" ? raw.image : "";
+  if (image && (!/^data:image\/(jpeg|png|webp);base64,/.test(image) || image.length > 3.7 * 1024 * 1024)) {
+    return res.status(400).json({ error: "Image must be JPG, PNG or WEBP and no larger than 3 MB." });
+  }
+  if (image) {
+    const lastUser = [...messages].reverse().find(item => item.role === "user");
+    if (!lastUser) return res.status(400).json({ error: "Send a text message with your image." });
+    lastUser.content = [
+      { type: "text", text: lastUser.content },
+      { type: "image_url", image_url: { url: image, detail: "auto" } }
+    ];
   }
 
   if (Buffer.byteLength(JSON.stringify({ messages }), "utf8") > MAX_BODY_BYTES) {
