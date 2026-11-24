@@ -50,6 +50,34 @@
   document.addEventListener('click', (event) => {
     if (!menu.hidden && !menu.contains(event.target) && event.target !== button) closeMenu();
   });
+
+  const navButton = document.getElementById('menuToggle');
+  const navMenu = document.getElementById('navDropdown');
+  if (navButton && navMenu) {
+    navButton.addEventListener('click', (event) => {
+      event.stopPropagation();
+      navMenu.hidden = !navMenu.hidden;
+      navButton.setAttribute('aria-expanded', String(!navMenu.hidden));
+    });
+    navMenu.addEventListener('click', (event) => {
+      if (event.target.closest('a')) {
+        navMenu.hidden = true;
+        navButton.setAttribute('aria-expanded', 'false');
+      }
+    });
+    document.addEventListener('click', (event) => {
+      if (!navMenu.hidden && !navMenu.contains(event.target) && event.target !== navButton) {
+        navMenu.hidden = true;
+        navButton.setAttribute('aria-expanded', 'false');
+      }
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        navMenu.hidden = true;
+        navButton.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') closeMenu();
   });
