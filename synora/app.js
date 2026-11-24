@@ -301,7 +301,7 @@
     if (movieTranscript) renderMovieDownloadButton();
   }
   function downloadTextFile(text, filename) {
-    const blob = new Blob(['\\ufeff', text], {type:'text/plain;charset=utf-8'});
+    const blob = new Blob([String.fromCharCode(65279), text], {type:'text/plain;charset=utf-8'});
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
