@@ -357,3 +357,12 @@ footer{border-color:var(--line);color:#77718e}
 .plus-menu-divider{height:1px;background:#eee9f4;margin:5px 4px}
 .plus-menu-soon{display:flex;align-items:center;gap:12px;padding:9px 10px;opacity:.58}
 @media(max-width:560px){.plus-button{width:40px;height:40px}.chat-attach-row{align-items:center}}
+
+
+/* Functional compact navigation dropdown */
+.nav-menu-wrap{position:relative;display:block;z-index:100}
+.nav-menu-wrap .menu-toggle{width:42px!important;min-width:42px!important;height:42px!important;padding:0!important;border:1px solid #ded6f2!important;border-radius:12px!important;background:#fff!important;color:#5d43a8!important;font-size:22px!important;line-height:1!important;display:grid!important;place-items:center!important;cursor:pointer!important}
+.nav-dropdown{position:absolute;right:0;top:calc(100% + 10px);width:210px;padding:8px;background:#fff;border:1px solid #e7e1f0;border-radius:14px;box-shadow:0 14px 42px rgba(34,22,58,.18);z-index:101}
+.nav-dropdown[hidden]{display:none!important}
+.nav-dropdown a{display:block;padding:12px 13px;border-radius:9px;color:#302b45;text-decoration:none;font-size:13px;font-weight:600}
+.nav-dropdown a:hover,.nav-dropdown a:focus{background:#f3efff;color:#684bd1}
