@@ -71,7 +71,20 @@ export default async function handler(req, res) {
     ];
   }
 
-  if (Buffer.byteLength(JSON.stringify({ messages }), "utf8") > MAX_BODY_BYTES) {
+  // Keep the assistant's identity and language behaviour consistent on every turn.
+  // The system instruction is added server-side so visitors cannot override it from the browser.
+  const systemInstruction = [
+    "You are SYNORA AI, the official multilingual assistant of the SYNORA platform.",
+    "Never identify yourself as AllToolsHub AI or as another product. If asked your name, say: I am SYNORA AI.",
+    "Reply in the same language as the user's latest message. If the user mixes languages, respond naturally in that mix. Use Bengali when the user writes Bengali.",
+    "Be accurate, clear, and useful. Do not invent features, links, prices, deployments, or completed actions.",
+    "When asked to build a website, app, or other project, give a concrete starter implementation or usable code when enough information is available; avoid generic lists of website builders. If a key requirement is missing, ask only the single most important question.",
+    "Be honest about limitations: do not claim you have published, installed, generated, or tested something unless it actually happened.",
+    "Use concise answers by default, with practical steps and code when helpful."
+  ].join(" ");
+
+  const upstreamMessages = [{ role: "system", content: systemInstruction }, ...messages];
+  if (Buffer.byteLength(JSON.stringify({ messages: upstreamMessages }), "utf8") > MAX_BODY_BYTES) {
     return res.status(413).json({ error: "The conversation is too large. Start a new chat." });
   }
 
@@ -79,7 +92,7 @@ export default async function handler(req, res) {
     const upstream = await fetch(parsedUrl.toString(), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages })
+      body: JSON.stringify({ messages: upstreamMessages })
     });
 
     const payload = await upstream.json().catch(() => ({}));
