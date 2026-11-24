@@ -21,8 +21,8 @@
     menu.hidden = !menu.hidden;
     button.setAttribute('aria-expanded', String(!menu.hidden));
   });
-  choosePhoto.addEventListener('click', () => { closeMenu(); photoInput.click(); });
-  takePhoto.addEventListener('click', () => { closeMenu(); cameraInput.click(); });
+  if (choosePhoto) choosePhoto.addEventListener('click', () => { closeMenu(); photoInput.click(); });
+  if (takePhoto) takePhoto.addEventListener('click', () => { closeMenu(); cameraInput.click(); });
   if (chooseVideo && videoInput) chooseVideo.addEventListener('click', () => {
     closeMenu();
     videoInput.click();
@@ -41,11 +41,11 @@
   });
   if (videoInput) videoInput.addEventListener('change', () => {
     const file = videoInput.files && videoInput.files[0];
-    if (file && notice) notice.textContent = 'Video selected: ' + file.name + '. Video analysis is not connected yet.';
+    if (file && notice) notice.textContent = 'Video selected: ' + file.name + '. This preview can select videos, but AI video analysis is not connected yet.';
   });
   if (documentInput) documentInput.addEventListener('change', () => {
     const file = documentInput.files && documentInput.files[0];
-    if (file && notice) notice.textContent = 'File selected: ' + file.name + '. Document reading is not connected yet.';
+    if (file && notice) notice.textContent = 'File selected: ' + file.name + '. This preview can select documents, but AI document reading is not connected yet.';
   });
   document.addEventListener('click', (event) => {
     if (!menu.hidden && !menu.contains(event.target) && event.target !== button) closeMenu();
