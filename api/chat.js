@@ -25,12 +25,7 @@ export default async function handler(req, res) {
     }
   }
 
-  const workerUrl = process.env.SYNORA_AI_URL;
-  if (!workerUrl) {
-    return res.status(503).json({
-      error: "SYNORA AI is not configured. Add SYNORA_AI_URL in Vercel Environment Variables."
-    });
-  }
+  const workerUrl = process.env.SYNORA_AI_URL || "https://synora-chat-ai.dbil0368.workers.dev/";
 
   let parsedUrl;
   try {
