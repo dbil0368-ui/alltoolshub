@@ -325,6 +325,28 @@
       chatImageInput.value = '';
     }
   });
+  function renderMoviePackage(reply) {
+    addChatBubble('assistant', reply);
+    const wrap = document.createElement('div');
+    wrap.className = 'chat-bubble assistant-bubble movie-result-actions';
+    const download = document.createElement('button');
+    download.type = 'button';
+    download.className = 'image-download';
+    download.textContent = 'Download movie plan / screenplay ↓';
+    download.addEventListener('click', () => {
+      const blob = new Blob([reply], {type:'text/plain;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'synora-movie-plan.txt';
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+    wrap.append(download);
+    chatMessages.append(wrap);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
   function addChatImageBubble(dataUrl) {
     const wrap = document.createElement('div');
     wrap.className = 'chat-bubble assistant-bubble image-result-bubble';
@@ -475,6 +497,8 @@
       if (websiteHtml) {
         addChatBubble('assistant', 'I created your website. Preview it below or download the HTML file.');
         renderWebsitePreview(websiteHtml);
+      } else if (buildMovie) {
+        renderMoviePackage(payload.reply);
       } else {
         addChatBubble('assistant', payload.reply);
         if (buildWebsite) setChatNotice('AI replied, but did not return a complete HTML document. Ask: “Return the full website as one HTML code block.”');
