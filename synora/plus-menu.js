@@ -91,7 +91,19 @@
       navButton.setAttribute('aria-expanded', String(opening));
     });
     navMenu.addEventListener('click', (event) => {
-      if (event.target.closest('a')) closeNavMenu();
+      const link = event.target.closest('a');
+      if (!link) return;
+      closeNavMenu();
+      const href = link.getAttribute('href') || '';
+      if (href.startsWith('#')) {
+        const target = document.querySelector(href);
+        if (target) {
+          document.body.classList.add('menu-page');
+          document.querySelectorAll('.shell>.section').forEach(section => section.classList.remove('active-menu-page'));
+          target.classList.add('active-menu-page');
+          target.scrollIntoView({behavior:'smooth',block:'start'});
+        }
+      }
     });
     document.addEventListener('click', (event) => {
       if (!navMenu.hidden && !navMenu.contains(event.target) && event.target !== navButton) closeNavMenu();
