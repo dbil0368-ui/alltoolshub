@@ -281,7 +281,27 @@
     chatImagePreview.hidden = true;
     chatImageName.textContent = 'JPG, PNG or WEBP · max 3 MB';
   });
-  chatImageInput.addEventListener('change', () => {
+  async function prepareImageForEdit(file) {
+    // FLUX.2 Klein reference images must be below 512x512; resize locally before upload.
+    if (typeof createImageBitmap === 'function') {
+      const bitmap = await createImageBitmap(file);
+      const scale = Math.min(1, 512 / Math.max(bitmap.width, bitmap.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+      canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+      const context = canvas.getContext('2d');
+      context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      bitmap.close();
+      return canvas.toDataURL('image/jpeg', 0.88);
+    }
+    return await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || ''));
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+  chatImageInput.addEventListener('change', async () => {
     const file = chatImageInput.files && chatImageInput.files[0];
     if (!file) return;
     if (!['image/jpeg','image/png','image/webp'].includes(file.type)) {
@@ -294,28 +314,85 @@
       chatImageInput.value = '';
       return;
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      chatImageData = String(reader.result || '');
+    try {
+      chatImageData = await prepareImageForEdit(file);
       chatImageThumb.src = chatImageData;
-      chatImageName.textContent = file.name;
+      chatImageName.textContent = file.name + ' · ready to edit';
       chatImagePreview.hidden = false;
-      setChatNotice('Image ready. Add a question or send the photo.');
-    };
-    reader.readAsDataURL(file);
+      setChatNotice('Image ready. Describe the edit you want, then press Send.');
+    } catch {
+      setChatNotice('Could not prepare this image. Please choose another photo.');
+      chatImageInput.value = '';
+    }
   });
+  function addChatImageBubble(dataUrl) {
+    const wrap = document.createElement('div');
+    wrap.className = 'chat-bubble assistant-bubble image-result-bubble';
+    const image = document.createElement('img');
+    image.src = dataUrl;
+    image.alt = 'SYNORA AI edited image';
+    image.loading = 'lazy';
+    const download = document.createElement('a');
+    download.href = dataUrl;
+    download.download = 'synora-edited-image.png';
+    download.className = 'image-download';
+    download.textContent = 'Download edited image ↓';
+    wrap.append(image, download);
+    chatMessages.append(wrap);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
   chatForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const message = chatInput.value.trim();
     const imageToSend = chatImageData;
     if ((!message && !imageToSend) || chatSend.disabled) return;
+
+    if (imageToSend) {
+      chatInput.value = '';
+      addChatBubble('user', message || 'Please enhance this image.');
+      chatSend.disabled = true;
+      chatSend.textContent = 'Editing…';
+      setChatNotice('SYNORA Image AI is editing your photo…');
+      try {
+        const response = await fetch('/api/image-edit', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({
+            prompt:message || 'Enhance this image while preserving the main subject and overall composition.',
+            image:imageToSend
+          })
+        });
+        const payload = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(payload.error || 'Image editing is unavailable right now.');
+        if (typeof payload.image !== 'string' || !payload.image.startsWith('data:image/')) {
+          throw new Error('The image service returned no edited image.');
+        }
+        addChatBubble('assistant', 'Your edited image is ready.');
+        addChatImageBubble(payload.image);
+        chatImageData = '';
+        chatImageInput.value = '';
+        chatImagePreview.hidden = true;
+        chatImageName.textContent = 'JPG, PNG or WEBP · max 3 MB';
+        setChatNotice('Image edit complete.', false);
+      } catch (error) {
+        chatInput.value = message;
+        addChatBubble('assistant', 'I could not edit that image. ' + (error.message || 'Please try again.'));
+        setChatNotice(error.message || 'Image editing failed. Check the server configuration.');
+      } finally {
+        chatSend.disabled = false;
+        chatSend.textContent = 'Send ↗';
+        chatInput.focus();
+      }
+      return;
+    }
+
     if (chatHistory.length >= 10) {
       setChatNotice('This chat has reached its message limit. Start a new conversation by refreshing the page.');
       return;
     }
     chatInput.value = '';
-    addChatBubble('user', message || 'Please describe this image.');
-    chatHistory.push({role:'user', content:message || 'Please describe this image.'});
+    addChatBubble('user', message);
+    chatHistory.push({role:'user', content:message});
     chatSend.disabled = true;
     chatSend.textContent = 'Thinking…';
     setChatNotice('Connecting securely to SYNORA AI…');
@@ -323,13 +400,12 @@
       const response = await fetch('/api/chat', {
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({messages:chatHistory, image:imageToSend || undefined})
+        body:JSON.stringify({messages:chatHistory})
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(payload.error || 'AI service is unavailable right now.');
       if (typeof payload.reply !== 'string' || !payload.reply.trim()) throw new Error('The AI service returned an empty reply.');
       chatHistory.push({role:'assistant', content:payload.reply});
-      chatImageData = ''; chatImageInput.value = ''; chatImagePreview.hidden = true; chatImageName.textContent = 'JPG, PNG or WEBP · max 3 MB';
       addChatBubble('assistant', payload.reply);
       setChatNotice('Connected. Replies are generated by the configured AI provider.', false);
     } catch (error) {
