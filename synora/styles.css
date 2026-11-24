@@ -663,3 +663,7 @@ body:not(.menu-page) .chat-panel>.notice{
   body:not(.menu-page) .chat-messages{padding:10px 2px}
   body:not(.menu-page) .chat-form{margin-bottom:0}
 }
+
+
+/* Hide the introductory banner so the full-screen conversation has room */
+body:not(.menu-page) .chat-intro{display:none!important}
