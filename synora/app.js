@@ -118,8 +118,8 @@
     document.body.classList.remove(...themeClasses);
     if (theme !== 'dark' && themeNames.includes(theme)) document.body.classList.add(theme + '-theme');
   }
-  const savedTheme = localStorage.getItem('synora.theme') || 'dark';
-  applyTheme(['dark', ...themeNames].includes(savedTheme) ? savedTheme : 'dark');
+  const savedTheme = localStorage.getItem('synora.theme') || 'white-glow';
+  applyTheme(['dark', ...themeNames].includes(savedTheme) ? savedTheme : 'white-glow');
 
   $('projectSearch').addEventListener('input', () => { searchTerm = $('projectSearch').value.trim().toLowerCase(); renderProjects(); });
   $('newProject').addEventListener('click', () => { editingId = null; title.value = ''; prompt.value = ''; activeStudio = 'Creative Studio'; populateTemplates(activeStudio); $('workspaceTitle').textContent = 'Start creating'; $('charCount').textContent = '0 / 2000'; showNotice('New brief ready. Add a title and describe your idea.'); $('workspace').scrollIntoView({behavior:'smooth'}); title.focus({preventScroll:true}); });
