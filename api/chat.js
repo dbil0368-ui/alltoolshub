@@ -96,24 +96,41 @@ export default async function handler(req, res) {
     });
 
     const payload = await upstream.json().catch(() => ({}));
-    if (!upstream.ok || payload.success !== true) {
+    if (!upstream.ok || (payload && payload.success === false)) {
       const status = upstream.status === 429 ? 429 : 502;
       const workerMessage = typeof payload.error === "string" ? payload.error :
         (typeof payload.message === "string" ? payload.message : "");
       return res.status(status).json({
         error: "Worker response (HTTP " + upstream.status + ")" +
           (workerMessage ? ": " + workerMessage.slice(0, 220) : ". Check the Worker POST handler and model response format."),
-        upstreamStatus: upstream.status,
-        responseFields: Object.keys(payload).slice(0, 8)
+        upstreamStatus: upstream.status
       });
     }
 
-    if (typeof payload.reply !== "string" || !payload.reply.trim()) {
-      return res.status(502).json({ error: "SYNORA AI returned an empty reply. Please try again." });
+    // Accept both the SYNORA {success, reply} format and Cloudflare AI's
+    // common {response} format, including the older Worker tasks array.
+    let reply = "";
+    if (payload && typeof payload.reply === "string") {
+      reply = payload.reply;
+    } else if (payload && typeof payload.response === "string") {
+      reply = payload.response;
+    } else if (payload && payload.result && typeof payload.result.response === "string") {
+      reply = payload.result.response;
+    } else if (Array.isArray(payload)) {
+      const responses = payload
+        .map(item => item && typeof item.response === "string" ? item.response.trim() : "")
+        .filter(Boolean);
+      reply = responses.length ? responses[responses.length - 1] : "";
+    }
+
+    if (!reply.trim()) {
+      return res.status(502).json({
+        error: "The Worker responded, but no text reply was found. Check the Worker POST response format."
+      });
     }
 
     res.setHeader("Cache-Control", "no-store");
-    return res.status(200).json({ reply: payload.reply.trim() });
+    return res.status(200).json({ reply: reply.trim() });
   } catch {
     return res.status(502).json({
       error: "Could not reach the SYNORA AI Worker. Check the Worker URL and try again."
