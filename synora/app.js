@@ -393,7 +393,7 @@
   }
   function renderMoviePackage(reply) {
     addChatBubble('assistant', reply);
-    movieTranscript = (movieTranscript ? movieTranscript + '\\n\\n' : '') + reply;
+    movieTranscript = (movieTranscript ? movieTranscript + String.fromCharCode(10,10) : '') + reply;
     persistChatState();
     renderMovieDownloadButton();
   }
@@ -532,15 +532,16 @@
       movieModeActive = true;
       chatHistory = [];
     }
+    const lineBreak = String.fromCharCode(10);
     const movieContext = movieTranscript
-      ? '\\n\\nCANONICAL MOVIE STORY SO FAR (continue this exact story; do not restart):\\n' + movieTranscript.slice(0, 2200) + (movieTranscript.length > 4400 ? '\\n[Earlier material abbreviated]\\n' + movieTranscript.slice(-2200) : movieTranscript.slice(2200))
+      ? lineBreak + lineBreak + 'CANONICAL MOVIE STORY SO FAR (continue this exact story; do not restart):' + lineBreak + movieTranscript.slice(0, 2200) + (movieTranscript.length > 4400 ? lineBreak + '[Earlier material abbreviated]' + lineBreak + movieTranscript.slice(-2200) : movieTranscript.slice(2200))
       : '';
     const requestContent = buildWebsite
-      ? message + '\\n\\nCreate a complete, polished, mobile-responsive single-file website now. Return the entire working HTML document including embedded CSS and JavaScript inside one ```html code fence. Do not return a plan or partial snippets. Use accessible semantic HTML, responsive styling, and working interactions. Do not use external build tools or require API keys.'
+      ? message + lineBreak + lineBreak + 'Create a complete, polished, mobile-responsive single-file website now. Return the entire working HTML document including embedded CSS and JavaScript inside one ```html code fence. Do not return a plan or partial snippets. Use accessible semantic HTML, responsive styling, and working interactions. Do not use external build tools or require API keys.'
       : (continueMovie
-        ? message + movieContext + '\\n\\nContinue from the exact next scene after the latest scene in the canonical story above. Preserve title, characters, facts, plot, tone and scene numbering. Do not repeat the outline or opening scene. Write the next 5–8 minutes as a complete screenplay section with scene headings, action and age-appropriate dialogue. Add this section to the continuing screenplay. This is text only, not an MP4 or rendered video.'
+        ? message + movieContext + lineBreak + lineBreak + 'Continue from the exact next scene after the latest scene in the canonical story above. Preserve title, characters, facts, plot, tone and scene numbering. Do not repeat the outline or opening scene. Write the next 5–8 minutes as a complete screenplay section with scene headings, action and age-appropriate dialogue. Add this section to the continuing screenplay. This is text only, not an MP4 or rendered video.'
         : (buildMovie
-          ? message + '\\n\\nAct as SYNORA AI Movie Studio. This is a text screenplay workflow, not video rendering. Do not claim an MP4/video has been generated. Create a production-ready movie package in the user’s language: title, genre, 120-minute target runtime, logline, premise, character bible, visual style, three-act structure with timings, and a numbered scene list whose timings total 120 minutes. Then write only the opening 5–8 minutes as a complete screenplay with scene headings, action and age-appropriate dialogue. Clearly say the output is a screenplay, not a finished movie. Tell the user to type “পরের দৃশ্য” to continue.'
+          ? message + lineBreak + lineBreak + 'Act as SYNORA AI Movie Studio. This is a text screenplay workflow, not video rendering. Do not claim an MP4/video has been generated. Create a production-ready movie package in the user’s language: title, genre, 120-minute target runtime, logline, premise, character bible, visual style, three-act structure with timings, and a numbered scene list whose timings total 120 minutes. Then write only the opening 5–8 minutes as a complete screenplay with scene headings, action and age-appropriate dialogue. Clearly say the output is a screenplay, not a finished movie. Tell the user to type “পরের দৃশ্য” to continue.'
           : message));
     chatHistory.push({role:'user', content:requestContent});
     chatSend.disabled = true;
