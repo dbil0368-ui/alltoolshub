@@ -599,3 +599,8 @@ body:not(.menu-page){
  .chat-form textarea{min-height:78px;font-size:15px}
  .chat-form .primary-btn{min-height:42px;padding:0 17px}
 }
+
+
+/* Keep optional attachment preview and technical status hidden until needed */
+.chat-image-preview[hidden],
+#chatNotice[hidden]{display:none!important}
