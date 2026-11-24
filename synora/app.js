@@ -383,9 +383,10 @@
       movieTranscript = '';
       movieModeActive = false;
       chatHistory = [];
+      visibleHistory = [];
       chatMessages.replaceChildren();
-      persistChatState();
       addChatBubble('assistant', 'নতুন সিনেমার জন্য প্রস্তুত। আপনার সিনেমার ধারণা লিখুন।');
+      persistChatState();
     });
     wrap.append(download, clear);
     chatMessages.append(wrap);
