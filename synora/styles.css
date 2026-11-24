@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
-:root{color-scheme:dark;--bg:#080711;--surface:#100e1b;--surface2:#171326;--text:#f8f6ff;--muted:#aaa4bd;--purple:#a88aff;--line:rgba(255,255,255,.09);--glow:rgba(142,93,255,.2)}
+:root{color-scheme:light;--bg:#f7f5ff;--surface:#ffffff;--surface2:#f1edfb;--text:#272238;--muted:#716b80;--purple:#7954d8;--line:rgba(55,39,88,.12);--glow:rgba(142,93,255,.12)}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:90px}
 body{margin:0;min-width:320px;background:radial-gradient(ellipse at 50% -20%,#21123b 0,transparent 48%),var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden}
@@ -366,3 +366,43 @@ footer{border-color:var(--line);color:#77718e}
 .nav-dropdown[hidden]{display:none!important}
 .nav-dropdown a{display:block;padding:12px 13px;border-radius:9px;color:#302b45;text-decoration:none;font-size:13px;font-weight:600}
 .nav-dropdown a:hover,.nav-dropdown a:focus{background:#f3efff;color:#684bd1}
+
+
+/* SYNORA light theme consistency pass */
+body{background:radial-gradient(ellipse at 50% -20%,#e9ddff 0,transparent 52%),var(--bg);color:var(--text)}
+body:before{opacity:.08;background-image:linear-gradient(rgba(72,50,110,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(72,50,110,.05) 1px,transparent 1px)}
+.topbar{background:rgba(250,248,255,.92);border-color:var(--line)}
+.brand{color:#33254f}
+.status{color:#665b79;border-color:var(--line);background:#ffffffb8}
+.status i{background:#36ad79;box-shadow:0 0 10px #36ad7955}
+.profile{background:linear-gradient(145deg,#eee5ff,#d7c5ff);color:#51358c}
+.hero-copy>p,.muted,.hero-note{color:var(--muted)}
+.float-card{background:rgba(255,255,255,.94);border-color:#e5def1;box-shadow:0 18px 50px rgba(47,32,75,.12);color:#302642}
+.float-card small{color:var(--muted)}
+.studio-card{color:#302642;background:linear-gradient(145deg,#fff,#f8f5ff);border-color:#e8e1f2;box-shadow:0 8px 24px rgba(45,30,75,.04)}
+.studio-card p{color:var(--muted)}
+.card-tag{color:#766d85}
+.editor,.chat-panel,.plan-card,.project-item{background:#fff;border-color:#e7e1f0;box-shadow:0 12px 35px rgba(45,30,75,.06)}
+.editor label{color:#514663}
+.editor input,.editor textarea,.chat-form textarea,.project-search{background:#fbfaff;color:#302642;border-color:#e2d9ef}
+.editor input::placeholder,.editor textarea::placeholder,.chat-form textarea::placeholder{color:#9a91a8}
+.editor-aside{background:#f4efff;color:#302642}
+.editor-aside p,.editor-aside small,.plan-card p,.plan-card li{color:var(--muted)}
+.text-btn{color:#694bb0;border-color:#9d7cdb66}
+.text-btn:hover{background:#f3edff;color:#50348f}
+.plan-card{background:#fff}
+.plan-card.featured{background:linear-gradient(145deg,#fbf8ff,#f0e8ff);border-color:#cbb8ee}
+.plan-label,.plan-action{color:#694bb0}
+.chat-bubble{color:#302642}
+.assistant-bubble{background:#f1edfa;border-color:#e4dcf1}
+.user-bubble{background:#7651d1;color:#fff}
+.chat-intro p{color:var(--muted)}
+.notice{color:#756b83}
+.empty-state{color:#4e435e}
+.empty-state p,.project-item p,.project-item small{color:var(--muted)}
+.project-item{color:#302642}
+footer{color:var(--muted);border-color:var(--line)}
+footer .brand{color:#33254f}
+.nav-menu-wrap .menu-toggle span{width:auto!important;height:auto!important;background:transparent!important;color:#5d43a8!important;font-size:22px!important;line-height:1!important}
+.nav-dropdown[hidden],.plus-menu[hidden]{display:none!important}
+@media(max-width:560px){.topbar{background:rgba(250,248,255,.96)}}
