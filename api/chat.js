@@ -76,9 +76,13 @@ export default async function handler(req, res) {
     const payload = await upstream.json().catch(() => ({}));
     if (!upstream.ok || payload.success !== true) {
       const status = upstream.status === 429 ? 429 : 502;
+      const workerMessage = typeof payload.error === "string" ? payload.error :
+        (typeof payload.message === "string" ? payload.message : "");
       return res.status(status).json({
-        error: "SYNORA AI could not complete the request. Please try again.",
-        upstreamStatus: upstream.status
+        error: "Worker response (HTTP " + upstream.status + ")" +
+          (workerMessage ? ": " + workerMessage.slice(0, 220) : ". Check the Worker POST handler and model response format."),
+        upstreamStatus: upstream.status,
+        responseFields: Object.keys(payload).slice(0, 8)
       });
     }
 
