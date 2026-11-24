@@ -234,7 +234,7 @@
     const a = document.createElement('a'); a.href = url; a.download = 'synora-projects.json'; a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   });
-  $('profileBtn').addEventListener('click', () => {
+  if ($('profileBtn')) $('profileBtn').addEventListener('click', () => {
     showNotice('Account sign-in is not connected in this preview. A secure authentication backend is needed.');
     $('workspace').scrollIntoView({behavior:'smooth'});
   });
