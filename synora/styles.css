@@ -406,3 +406,26 @@ footer .brand{color:#33254f}
 .nav-menu-wrap .menu-toggle span{width:auto!important;height:auto!important;background:transparent!important;color:#5d43a8!important;font-size:22px!important;line-height:1!important}
 .nav-dropdown[hidden],.plus-menu[hidden]{display:none!important}
 @media(max-width:560px){.topbar{background:rgba(250,248,255,.96)}}
+
+
+/* Mobile navigation and attachment menu visibility fixes */
+.nav-menu-wrap .menu-toggle span{
+  display:inline!important;
+  width:auto!important;
+  min-width:0!important;
+  height:auto!important;
+  background:transparent!important;
+  border-radius:0!important;
+  color:#5d43a8!important;
+  font:700 22px/1 Arial,sans-serif!important;
+  transform:none!important;
+  opacity:1!important;
+}
+.nav-menu-wrap .menu-toggle[aria-expanded="true"] span{
+  transform:none!important;
+}
+.nav-menu-wrap{z-index:1000!important}
+.nav-dropdown{z-index:1001!important;max-height:min(70vh,420px);overflow:auto}
+.plus-wrap{z-index:1002}
+.plus-menu{z-index:1003;max-height:min(65vh,380px);overflow:auto}
+.plus-menu[hidden],.nav-dropdown[hidden]{display:none!important}
