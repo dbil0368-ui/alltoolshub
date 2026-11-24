@@ -1,8 +1,29 @@
 {
   "version": 2,
   "rewrites": [
-    { "source": "/", "destination": "/synora/index.html" },
-    { "source": "/styles.css", "destination": "/synora/styles.css" },
-    { "source": "/app.js", "destination": "/synora/app.js" }
+    {
+      "source": "/",
+      "destination": "/synora/index.html"
+    },
+    {
+      "source": "/styles.css",
+      "destination": "/synora/styles.css"
+    },
+    {
+      "source": "/app.js",
+      "destination": "/synora/app.js"
+    },
+    {
+      "source": "/plus-menu.js",
+      "destination": "/synora/plus-menu.js"
+    },
+    {
+      "source": "/settings.html",
+      "destination": "/synora/settings.html"
+    },
+    {
+      "source": "/menu.html",
+      "destination": "/synora/menu.html"
+    }
   ]
 }
