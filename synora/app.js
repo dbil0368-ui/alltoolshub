@@ -422,8 +422,10 @@
   }
 
   function isMovieBuildRequest(text) {
-    return /(movie|film|cinema|short film|feature film|সিনেমা|চলচ্চিত্র|মুভি|ফিল্ম)/i.test(text)
-      && /(বানাও|তৈরি|create|make|generate|লিখ|করো|চাই|build)/i.test(text);
+    const movieTopic = /(movie|film|cinema|short film|feature film|সিনেমা|চলচ্চিত্র|মুভি|ফিল্ম)/i.test(text);
+    const duration = /(2\\s*hours?|two\\s*hours?|120\\s*(minutes?|mins?)|২\\s*(ঘণ্টা|ঘন্টা)|দুই\\s*(ঘণ্টা|ঘন্টা)|দুই ঘণ্টার)/i.test(text);
+    const action = /(বানাও|তৈরি|create|make|generate|লিখ|করো|চাই|build)/i.test(text);
+    return (movieTopic && (action || duration)) || (duration && /(ভিডিও|video|সিনেমা|মুভি|ফিল্ম)/i.test(text));
   }
 
   function isWebsiteBuildRequest(text) {
@@ -540,9 +542,9 @@
     const requestContent = buildWebsite
       ? message + lineBreak + lineBreak + 'Create a complete, polished, mobile-responsive single-file website now. Return the entire working HTML document including embedded CSS and JavaScript inside one ```html code fence. Do not return a plan or partial snippets. Use accessible semantic HTML, responsive styling, and working interactions. Do not use external build tools or require API keys.'
       : (continueMovie
-        ? message + movieContext + lineBreak + lineBreak + 'Continue from the exact next scene after the latest scene in the canonical story above. Preserve title, characters, facts, plot, tone and scene numbering. Do not repeat the outline or opening scene. Write the next 5–8 minutes as a complete screenplay section with scene headings, action and age-appropriate dialogue. Add this section to the continuing screenplay. This is text only, not an MP4 or rendered video.'
+        ? message + movieContext + lineBreak + lineBreak + 'Continue from the exact next scene after the latest scene in the canonical story above. Preserve title, characters, facts, plot, tone, visual continuity and scene numbering. Do not repeat the outline or opening scene. Write the next 5–8 minutes as a complete screenplay section with scene headings, action and age-appropriate dialogue. Then add 6–10 standalone text-to-video prompts matching those exact new scenes; include subject, setting, action, camera, lighting, mood and continuity, and avoid copyrighted characters or existing movie styles. Add this section to the continuing screenplay. This is text and prompt preparation only, not rendered clips or an MP4. Keep the cumulative target runtime at exactly 120 minutes.'
         : (buildMovie
-          ? message + lineBreak + lineBreak + 'Act as SYNORA AI Movie Studio. This is a text screenplay workflow, not video rendering. Do not claim an MP4/video has been generated. Create a production-ready movie package in the user’s language: title, genre, 120-minute target runtime, logline, premise, character bible, visual style, three-act structure with timings, and a numbered scene list whose timings total 120 minutes. Then write only the opening 5–8 minutes as a complete screenplay with scene headings, action and age-appropriate dialogue. Clearly say the output is a screenplay, not a finished movie. Tell the user to type “পরের দৃশ্য” to continue.'
+          ? message + lineBreak + lineBreak + 'Act as SYNORA AI Movie Studio. Target runtime is exactly 120 minutes (2 hours). This workflow is free planning and screenplay assistance only: do not claim that video clips or an MP4 have been rendered. Create a production-ready package in the user’s language: title, genre, 120-minute logline and premise, character bible, visual continuity guide, visual style, three-act timeline that adds to exactly 120 minutes, and a numbered scene list with scene numbers and durations that add to exactly 120 minutes. For each listed scene include a concise visual summary. Then write only the opening 5–8 minutes as a complete screenplay with scene headings, action and age-appropriate dialogue. After the screenplay, add a “FREE VIDEO CLIP PROMPTS” section with 6–10 short, standalone text-to-video prompts for the opening scenes; each prompt should specify subject, setting, action, camera framing/movement, lighting, mood, and continuity details, and should avoid copyrighted characters or existing movie styles. Clearly label all of this as a plan/script/prompt pack, not a finished movie. Explain that the user can generate short clips with a service’s free allowance, but free quotas and availability vary. Tell the user to type “পরের দৃশ্য” to continue with the next 5–8 minutes and its video prompts.'
           : message));
     chatHistory.push({role:'user', content:requestContent});
     chatSend.disabled = true;
