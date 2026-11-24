@@ -261,13 +261,45 @@
     chatNotice.textContent = message;
     chatNotice.hidden = !visible;
   }
-  const chatHistory = [];
+  const CHAT_STORAGE_KEY = 'synora.chatHistory.v2';
+  const MOVIE_STORAGE_KEY = 'synora.movieTranscript.v1';
+  let chatHistory = [];
+  let movieTranscript = '';
+  try {
+    const savedChat = JSON.parse(localStorage.getItem(CHAT_STORAGE_KEY) || '[]');
+    if (Array.isArray(savedChat)) chatHistory = savedChat.filter(item =>
+      item && ['user','assistant'].includes(item.role) && typeof item.content === 'string'
+    ).slice(-10);
+    movieTranscript = localStorage.getItem(MOVIE_STORAGE_KEY) || '';
+  } catch { chatHistory = []; movieTranscript = ''; }
+  function persistChatState() {
+    try {
+      localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chatHistory.slice(-10)));
+      if (movieTranscript) localStorage.setItem(MOVIE_STORAGE_KEY, movieTranscript);
+      else localStorage.removeItem(MOVIE_STORAGE_KEY);
+    } catch { setChatNotice('এই ব্রাউজারে মেমোরি সংরক্ষণ করা যায়নি। ডাউনলোড করে রাখুন।'); }
+  }
   function addChatBubble(role, content) {
     const bubble = document.createElement('div');
     bubble.className = 'chat-bubble ' + (role === 'assistant' ? 'assistant-bubble' : 'user-bubble');
     bubble.textContent = content;
     chatMessages.append(bubble);
     chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+  function restoreVisibleChat() {
+    if (!chatHistory.length) return;
+    chatMessages.replaceChildren();
+    chatHistory.forEach(item => addChatBubble(item.role, item.content));
+    if (movieTranscript) renderMovieDownloadButton();
+  }
+  function downloadTextFile(text, filename) {
+    const blob = new Blob(['\\ufeff', text], {type:'text/plain;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
   let chatImageData = '';
@@ -325,26 +357,37 @@
       chatImageInput.value = '';
     }
   });
-  function renderMoviePackage(reply) {
-    addChatBubble('assistant', reply);
+  function renderMovieDownloadButton() {
+    const old = chatMessages.querySelector('.movie-result-actions');
+    if (old) old.remove();
     const wrap = document.createElement('div');
     wrap.className = 'chat-bubble assistant-bubble movie-result-actions';
     const download = document.createElement('button');
     download.type = 'button';
     download.className = 'image-download';
-    download.textContent = 'Download movie plan / screenplay ↓';
-    download.addEventListener('click', () => {
-      const blob = new Blob([reply], {type:'text/plain;charset=utf-8'});
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'synora-movie-plan.txt';
-      link.click();
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    download.textContent = 'সম্পূর্ণ চিত্রনাট্য TXT ডাউনলোড ↓';
+    download.addEventListener('click', () => downloadTextFile(movieTranscript, 'synora-complete-screenplay.txt'));
+    const clear = document.createElement('button');
+    clear.type = 'button';
+    clear.className = 'image-download';
+    clear.textContent = 'নতুন সিনেমা শুরু';
+    clear.addEventListener('click', () => {
+      movieTranscript = '';
+      movieModeActive = false;
+      chatHistory = [];
+      chatMessages.replaceChildren();
+      persistChatState();
+      addChatBubble('assistant', 'নতুন সিনেমার জন্য প্রস্তুত। আপনার সিনেমার ধারণা লিখুন।');
     });
-    wrap.append(download);
+    wrap.append(download, clear);
     chatMessages.append(wrap);
     chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+  function renderMoviePackage(reply) {
+    addChatBubble('assistant', reply);
+    movieTranscript = (movieTranscript ? movieTranscript + '\\n\\n' : '') + reply;
+    persistChatState();
+    renderMovieDownloadButton();
   }
 
   function addChatImageBubble(dataUrl) {
@@ -364,7 +407,7 @@
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
 
-  let movieModeActive = false;
+  let movieModeActive = Boolean(movieTranscript);
   function isMovieContinuationRequest(text) {
     return /(পরের অংশ|পরের দৃশ্য|পরবর্তী দৃশ্য|চালিয়ে যাও|চালিয়ে যাও|continue|next scene|next part|continue screenplay|লেখা চালাও)/i.test(text);
   }
@@ -471,22 +514,21 @@
       return;
     }
 
-    if (chatHistory.length >= 10) {
-      setChatNotice('This chat has reached its message limit. Start a new conversation by refreshing the page.');
-      return;
-    }
     chatInput.value = '';
     addChatBubble('user', message);
     const buildWebsite = isWebsiteBuildRequest(message);
     const buildMovie = !buildWebsite && isMovieBuildRequest(message);
     const continueMovie = !buildWebsite && !buildMovie && movieModeActive && isMovieContinuationRequest(message);
     if (buildMovie) movieModeActive = true;
+    const movieContext = movieTranscript
+      ? '\\n\\nCANONICAL MOVIE STORY SO FAR (continue this exact story; do not restart):\\n' + movieTranscript.slice(0, 2200) + (movieTranscript.length > 4400 ? '\\n[Earlier material abbreviated]\\n' + movieTranscript.slice(-2200) : movieTranscript.slice(2200))
+      : '';
     const requestContent = buildWebsite
-      ? message + '\n\nCreate a complete, polished, mobile-responsive single-file website now. Return the entire working HTML document including embedded CSS and JavaScript inside one ```html code fence. Do not return a plan or partial snippets. Use accessible semantic HTML, responsive styling, and working interactions. Do not use external build tools or require API keys.'
+      ? message + '\\n\\nCreate a complete, polished, mobile-responsive single-file website now. Return the entire working HTML document including embedded CSS and JavaScript inside one ```html code fence. Do not return a plan or partial snippets. Use accessible semantic HTML, responsive styling, and working interactions. Do not use external build tools or require API keys.'
       : (continueMovie
-        ? message + '\n\nContinue the existing SYNORA movie project using the previous conversation as canon. Do not restart or repeat the movie package. Continue with the next screenplay section in sequence, maintaining established characters, plot, tone, and scene numbering. Write approximately the next 5–8 minutes of screen time, with scene headings, action, and age-appropriate dialogue. End with a brief cue for the next continuation.'
+        ? message + movieContext + '\\n\\nContinue from the exact next scene after the latest scene in the canonical story above. Preserve title, characters, facts, plot, tone and scene numbering. Do not repeat the outline or opening scene. Write the next 5–8 minutes as a complete screenplay section with scene headings, action and age-appropriate dialogue. Add this section to the continuing screenplay. This is text only, not an MP4 or rendered video.'
         : (buildMovie
-          ? message + '\n\nAct as SYNORA AI Movie Studio. Use a free, text-first workflow. Do not claim that an MP4/video has been generated or that video rendering is available. First create a production-ready movie package in the user’s language: title, genre, target runtime, logline, premise, character bible, visual style, three-act structure with approximate timings, and a numbered scene list whose timings add up to the requested runtime. Then write only the opening screenplay section (about 5–8 minutes) with scene headings, action, and dialogue. Keep it age-appropriate. End by inviting the user to ask to continue with the next screenplay section. Briefly explain that actual moving-video export needs a separate video-generation/rendering service, which is not enabled in this free workflow.'
+          ? message + '\\n\\nAct as SYNORA AI Movie Studio. This is a text screenplay workflow, not video rendering. Do not claim an MP4/video has been generated. Create a production-ready movie package in the user’s language: title, genre, 120-minute target runtime, logline, premise, character bible, visual style, three-act structure with timings, and a numbered scene list whose timings total 120 minutes. Then write only the opening 5–8 minutes as a complete screenplay with scene headings, action and age-appropriate dialogue. Clearly say the output is a screenplay, not a finished movie. Tell the user to type “পরের দৃশ্য” to continue.'
           : message));
     chatHistory.push({role:'user', content:requestContent});
     chatSend.disabled = true;
@@ -502,11 +544,13 @@
       if (!response.ok) throw new Error(payload.error || 'AI service is unavailable right now.');
       if (typeof payload.reply !== 'string' || !payload.reply.trim()) throw new Error('The AI service returned an empty reply.');
       chatHistory.push({role:'assistant', content:payload.reply});
+      chatHistory = chatHistory.slice(-10);
+      persistChatState();
       const websiteHtml = buildWebsite ? extractWebsiteHtml(payload.reply) : '';
       if (websiteHtml) {
         addChatBubble('assistant', 'I created your website. Preview it below or download the HTML file.');
         renderWebsitePreview(websiteHtml);
-      } else if (buildMovie) {
+      } else if (buildMovie || continueMovie) {
         renderMoviePackage(payload.reply);
       } else {
         addChatBubble('assistant', payload.reply);
@@ -515,6 +559,7 @@
       setChatNotice('Connected. Replies are generated by the configured AI provider.', false);
     } catch (error) {
       chatHistory.pop();
+      persistChatState();
       chatInput.value = message;
       addChatBubble('assistant', 'I could not connect just now. ' + (error.message || 'Please try again later.'));
       setChatNotice(location.hostname.endsWith('github.io')
@@ -526,6 +571,7 @@
       chatInput.focus();
     }
   });
+  restoreVisibleChat();
   chatInput.addEventListener('keydown', (event) => {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
