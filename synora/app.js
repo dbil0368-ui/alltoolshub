@@ -364,6 +364,11 @@
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
 
+  let movieModeActive = false;
+  function isMovieContinuationRequest(text) {
+    return /(পরের অংশ|পরের দৃশ্য|পরবর্তী দৃশ্য|চালিয়ে যাও|চালিয়ে যাও|continue|next scene|next part|continue screenplay|লেখা চালাও)/i.test(text);
+  }
+
   function isMovieBuildRequest(text) {
     return /(movie|film|cinema|short film|feature film|সিনেমা|চলচ্চিত্র|মুভি|ফিল্ম)/i.test(text)
       && /(বানাও|তৈরি|create|make|generate|লিখ|করো|চাই|build)/i.test(text);
@@ -474,11 +479,15 @@
     addChatBubble('user', message);
     const buildWebsite = isWebsiteBuildRequest(message);
     const buildMovie = !buildWebsite && isMovieBuildRequest(message);
+    const continueMovie = !buildWebsite && !buildMovie && movieModeActive && isMovieContinuationRequest(message);
+    if (buildMovie) movieModeActive = true;
     const requestContent = buildWebsite
       ? message + '\n\nCreate a complete, polished, mobile-responsive single-file website now. Return the entire working HTML document including embedded CSS and JavaScript inside one ```html code fence. Do not return a plan or partial snippets. Use accessible semantic HTML, responsive styling, and working interactions. Do not use external build tools or require API keys.'
-      : (buildMovie
-        ? message + '\n\nAct as SYNORA AI Movie Studio. Use a free, text-first workflow. Do not claim that an MP4/video has been generated or that video rendering is available. First create a production-ready movie package in the user’s language: title, genre, target runtime, logline, premise, character bible, visual style, three-act structure with approximate timings, and a numbered scene list whose timings add up to the requested runtime. Then write only the opening screenplay section (about 5–8 minutes) with scene headings, action, and dialogue. Keep it age-appropriate. End by inviting the user to ask to continue with the next screenplay section. Briefly explain that actual moving-video export needs a separate video-generation/rendering service, which is not enabled in this free workflow.'
-        : message);
+      : (continueMovie
+        ? message + '\n\nContinue the existing SYNORA movie project using the previous conversation as canon. Do not restart or repeat the movie package. Continue with the next screenplay section in sequence, maintaining established characters, plot, tone, and scene numbering. Write approximately the next 5–8 minutes of screen time, with scene headings, action, and age-appropriate dialogue. End with a brief cue for the next continuation.'
+        : (buildMovie
+          ? message + '\n\nAct as SYNORA AI Movie Studio. Use a free, text-first workflow. Do not claim that an MP4/video has been generated or that video rendering is available. First create a production-ready movie package in the user’s language: title, genre, target runtime, logline, premise, character bible, visual style, three-act structure with approximate timings, and a numbered scene list whose timings add up to the requested runtime. Then write only the opening screenplay section (about 5–8 minutes) with scene headings, action, and dialogue. Keep it age-appropriate. End by inviting the user to ask to continue with the next screenplay section. Briefly explain that actual moving-video export needs a separate video-generation/rendering service, which is not enabled in this free workflow.'
+          : message));
     chatHistory.push({role:'user', content:requestContent});
     chatSend.disabled = true;
     chatSend.textContent = 'Thinking…';
