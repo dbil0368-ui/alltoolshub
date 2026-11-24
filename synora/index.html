@@ -80,7 +80,7 @@
         <div class="chat-intro"><div class="aside-icon">✦</div><div><h3>Ask, plan, and refine ideas</h3><p>Get help with scripts, prompts, concepts and writing. This chat connects to the secure server when SYNORA is deployed on Vercel and its AI key is configured.</p></div></div>
         <div class="chat-messages" id="chatMessages" aria-live="polite"><div class="chat-bubble assistant-bubble">Hello! I’m SYNORA AI. I can help you develop creative ideas and prompts. What would you like to make?</div></div>
         <form class="chat-form" id="chatForm"><label class="sr-only" for="chatInput">Message SYNORA AI</label><textarea id="chatInput" rows="2" maxlength="5000" placeholder="Ask SYNORA AI to help with an idea..." required></textarea><button class="primary-btn" id="chatSend" type="submit">Send ↗</button></form>
-        <p class="notice" id="chatNotice" role="status">AI chat is not connected on GitHub Pages. Deploy the repository to Vercel and configure OPENROUTER_API_KEY to enable it.</p>
+        <p class="notice" id="chatNotice" role="status">SYNORA AI connects through the secure Cloudflare Worker configured in Vercel as SYNORA_AI_URL.</p>
       </div>
     </section>
 
