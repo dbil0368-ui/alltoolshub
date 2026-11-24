@@ -445,7 +445,9 @@
     }
     chatInput.value = '';
     addChatBubble('user', message);
-    const buildWebsite = isWebsiteBuildRequest(message);\n    const requestContent = buildWebsite ? message + '\\n\\nCreate a complete, polished, mobile-responsive single-file website now. Return the entire working HTML document including embedded CSS and JavaScript inside one ```html code fence. Do not return a plan or partial snippets. Use accessible semantic HTML, responsive styling, and working interactions. Do not use external build tools or require API keys.' : message;\n    chatHistory.push({role:'user', content:requestContent});
+    const buildWebsite = isWebsiteBuildRequest(message);
+    const requestContent = buildWebsite ? message + '\n\nCreate a complete, polished, mobile-responsive single-file website now. Return the entire working HTML document including embedded CSS and JavaScript inside one ```html code fence. Do not return a plan or partial snippets. Use accessible semantic HTML, responsive styling, and working interactions. Do not use external build tools or require API keys.' : message;
+    chatHistory.push({role:'user', content:requestContent});
     chatSend.disabled = true;
     chatSend.textContent = 'Thinking…';
     setChatNotice('Connecting securely to SYNORA AI…');
