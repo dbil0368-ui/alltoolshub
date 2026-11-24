@@ -480,6 +480,25 @@
     return /<!doctype html|<html[\\s>]/i.test(candidate) ? candidate : '';
   }
 
+  function getLocalTimeReply(message) {
+    const text = String(message || '').toLowerCase();
+    const asksTime = /\b(time|what time|current time|clock|kitna time|kitne baje|samay|waqt|abhi time|time kya)\b/.test(text) ||
+      /সময়|সময়|কটা বাজে|কয়টা বাজে|কত বাজে|এখন কয়টা|এখন কত/.test(text) ||
+      /\b(kitna|kitne|baje|baj rahe|samay|waqt|abhi)\b/.test(text);
+    if (!asksTime) return '';
+    const now = new Date();
+    const isBengali = /[\u0980-\u09FF]/.test(message);
+    const isHindi = /[\u0900-\u097F]/.test(message);
+    const isRomanHindi = /\b(kitna|kitne|baje|baj rahe|samay|waqt|abhi)\b/.test(text);
+    const locale = isBengali ? 'bn-IN' : (isHindi || isRomanHindi ? 'hi-IN' : 'en-IN');
+    const formatted = new Intl.DateTimeFormat(locale, {
+      hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true
+    }).format(now);
+    if (isBengali) return 'এখন ' + formatted + ' বাজে। (স্থানীয় সময়)';
+    if (isHindi || isRomanHindi) return 'Abhi ' + formatted + ' ho raha hai. (Aapka local time)';
+    return 'It is ' + formatted + ' now. (Your local time)';
+  }
+
   chatForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const message = chatInput.value.trim();
@@ -527,6 +546,13 @@
 
     chatInput.value = '';
     addChatBubble('user', message);
+    const localTimeReply = getLocalTimeReply(message);
+    if (localTimeReply) {
+      addChatBubble('assistant', localTimeReply);
+      persistChatState();
+      setChatNotice('Answered using this device’s live local clock.', false);
+      return;
+    }
     const buildWebsite = isWebsiteBuildRequest(message);
     const buildMovie = !buildWebsite && isMovieBuildRequest(message);
     const continueMovie = !buildWebsite && !buildMovie && movieModeActive && isMovieContinuationRequest(message);
