@@ -342,6 +342,11 @@
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
 
+  function isMovieBuildRequest(text) {
+    return /(movie|film|cinema|short film|feature film|সিনেমা|চলচ্চিত্র|মুভি|ফিল্ম)/i.test(text)
+      && /(বানাও|তৈরি|create|make|generate|লিখ|করো|চাই|build)/i.test(text);
+  }
+
   function isWebsiteBuildRequest(text) {
     return /(website|web site|webpage|web page|ওয়েবসাইট|ওয়েবসাইট|ওয়েব পেজ|ওয়েব পেজ|সাইট বানাও|সাইট তৈরি|ওয়েব অ্যাপ|ওয়েব অ্যাপ)/i.test(text);
   }
@@ -446,7 +451,12 @@
     chatInput.value = '';
     addChatBubble('user', message);
     const buildWebsite = isWebsiteBuildRequest(message);
-    const requestContent = buildWebsite ? message + '\n\nCreate a complete, polished, mobile-responsive single-file website now. Return the entire working HTML document including embedded CSS and JavaScript inside one ```html code fence. Do not return a plan or partial snippets. Use accessible semantic HTML, responsive styling, and working interactions. Do not use external build tools or require API keys.' : message;
+    const buildMovie = !buildWebsite && isMovieBuildRequest(message);
+    const requestContent = buildWebsite
+      ? message + '\n\nCreate a complete, polished, mobile-responsive single-file website now. Return the entire working HTML document including embedded CSS and JavaScript inside one ```html code fence. Do not return a plan or partial snippets. Use accessible semantic HTML, responsive styling, and working interactions. Do not use external build tools or require API keys.'
+      : (buildMovie
+        ? message + '\n\nAct as SYNORA AI Movie Studio. Use a free, text-first workflow. Do not claim that an MP4/video has been generated or that video rendering is available. First create a production-ready movie package in the user’s language: title, genre, target runtime, logline, premise, character bible, visual style, three-act structure with approximate timings, and a numbered scene list whose timings add up to the requested runtime. Then write only the opening screenplay section (about 5–8 minutes) with scene headings, action, and dialogue. Keep it age-appropriate. End by inviting the user to ask to continue with the next screenplay section. Briefly explain that actual moving-video export needs a separate video-generation/rendering service, which is not enabled in this free workflow.'
+        : message);
     chatHistory.push({role:'user', content:requestContent});
     chatSend.disabled = true;
     chatSend.textContent = 'Thinking…';
