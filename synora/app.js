@@ -295,7 +295,7 @@
       chatInput.value = message;
       addChatBubble('assistant', 'I could not connect just now. ' + (error.message || 'Please try again later.'));
       chatNotice.textContent = location.hostname.endsWith('github.io')
-        ? 'GitHub Pages cannot run the /api/chat server. Deploy this repository to Vercel and configure OPENROUTER_API_KEY.'
+        ? 'GitHub Pages cannot run the /api/chat server. Deploy this repository to Vercel and configure SYNORA_AI_URL.'
         : (error.message || 'AI connection failed. Check the Vercel server configuration.');
     } finally {
       chatSend.disabled = false;
