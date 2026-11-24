@@ -667,3 +667,49 @@ body:not(.menu-page) .chat-panel>.notice{
 
 /* Hide the introductory banner so the full-screen conversation has room */
 body:not(.menu-page) .chat-intro{display:none!important}
+
+
+/* SYNORA AI: focused, full-screen chat home */
+html,body{height:100%;min-height:100%;overflow:hidden}
+body{background:#fbfaff;color:#29233b}
+.topbar{height:64px;min-height:64px;padding:0 18px;background:rgba(255,255,255,.96);border-bottom:1px solid #e9e4f1;box-shadow:0 2px 14px rgba(45,30,75,.04)}
+.brand{color:#34264f;font-size:18px;letter-spacing:.6px}
+.brand-mark{width:32px;height:32px}
+.top-actions{margin-left:auto}
+.nav-dropdown{right:0;max-height:calc(100dvh - 82px);overflow:auto}
+.shell{width:100%;max-width:none;height:calc(100dvh - 64px);min-height:0;margin:0;padding:0 0 10px;display:flex;flex-direction:column}
+.shell>.hero,.shell>footer{display:none!important}
+.shell>.section{display:none}
+.shell>.section.ai-assistant-section{display:flex;flex:1;flex-direction:column;min-height:0;width:100%;padding:0;max-width:920px;margin:0 auto}
+.shell>.section.active-menu-page{display:block;flex:1;overflow:auto;width:100%;max-width:1180px;padding:28px 24px}
+.ai-assistant-section>.section-head{display:none}
+.chat-panel{display:flex;flex:1;flex-direction:column;min-height:0;gap:0;padding:0 18px 10px;border:0;border-radius:0;background:transparent;box-shadow:none}
+.chat-intro{display:none!important}
+.chat-messages{display:flex;flex:1;flex-direction:column;min-height:0;max-height:none;overflow-y:auto;gap:16px;padding:24px 6px 20px;border:0;border-radius:0;background:transparent;overscroll-behavior:contain}
+.chat-bubble{max-width:min(90%,760px);padding:14px 17px;font-size:15px;line-height:1.7;border-radius:18px}
+.assistant-bubble{background:#f2eff9;border:1px solid #e9e3f3;color:#302742;border-bottom-left-radius:6px}
+.user-bubble{background:#7652c9;color:white;border-bottom-right-radius:6px}
+.chat-form{position:relative;display:flex;align-items:flex-end;flex-direction:row;gap:10px;width:100%;padding:10px;border:1px solid #e4dced;border-radius:22px;background:#fff;box-shadow:0 8px 30px rgba(48,32,78,.09)}
+.chat-form textarea{flex:1;min-height:46px;max-height:140px;resize:none;padding:12px 10px;border:0;background:transparent;color:#29233b;font-size:15px;outline:none;box-shadow:none}
+.chat-form textarea:focus{border:0;box-shadow:none}
+.chat-form .primary-btn{width:auto;min-height:44px;padding:11px 17px;border-radius:14px}
+.chat-attach-row{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.plus-button{width:42px;height:42px;border:1px solid #e4dced;border-radius:14px;background:#f7f4fc;color:#6545a9;font-size:25px;cursor:pointer}
+.plus-menu{bottom:calc(100% + 12px);top:auto;left:0;z-index:50}
+.chat-image-preview{padding:10px 4px}
+.chat-image-preview img{max-width:120px;max-height:120px;border-radius:12px}
+#chatNotice{padding:0 8px 5px;margin:4px 0 0;color:#716783;font-size:11px}
+@media(max-width:600px){
+ .topbar{height:58px;min-height:58px;padding:0 13px}
+ .shell{height:calc(100dvh - 58px);padding-bottom:env(safe-area-inset-bottom)}
+ .brand{font-size:16px}
+ .chat-panel{padding:0 10px 8px}
+ .chat-messages{padding:16px 3px}
+ .chat-bubble{max-width:94%;font-size:14px;padding:12px 14px}
+ .chat-form{flex-direction:row;align-items:flex-end;gap:7px;padding:7px;border-radius:19px}
+ .chat-form textarea{min-height:42px;padding:10px 6px;font-size:14px}
+ .chat-form .primary-btn{width:auto;min-height:42px;padding:10px 12px;font-size:12px}
+ .chat-attach-row{gap:6px}
+ .plus-button{width:39px;height:39px}
+ .shell>.section.active-menu-page{padding:22px 15px}
+}
