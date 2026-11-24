@@ -527,7 +527,11 @@
     const buildWebsite = isWebsiteBuildRequest(message);
     const buildMovie = !buildWebsite && isMovieBuildRequest(message);
     const continueMovie = !buildWebsite && !buildMovie && movieModeActive && isMovieContinuationRequest(message);
-    if (buildMovie) movieModeActive = true;
+    if (buildMovie) {
+      movieTranscript = '';
+      movieModeActive = true;
+      chatHistory = [];
+    }
     const movieContext = movieTranscript
       ? '\\n\\nCANONICAL MOVIE STORY SO FAR (continue this exact story; do not restart):\\n' + movieTranscript.slice(0, 2200) + (movieTranscript.length > 4400 ? '\\n[Earlier material abbreviated]\\n' + movieTranscript.slice(-2200) : movieTranscript.slice(2200))
       : '';
