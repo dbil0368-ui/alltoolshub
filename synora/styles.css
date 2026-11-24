@@ -713,3 +713,23 @@ body{background:#fbfaff;color:#29233b}
  .plus-button{width:39px;height:39px}
  .shell>.section.active-menu-page{padding:22px 15px}
 }
+
+
+/* Final preview guard: keep the default route focused on the full-screen chat. */
+@media (min-width: 0px) {
+  body:not(.menu-page) .shell > .hero,
+  body:not(.menu-page) .shell > footer,
+  body:not(.menu-page) .shell > .section:not(.ai-assistant-section) {
+    display: none !important;
+  }
+  body:not(.menu-page) .shell > .ai-assistant-section {
+    display: flex !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+  body:not(.menu-page) .ai-assistant-section > .section-head,
+  body:not(.menu-page) .chat-intro {
+    display: none !important;
+  }
+}
