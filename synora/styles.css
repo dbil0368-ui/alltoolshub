@@ -604,3 +604,7 @@ body:not(.menu-page){
 /* Keep optional attachment preview and technical status hidden until needed */
 .chat-image-preview[hidden],
 #chatNotice[hidden]{display:none!important}
+
+.image-result-bubble{max-width:min(100%,620px);padding:12px}
+.image-result-bubble img{display:block;width:100%;height:auto;max-height:640px;object-fit:contain;border-radius:14px}
+.image-download{display:inline-flex;margin-top:12px;padding:10px 14px;border-radius:10px;background:#7652c9;color:#fff;text-decoration:none;font-size:13px;font-weight:700}
