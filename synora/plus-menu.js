@@ -75,6 +75,13 @@
     if (navMenu) navMenu.hidden = true;
     if (navButton) navButton.setAttribute('aria-expanded', 'false');
   }
+  const homeLink = byId('homeLink');
+  if (homeLink) homeLink.addEventListener('click', (event) => {
+    event.preventDefault();
+    document.body.classList.remove('menu-page');
+    document.querySelectorAll('.shell>.section').forEach(section => section.classList.remove('active-menu-page'));
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
   if (navButton && navMenu) {
     navButton.addEventListener('click', (event) => {
       event.preventDefault();
