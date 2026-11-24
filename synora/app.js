@@ -548,6 +548,9 @@
     addChatBubble('user', message);
     const localTimeReply = getLocalTimeReply(message);
     if (localTimeReply) {
+      chatHistory.push({role:'user', content:message});
+      chatHistory.push({role:'assistant', content:localTimeReply});
+      chatHistory = chatHistory.slice(-10);
       addChatBubble('assistant', localTimeReply);
       persistChatState();
       setChatNotice('Answered using this device’s live local clock.', false);
