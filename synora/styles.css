@@ -429,3 +429,47 @@ footer .brand{color:#33254f}
 .plus-wrap{z-index:1002}
 .plus-menu{z-index:1003;max-height:min(65vh,380px);overflow:auto}
 .plus-menu[hidden],.nav-dropdown[hidden]{display:none!important}
+
+/* SYNORA focused chat home + menu-driven sections */
+.top-actions{margin-left:auto}
+.menu-toggle{font-size:0}
+.menu-toggle span{display:block;width:auto;height:auto;background:none;border-radius:0;color:#f3eaff;font-size:23px;line-height:1}
+.menu-toggle[aria-expanded="true"] span{transform:none!important;opacity:1!important}
+.nav-menu-wrap{position:relative}
+.nav-dropdown{position:absolute;right:0;top:calc(100% + 12px);width:min(290px,calc(100vw - 34px));padding:9px;border:1px solid #a88aff55;border-radius:15px;background:#171225;box-shadow:0 20px 55px #0008;z-index:100;max-height:75vh;overflow:auto}
+.nav-dropdown a{display:block;padding:13px 14px;border-radius:9px;color:#eee6ff;text-decoration:none;font-size:13px}
+.nav-dropdown a:hover{background:#a88aff20;color:#fff}
+.nav-dropdown[hidden],.plus-menu[hidden]{display:none!important}
+.shell>.hero,.shell>.section:not(.ai-assistant-section),.shell>footer{display:none}
+.shell>.ai-assistant-section{display:block;max-width:790px;margin:0 auto;min-height:calc(100vh - 100px);padding:clamp(65px,13vh,130px) 0 28px}
+.ai-assistant-section>.section-head{display:none}
+.chat-panel{border:0;background:transparent;box-shadow:none;padding:0}
+.chat-intro{display:block;text-align:center;max-width:690px;margin:0 auto 34px}
+.chat-intro .aside-icon{font-size:30px;margin-bottom:14px}
+.chat-intro h3{font:600 clamp(27px,5vw,38px)/1.15 'Space Grotesk',sans-serif;margin:0 0 13px;color:#29223a}
+.chat-intro p{font-size:14px;line-height:1.7;color:#716b80;margin:0 auto;max-width:620px}
+.chat-messages{min-height:115px;max-height:42vh;overflow:auto;margin:0 auto 18px;max-width:680px}
+.assistant-bubble{max-width:100%;border:1px solid #e5def2;background:#fff;color:#302a40;border-radius:17px;padding:17px 19px;line-height:1.7;font-size:14px}
+.chat-form{max-width:720px;margin:0 auto;border:1px solid #ddd4ef;background:#fff;border-radius:20px;padding:13px;box-shadow:0 12px 38px #4b327314}
+.chat-form textarea{display:block;width:100%;min-height:66px;resize:vertical;border:0;outline:0;background:transparent;color:#272238;font:14px/1.6 'DM Sans',sans-serif;padding:7px}
+.chat-attach-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.plus-button{width:40px;height:40px;border:1px solid #e3d9f4;border-radius:12px;background:#f7f3ff;color:#7954d8;font-size:25px;cursor:pointer}
+.chat-form .primary-btn{padding:11px 18px;border-radius:12px}
+.plus-menu{position:absolute;left:0;bottom:calc(100% + 12px);width:220px;padding:8px;border:1px solid #e2d8f2;border-radius:14px;background:#fff;box-shadow:0 16px 45px #2c1b4a22;z-index:120}
+.plus-menu button{display:flex;align-items:center;gap:12px;width:100%;padding:11px;border:0;border-radius:10px;background:transparent;color:#302a40;text-align:left;cursor:pointer}
+.plus-menu button:hover{background:#f5f0ff}
+.plus-menu small{display:block;color:#81798e;font-size:11px;margin-top:3px}
+.plus-menu-icon{width:32px;height:32px;display:grid;place-items:center;border-radius:9px;background:#f1eaff;color:#7954d8}
+.plus-wrap{position:relative}
+.chat-notice,.chat-panel>.notice{max-width:720px;margin:12px auto;color:#8a8298;text-align:center}
+body.menu-page .shell>.hero{display:none}
+body.menu-page .shell>.ai-assistant-section{display:none}
+body.menu-page .shell>.section.active-menu-page{display:block;max-width:980px;margin:0 auto;padding:55px 0}
+body.menu-page .shell>footer{display:flex}
+@media(max-width:600px){
+ .topbar{padding:0 17px}
+ .shell{padding:0 17px}
+ .shell>.ai-assistant-section{padding-top:clamp(55px,10vh,95px)}
+ .chat-intro p{font-size:13px}
+ .chat-form{padding:10px}
+}
