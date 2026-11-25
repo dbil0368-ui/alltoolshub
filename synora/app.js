@@ -526,7 +526,7 @@
   function isImageCreationRequest(text) {
     const subject = /(ছবি|ফটো|চবি|চিত্র|মেয়ের|মেয়ের|মেইয়ে|মেইয়ের|মাইয়ে|মাইয়ের|মেয়ে|মেয়ে|নারী|মহিলা|শাড়ি|শাড়ি|সারি|chobi|chhobi|photo|picture|image|tasveer|saree|sari|ladki|mujer|imagen|foto|ফুল|বিড়াল|বিড়াল|কুকুর|cat|dog|flower|rose|logo|লোগো|poster|পোস্টার|wallpaper|ওয়ালপেপার)/i.test(text);
     const action = /(দাও|দেখাও|বানাও|তৈরি|আঁকো|করো|চাই|পড়|পরা|পরানো|generate|create|make|draw|give|show|edit|চেঞ্জ|পরিবর্তন|সৃষ্টি)/i.test(text);
-    const ageMention = /(?:18|১৮)\\s*(?:বছর|year)(?:\\s*(?:বয়স|বয়স|বয়সী|বয়সী|old))?/i.test(text);
+    const ageMention = /(?:18|19|২০?|১৮|১৯)\s*(?:বছর|year|boios|boyos|bochhor)(?:\s*(?:বয়স|বয়স|বয়সী|বয়সী|old))?/i.test(text);
     const shortPhotoRequest = /(ছবি|ফটো|চবি|চিত্র|photo|picture|image)/i.test(text) &&
       /(মেয়|মেয়ে|মেইয়ে|মেইয়ের|মাইয়ে|মাইয়ের|girl|woman|ladki|নারী|মহিলা)/i.test(text);
     return subject && (action || shortPhotoRequest || (ageMention && /(ছবি|ফটো|photo|picture|image)/i.test(text)));
