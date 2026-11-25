@@ -8,6 +8,8 @@
 
   const imageIntent = /(image|photo|picture|portrait|wallpaper|illustration|draw|paint|generate.*(image|photo|picture)|create.*(image|photo|picture)|make.*(image|photo|picture)|ছবি|ফটো|চিত্র|আঁকো|আঁকা|ছবি বানাও|ছবি তৈরি|ফটো বানাও|ছবি দাও|একটা ছবি|একটি ছবি|तस्वीर|फोटो|चित्र|बनाओ|तस्वीर बनाओ|फोटो बनाओ|imagen|foto|dibuja|crée.*image)/i;
 
+  const backgroundIntent = /(background|back\s*ground|ব্যাকগ্রাউন্ড|পেছনের দৃশ্য|পটভূমি|पृष्ठभूमि|फोटो का बैकग्राउंड|fondo)/i;
+
   function makeImagePrompt(original) {
     const p = original.toLowerCase();
     // FLUX Schnell follows concise English subject descriptions more reliably
@@ -70,6 +72,18 @@
     if (event.target !== form) return;
     const prompt = input.value.trim();
     const attachedImage = document.getElementById('chatImage');
+    if (prompt && backgroundIntent.test(prompt) && !(attachedImage && attachedImage.files && attachedImage.files.length)) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      const user = document.createElement('div');
+      user.className = 'chat-bubble user-bubble';
+      user.textContent = prompt;
+      messages.append(user);
+      bubble('Please attach the photo you want to edit using the + button, then tell me the background you want (for example: garden, beach, mountains, or city). I will edit the uploaded photo rather than create a new unrelated image.');
+      input.value = '';
+      messages.scrollTop = messages.scrollHeight;
+      return;
+    }
     if (!prompt || !imageIntent.test(prompt) || (attachedImage && attachedImage.files && attachedImage.files.length)) return;
 
     event.preventDefault();
