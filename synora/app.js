@@ -256,6 +256,71 @@
   const chatMessages = $('chatMessages');
   const chatNotice = $('chatNotice');
   const chatSend = $('chatSend');
+
+  // Optional browser-native voice input and spoken replies (no external API key).
+  const voiceInputButton = $('voiceInputButton');
+  const speechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let activeRecognition = null;
+  let isVoiceListening = false;
+  function preferredSpeechLanguage() {
+    const text = (chatInput && chatInput.value) || '';
+    return /[\\u0980-\\u09FF]/.test(text) ? 'bn-IN' : 'en-IN';
+  }
+  function setVoiceButtonState(listening) {
+    isVoiceListening = listening;
+    if (!voiceInputButton) return;
+    voiceInputButton.textContent = listening ? '■' : '🎙';
+    voiceInputButton.setAttribute('aria-label', listening ? 'Stop voice input' : 'Speak to SYNORA');
+    voiceInputButton.title = listening ? 'Stop listening' : 'Speak to SYNORA';
+    voiceInputButton.classList.toggle('voice-listening', listening);
+  }
+  if (voiceInputButton) {
+    if (!speechRecognition) {
+      voiceInputButton.disabled = true;
+      voiceInputButton.title = 'Voice input is not supported in this browser';
+      voiceInputButton.setAttribute('aria-label', 'Voice input is not supported');
+    } else {
+      voiceInputButton.addEventListener('click', () => {
+        if (isVoiceListening && activeRecognition) { activeRecognition.stop(); return; }
+        try {
+          const recognition = new speechRecognition();
+          activeRecognition = recognition;
+          recognition.lang = preferredSpeechLanguage();
+          recognition.interimResults = true;
+          recognition.continuous = false;
+          recognition.onstart = () => { setVoiceButtonState(true); setChatNotice('শুনছি… কথা বলুন।'); };
+          recognition.onresult = (event) => {
+            let finalText = '';
+            let interimText = '';
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+              const transcript = event.results[i][0].transcript || '';
+              if (event.results[i].isFinal) finalText += transcript;
+              else interimText += transcript;
+            }
+            if (finalText) {
+              chatInput.value = (chatInput.value.trim() ? chatInput.value.trim() + ' ' : '') + finalText.trim();
+              chatInput.dispatchEvent(new Event('input', {bubbles:true}));
+            }
+            if (interimText) setChatNotice('শুনছি: ' + interimText, true);
+          };
+          recognition.onerror = (event) => setChatNotice('Voice input: ' + (event.error || 'not available') + '. চাইলে টাইপ করে পাঠান।');
+          recognition.onend = () => { setVoiceButtonState(false); activeRecognition = null; if (chatNotice && chatNotice.textContent.startsWith('শুনছি')) setChatNotice('', false); };
+          recognition.start();
+        } catch { setVoiceButtonState(false); setChatNotice('Voice input চালু করা যায়নি। Browser permission পরীক্ষা করুন।'); }
+      });
+    }
+  }
+  function speakAssistantReply(text, button) {
+    if (!('speechSynthesis' in window)) { setChatNotice('এই browser-এ spoken replies সমর্থিত নয়।'); return; }
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = /[\\u0980-\\u09FF]/.test(text) ? 'bn-IN' : 'en-IN';
+    utterance.rate = 1;
+    utterance.onstart = () => { if (button) button.textContent = '■ Stop'; };
+    utterance.onend = utterance.onerror = () => { if (button) button.textContent = '🔊 Read aloud'; };
+    if (button) button.textContent = '■ Stop';
+    window.speechSynthesis.speak(utterance);
+  }
   function setChatNotice(message, visible = true) {
     if (!chatNotice) return;
     chatNotice.textContent = message;
@@ -374,6 +439,20 @@
         }
       });
       bubble.append(copyButton);
+      const speakButton = document.createElement('button');
+      speakButton.type = 'button';
+      speakButton.className = 'speak-message-btn';
+      speakButton.textContent = '🔊 Read aloud';
+      speakButton.setAttribute('aria-label', 'Read this SYNORA reply aloud');
+      speakButton.addEventListener('click', () => {
+        if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
+          window.speechSynthesis.cancel();
+          speakButton.textContent = '🔊 Read aloud';
+        } else {
+          speakAssistantReply(content, speakButton);
+        }
+      });
+      bubble.append(speakButton);
     }
     chatMessages.append(bubble);
     chatMessages.scrollTop = chatMessages.scrollHeight;
