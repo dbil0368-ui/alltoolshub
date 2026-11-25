@@ -792,3 +792,16 @@ body.chat-home .nav-dropdown{max-height:75dvh;overflow:auto}
   visibility:visible!important;
   opacity:1!important;
 }
+
+
+/* SYNORA navigation chat actions */
+.nav-dropdown .nav-action{
+  display:block;width:100%;text-align:left;padding:12px 13px;
+  border:0;border-radius:9px;background:transparent;color:#302b45;
+  font:600 13px 'DM Sans',sans-serif;cursor:pointer;
+}
+.nav-dropdown .nav-action:hover,.nav-dropdown .nav-action:focus{
+  background:#f3efff;color:#684bd1;
+}
+body.chat-home .chat-messages{scrollbar-width:thin}
+body.chat-home .chat-form{padding-bottom:max(12px,env(safe-area-inset-bottom))}
