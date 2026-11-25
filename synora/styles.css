@@ -733,3 +733,16 @@ body{background:#fbfaff;color:#29233b}
     display: none !important;
   }
 }
+
+
+/* SYNORA chat-first home layout */
+.ai-assistant-section{margin:24px 0 54px;scroll-margin-top:90px}
+.ai-assistant-section>.section-head{margin-bottom:14px}
+.ai-assistant-section .chat-panel{min-height:calc(100svh - 190px);display:flex;flex-direction:column}
+.ai-assistant-section .chat-messages{flex:1;min-height:260px;max-height:calc(100svh - 390px)}
+.ai-assistant-section .chat-intro p{max-width:900px}
+@media(max-width:700px){
+ .ai-assistant-section{margin:12px 0 38px}
+ .ai-assistant-section .chat-panel{min-height:calc(100svh - 150px)}
+ .ai-assistant-section .chat-messages{min-height:42svh;max-height:58svh}
+}
