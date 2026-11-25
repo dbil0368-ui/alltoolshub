@@ -761,3 +761,34 @@ body.chat-home #chatInput{min-height:54px;max-height:160px}
 body.chat-home .notice{margin:5px 4px 0}
 body.chat-home .nav-dropdown{max-height:75dvh;overflow:auto}
 @media(max-width:560px){body.chat-home .topbar{height:62px;padding:0 14px}body.chat-home .shell{padding:0 12px}body.chat-home .ai-assistant-section{height:calc(100dvh - 62px);min-height:calc(100dvh - 62px);padding:10px 0 8px}body.chat-home .chat-form{border-radius:18px;padding:9px}body.chat-home .chat-messages{padding:12px 2px 18px}}
+
+
+/* Fix visible hamburger glyph: the navigation button contains a single ☰ character. */
+.nav-menu-wrap .menu-toggle span{
+  display:block!important;
+  width:auto!important;
+  min-width:0!important;
+  height:auto!important;
+  background:transparent!important;
+  color:inherit!important;
+  font-family:Arial,sans-serif!important;
+  font-size:25px!important;
+  font-weight:700!important;
+  line-height:1!important;
+  transform:none!important;
+  opacity:1!important;
+  letter-spacing:0!important;
+}
+.nav-menu-wrap .menu-toggle[aria-expanded="true"] span{
+  transform:none!important;
+}
+.nav-menu-wrap .menu-toggle{
+  position:relative!important;
+  z-index:102!important;
+  touch-action:manipulation;
+}
+.nav-menu-wrap .nav-dropdown:not([hidden]){
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
