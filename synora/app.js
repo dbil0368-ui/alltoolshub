@@ -310,6 +310,42 @@
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
+  // Chat actions available from the navigation menu.
+  const newChatAction = $('newChatAction');
+  if (newChatAction) newChatAction.addEventListener('click', () => {
+    chatHistory = [];
+    visibleHistory = [];
+    movieTranscript = '';
+    try {
+      localStorage.removeItem(CHAT_STORAGE_KEY);
+      localStorage.removeItem('synora.visibleChat.v1');
+      localStorage.removeItem(MOVIE_STORAGE_KEY);
+    } catch {}
+    chatMessages.replaceChildren();
+    addChatBubble('assistant', 'Hello! I’m SYNORA AI. What would you like help with today?');
+    persistChatState();
+    setChatNotice('নতুন চ্যাট শুরু হয়েছে।');
+    const menu = $('navDropdown');
+    const toggle = $('menuToggle');
+    if (menu) menu.hidden = true;
+    if (toggle) toggle.setAttribute('aria-expanded', 'false');
+    chatInput.focus();
+  });
+  const downloadChatAction = $('downloadChatAction');
+  if (downloadChatAction) downloadChatAction.addEventListener('click', () => {
+    const transcript = visibleHistory.map(item => (item.role === 'user' ? 'You' : 'SYNORA AI') + ':\\n' + item.content).join('\\n\\n');
+    if (!transcript.trim()) {
+      setChatNotice('ডাউনলোড করার মতো চ্যাট এখনো নেই।');
+    } else {
+      downloadTextFile(transcript, 'synora-chat.txt');
+      setChatNotice('চ্যাট TXT ফাইল হিসেবে ডাউনলোড করা হয়েছে।');
+    }
+    const menu = $('navDropdown');
+    const toggle = $('menuToggle');
+    if (menu) menu.hidden = true;
+    if (toggle) toggle.setAttribute('aria-expanded', 'false');
+  });
+
   let chatImageData = '';
   let lastGeneratedImage = '';
   const chatImageInput = $('chatImage');
