@@ -380,6 +380,8 @@
   }
   function restoreVisibleChat() {
     conversations = readConversations();
+    const matchingCurrent = conversations.find(item => Array.isArray(item.messages) && JSON.stringify(item.messages.slice(-80)) === JSON.stringify(visibleHistory.slice(-80)));
+    if (matchingCurrent) currentConversationId = matchingCurrent.id;
     if (!conversations.length && visibleHistory.length) {
       conversations.unshift({id:currentConversationId,title:conversationTitle(visibleHistory),messages:visibleHistory.slice(-80),apiMessages:chatHistory.slice(-20),movieTranscript,updatedAt:new Date().toISOString()});
       try { localStorage.setItem(CONVERSATIONS_KEY,JSON.stringify(conversations)); } catch {}
