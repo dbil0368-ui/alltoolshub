@@ -499,6 +499,15 @@
     return 'It is ' + formatted + ' now. (Your local time)';
   }
 
+  function buildImageEditPrompt(message) {
+    const text = String(message || '').trim();
+    if (/(background|back\\s*ground|ব্যাকগ্রাউন্ড|পেছনের দৃশ্য|পটভূমি|पृष्ठभूमि|fondo)/i.test(text)) {
+      return "Edit the provided source photo. Replace ONLY the background with the background requested by the user: " + text +
+        ". Preserve the original person or main subject exactly as much as possible, including face, identity, hair, clothing, pose, body proportions, and foreground objects. Keep the subject in the same position and scale. Make the new background look natural with matching perspective, lighting, shadows, and depth of field. Do not generate a new person, do not change the subject, and do not turn this into a standalone landscape.";
+    }
+    return text || 'Enhance this image while preserving the main subject and overall composition.';
+  }
+
   chatForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const message = chatInput.value.trim();
@@ -516,7 +525,7 @@
           method:'POST',
           headers:{'Content-Type':'application/json'},
           body:JSON.stringify({
-            prompt:message || 'Enhance this image while preserving the main subject and overall composition.',
+            prompt:buildImageEditPrompt(message),
             image:imageToSend
           })
         });
