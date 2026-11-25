@@ -719,4 +719,32 @@
   });
 
   renderProjects();
+
+  // Chat-first home view; other workspaces open from the navigation menu.
+  const homeLink = $('homeLink');
+  const menuToggle = $('menuToggle');
+  const navDropdown = $('navDropdown');
+  function showChatHome() {
+    document.body.classList.add('chat-home');
+    if (navDropdown) navDropdown.hidden = true;
+    if (menuToggle) menuToggle.setAttribute('aria-expanded','false');
+    window.scrollTo({top:0,behavior:'smooth'});
+    if (chatInput) setTimeout(() => chatInput.focus({preventScroll:true}),180);
+  }
+  function showWorkspaceFromMenu(hash) {
+    document.body.classList.remove('chat-home');
+    if (navDropdown) navDropdown.hidden = true;
+    if (menuToggle) menuToggle.setAttribute('aria-expanded','false');
+    const target = hash ? document.querySelector(hash) : null;
+    if (target) setTimeout(() => target.scrollIntoView({behavior:'smooth',block:'start'}),40);
+  }
+  showChatHome();
+  if (homeLink) homeLink.addEventListener('click',event=>{event.preventDefault();showChatHome();});
+  if (navDropdown) navDropdown.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener('click',event=>{
+    event.preventDefault();showWorkspaceFromMenu(link.getAttribute('href'));
+  }));
+  if (menuToggle && navDropdown) menuToggle.addEventListener('click',()=>{
+    const opening=navDropdown.hidden;navDropdown.hidden=!opening;menuToggle.setAttribute('aria-expanded',String(opening));
+  });
+
 })();
