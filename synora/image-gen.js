@@ -14,6 +14,12 @@
     const p = original.toLowerCase();
     // FLUX Schnell follows concise English subject descriptions more reliably
     // than short Bengali/Hindi requests. Keep the user's requested subject first.
+    if (/(শাড়ি|শাড়ি|saree|sari|साड़ी)/i.test(p)) {
+      return "Create exactly this subject: a respectful, photorealistic full-length portrait of an adult South Asian woman wearing an elegant traditional saree. Show the saree clearly, including its drape and fabric, with a natural graceful pose and a simple tasteful background. The woman in the saree must be the central subject. Do not create a landscape or unrelated scene. User request: " + original;
+    }
+    if (/(শুধু মেয়ে|শুধু মেয়ে|only girl|only woman|plain background|সাদা ব্যাকগ্রাউন্ড)/i.test(p)) {
+      return "Create exactly this subject: a respectful, photorealistic head-and-shoulders portrait of an adult South Asian woman alone against a plain clean neutral studio background. No other people, objects, scenery, or distracting background. User request: " + original;
+    }
     if (/(মেয়ে|মেয়ের|মহিলা|নারী|স্ত্রী|woman|women|girl|female|ladki|mahila|mujer)/i.test(p)) {
       return "Create exactly this subject: a respectful, photorealistic head-and-shoulders portrait of an adult South Asian woman, looking toward the camera, natural expression, tasteful everyday clothing, softly lit uncluttered background. The woman must be clearly visible and be the main subject. Do not create a landscape, mountains, buildings, or an unrelated scene. User request: " + original;
     }
