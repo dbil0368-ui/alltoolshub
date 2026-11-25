@@ -520,17 +520,21 @@
     return text || 'Enhance this image while preserving the main subject and overall composition.';
   }
 
+  function isBackgroundEditRequest(text) {
+    return /(background|back\\s*ground|ব্যাক\\s*গ্রাউন্ড|বাগরাউন্ড|বেকগ্রাউন্ড|ব্যাকগ্রাউন্ড|পেছনের দৃশ্য|পটভূমি|पृष्ठभूमि|fondo)/i.test(text);
+  }
   function isImageCreationRequest(text) {
-    return /(ছবি|ফটো|চবি|চবি|চিত্র|মেয়ের|মেয়ের|মেইয়ে|মাইয়ে|মেয়ে|মেয়ে|শাড়ি|শাড়ি|সারি|chobi|chhobi|photo|picture|image|tasveer|saree|sari|ladki|mujer|imagen|foto)/i.test(text) &&
-      /(দাও|দেখাও|বানাও|তৈরি|আঁকো|করো|চাই|পড়|পরা|পরানো|generate|create|make|draw|give|show|edit|photo|picture|image|chobi|saree|sari)/i.test(text);
+    const subject = /(ছবি|ফটো|চবি|চিত্র|মেয়ের|মেয়ের|মেইয়ে|মাইয়ে|মেয়ে|মেয়ে|শাড়ি|শাড়ি|সারি|chobi|chhobi|photo|picture|image|tasveer|saree|sari|ladki|mujer|imagen|foto|ফুল|বিড়াল|বিড়াল|কুকুর|cat|dog|flower|rose)/i.test(text);
+    const action = /(দাও|দেখাও|বানাও|তৈরি|আঁকো|করো|চাই|পড়|পরা|পরানো|generate|create|make|draw|give|show|edit|চেঞ্জ|পরিবর্তন)/i.test(text);
+    return subject && action;
   }
   function isImageFollowUp(text) {
-    return /(সুন্দর|আরও ভালো|আরো ভালো|আরও সুন্দর|আরো সুন্দর|সাজাও|পরিবর্তন|বদলে|চেঞ্জ|ব্যাকগ্রাউন্ড|পেছনের দৃশ্য|শুধু মেয়ে|শুধু মেয়ে|শুধু মাইয়ে|শুধু মেইয়ে|শুধু মেয়েটা|শুধু মুখ|শাড়ি|শাড়ি|সারি|shundor|sundor|aro bhalo|aro sundor|make it|improve|enhance|edit|change|replace|remove|add|background|saree|sari)/i.test(text);
+    return /(সুন্দর|আরও ভালো|আরো ভালো|আরও সুন্দর|আরো সুন্দর|সাজাও|পরিবর্তন|বদলে|চেঞ্জ|ব্যাক\\s*গ্রাউন্ড|বাগরাউন্ড|ব্যাকগ্রাউন্ড|পেছনের দৃশ্য|শুধু মেয়ে|শুধু মেয়ে|শুধু মাইয়ে|শুধু মেইয়ে|শুধু মেয়েটা|শুধু মুখ|শাড়ি|শাড়ি|সারি|shundor|sundor|aro bhalo|aro sundor|make it|improve|enhance|edit|change|replace|remove|add|background|saree|sari)/i.test(text);
   }
   function makeDirectImagePrompt(text) {
-    if (/(শাড়ি|শাড়ি|সারি|saree|sari)/i.test(text)) return "A respectful, photorealistic portrait of an adult South Asian woman wearing a clearly visible elegant traditional saree. Main subject centered, natural pose, tasteful background. User request: " + text;
-    if (/(মেয়|মেয়ে|মেইয়ে|মাইয়ে|girl|woman|ladki)/i.test(text)) return "A respectful, photorealistic portrait of an adult South Asian woman, clearly visible as the main subject, natural expression, tasteful clothing, uncluttered background. User request: " + text;
-    return "Create a clear, high-quality image showing exactly the subject and scene requested. Do not substitute an unrelated landscape. User request: " + text;
+    if (/(শাড়ি|শাড়ি|সারি|saree|sari)/i.test(text)) return "Create exactly what the user requested: a respectful, photorealistic portrait of an adult South Asian woman wearing a clearly visible traditional saree. Keep the woman and saree as the central subject; do not substitute a landscape. Details requested: " + text;
+    if (/(মেয়|মেয়ে|মেইয়ে|মাইয়ে|girl|woman|ladki)/i.test(text)) return "Create exactly what the user requested: a respectful, photorealistic portrait of an adult South Asian woman, clearly visible as the main subject, natural expression and tasteful clothing. Do not substitute scenery or unrelated objects. Details requested: " + text;
+    return "Create an image that follows the user's exact request. Make the requested subject large, clear and central. Do not replace it with an unrelated landscape or subject. User request: " + text;
   }
   async function runDirectImageTask(userText, sourceImage) {
     const editing = Boolean(sourceImage);
@@ -568,6 +572,13 @@
     const imageToSend = chatImageData;
     if ((!message && !imageToSend) || chatSend.disabled) return;
 
+    if (!imageToSend && message && isBackgroundEditRequest(message) && !lastGeneratedImage) {
+      chatInput.value = '';
+      addChatBubble('user', message);
+      addChatBubble('assistant', 'যে ছবিটির ব্যাকগ্রাউন্ড বদলাতে চান, সেটি + বোতাম থেকে আপলোড করুন। তারপর শুধু নতুন ব্যাকগ্রাউন্ডের নাম লিখুন। আমি মূল ছবির মানুষ বা বিষয়টি অপরিবর্তিত রেখে ব্যাকগ্রাউন্ড বদলানোর চেষ্টা করব।');
+      setChatNotice('প্রথমে মূল ছবি আপলোড করুন।', false);
+      return;
+    }
     if (!imageToSend && message && (isImageCreationRequest(message) || (lastGeneratedImage && isImageFollowUp(message)))) {
       chatInput.value = '';
       addChatBubble('user', message);
