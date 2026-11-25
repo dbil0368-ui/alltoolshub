@@ -1,5 +1,5 @@
-const CACHE = "synora-cache-v20";
-const ASSETS = ["/synora/","/synora/index.html","/synora/styles.css?v=20","/synora/app.js?v=19","/synora/image-gen.js","/synora/plus-menu.js?v=8","/synora/manifest.webmanifest","/synora/icon.svg"];
+const CACHE = "synora-cache-v21";
+const ASSETS = ["/synora/","/synora/index.html","/synora/styles.css?v=20","/synora/app.js?v=20","/synora/image-gen.js","/synora/plus-menu.js?v=8","/synora/manifest.webmanifest","/synora/icon.svg"];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
 });
