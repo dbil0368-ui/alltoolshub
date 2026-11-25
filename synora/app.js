@@ -290,7 +290,37 @@
     }
     const bubble = document.createElement('div');
     bubble.className = 'chat-bubble ' + (role === 'assistant' ? 'assistant-bubble' : 'user-bubble');
-    bubble.textContent = content;
+    const messageText = document.createElement('span');
+    messageText.className = 'chat-message-text';
+    messageText.textContent = content;
+    bubble.append(messageText);
+    if (role === 'assistant') {
+      const copyButton = document.createElement('button');
+      copyButton.type = 'button';
+      copyButton.className = 'copy-message-btn';
+      copyButton.textContent = 'Copy';
+      copyButton.setAttribute('aria-label', 'Copy this SYNORA reply');
+      copyButton.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(content);
+          copyButton.textContent = 'Copied';
+          setTimeout(() => { copyButton.textContent = 'Copy'; }, 1400);
+        } catch {
+          const area = document.createElement('textarea');
+          area.value = content;
+          area.setAttribute('readonly', '');
+          area.style.position = 'fixed';
+          area.style.opacity = '0';
+          document.body.append(area);
+          area.select();
+          const copied = document.execCommand('copy');
+          area.remove();
+          copyButton.textContent = copied ? 'Copied' : 'Select text';
+          setTimeout(() => { copyButton.textContent = 'Copy'; }, 1400);
+        }
+      });
+      bubble.append(copyButton);
+    }
     chatMessages.append(bubble);
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
