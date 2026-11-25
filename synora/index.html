@@ -7,9 +7,9 @@
   <title>SYNORA AI — Your AI Assistant</title>
   <link rel="manifest" href="/synora/manifest.webmanifest">
   <meta name="theme-color" content="#f7f5ff">
-  <link rel="stylesheet" href="styles.css?v=16">
+  <link rel="stylesheet" href="styles.css?v=17">
 </head>
-<body>
+<body class="chat-home">
   <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
   <header class="topbar">
     <a class="brand" href="#" id="homeLink" aria-label="SYNORA home"><span class="brand-mark">S</span><span>SYNORA AI</span></a>
@@ -40,9 +40,7 @@
         <div class="float-card float-top"><span class="float-icon">▧</span><span><b>Image Studio</b><small>Visual ideas</small></span></div>
         <div class="float-card float-bottom"><span class="float-icon">▷</span><span><b>Video Studio</b><small>Stories in motion</small></span></div>
       </div>
-    </sect
-
-ion>
+    </section>
 
     <section class="section" id="studios">
       <div class="section-head"><div><div class="eyebrow">CREATE SOMETHING NEW</div><h2>Your studios</h2></div><span class="muted">Choose a creative tool</span></div>
@@ -86,9 +84,6 @@ ion>
         <aside class="editor-aside"><div class="aside-icon">✦</div><h3>Make room for ideas.</h3><p>Write a brief, save it, and return to it whenever inspiration strikes.</p><div class="aside-line"></div><small>COMING NEXT</small><b>Connected AI generation</b><small>Requires a secure server and AI provider.</small></aside>
       </div>
     </section>
-
-ion>
-
     <section class="section" id="projects">
       <div class="section-head"><div><div class="eyebrow">PICK UP WHERE YOU LEFT OFF</div><h2>My projects</h2></div><div class="project-tools"><input id="projectSearch" class="project-search" type="search" placeholder="Search projects" aria-label="Search projects"><button class="sort-btn" id="sortBtn" type="button" aria-label="Sort projects, newest first"><span class="sort-icon">⇅</span><span id="sortLabel">Newest</span></button><button class="text-btn" id="importBtn" type="button">Import ↑</button><input id="importFile" type="file" accept="application/json,.json" hidden><button class="text-btn" id="exportBtn" type="button">Export ↓</button></div></div>
       <div id="projectList" class="project-list"><div class="empty-state"><span>✧</span><b>Your ideas will live here</b><p>Save your first project from any studio.</p></div></div>
@@ -103,8 +98,8 @@ ion>
     </section>
     <footer><a class="brand footer-brand" href="#"><span class="brand-mark">S</span><span>SYNORA</span></a><span>Intelligence Without Limits</span><span>Early preview · Built for ideas</span></footer>
   </main>
-  <script src="app.js?v=15"></script>
+  <script src="app.js?v=16"></script>
   <script src="plus-menu.js?v=6"></script>
-  <script>if("serviceWorker" in navigator && location.hostname !== "localhost"){navigator.serviceWorker.register("/synora/sw.js?v=15").catch(()=>{});}</script>
+  <script>if("serviceWorker" in navigator && location.hostname !== "localhost"){navigator.serviceWorker.register("/synora/sw.js?v=16").catch(()=>{});}</script>
 </body>
 </html>
