@@ -830,3 +830,21 @@ body.chat-home .chat-form{padding-bottom:max(12px,env(safe-area-inset-bottom))}
 
 .premium-note{display:block;margin-top:10px;color:var(--muted);font-size:11px;line-height:1.5}
 .plan-card .primary-btn{margin-top:12px;cursor:pointer}
+
+
+/* Browser-native voice input and spoken replies */
+.voice-input-btn{
+  width:42px;height:42px;flex:0 0 42px;border:1px solid var(--line);
+  border-radius:13px;background:var(--surface);color:var(--text);
+  font-size:18px;cursor:pointer;touch-action:manipulation;
+}
+.voice-input-btn:disabled{opacity:.45;cursor:not-allowed}
+.voice-input-btn.voice-listening{background:#f2eaff;border-color:#9a7be8;color:#684bd1;animation:synora-voice-pulse 1.2s ease-in-out infinite}
+@keyframes synora-voice-pulse{50%{box-shadow:0 0 0 5px rgba(126,91,210,.13)}}
+.speak-message-btn{
+  position:absolute;right:12px;bottom:7px;padding:5px 10px;
+  border:1px solid var(--line);border-radius:8px;background:transparent;
+  color:var(--muted);font-size:10px;font-weight:700;cursor:pointer;
+}
+.speak-message-btn:hover{background:var(--surface);color:var(--text)}
+@media(prefers-reduced-motion:reduce){.voice-input-btn.voice-listening{animation:none}}
