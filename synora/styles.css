@@ -827,3 +827,6 @@ body.chat-home .chat-form{padding-bottom:max(12px,env(safe-area-inset-bottom))}
 .chat-history-open:hover,.chat-history-open:focus{background:#f3efff;color:#684bd1}
 .chat-history-delete{flex:0 0 30px;width:30px;height:30px;border:0;border-radius:8px;background:transparent;color:#92899d;font-size:19px;cursor:pointer}
 .chat-history-delete:hover{background:#fff0f0;color:#bd4242}
+
+.premium-note{display:block;margin-top:10px;color:var(--muted);font-size:11px;line-height:1.5}
+.plan-card .primary-btn{margin-top:12px;cursor:pointer}
