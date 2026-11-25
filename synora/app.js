@@ -262,6 +262,59 @@
     chatNotice.hidden = !visible;
   }
   const CHAT_STORAGE_KEY = 'synora.chatHistory.v2';
+  const CONVERSATIONS_KEY = 'synora.conversations.v1';
+  let currentConversationId = 'chat-' + Date.now();
+  let conversations = [];
+  function makeConversationId() { return 'chat-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7); }
+  function conversationTitle(items) {
+    const first = items.find(item => item.role === 'user' && item.content.trim());
+    return first ? first.content.trim().replace(/\\s+/g, ' ').slice(0, 42) : 'New chat';
+  }
+  function readConversations() {
+    try {
+      const value = JSON.parse(localStorage.getItem(CONVERSATIONS_KEY) || '[]');
+      return Array.isArray(value) ? value.filter(item => item && typeof item.id === 'string' && Array.isArray(item.messages)) : [];
+    } catch { return []; }
+  }
+  function saveCurrentConversation() {
+    if (!visibleHistory.length) return;
+    const entry = {id:currentConversationId,title:conversationTitle(visibleHistory),messages:visibleHistory.slice(-80),apiMessages:chatHistory.slice(-20),movieTranscript,updatedAt:new Date().toISOString()};
+    conversations = conversations.filter(item => item.id !== currentConversationId);
+    conversations.unshift(entry); conversations = conversations.slice(0,25);
+    try { localStorage.setItem(CONVERSATIONS_KEY, JSON.stringify(conversations)); }
+    catch { setChatNotice('চ্যাটের জায়গা পূর্ণ। পুরোনো চ্যাট মুছে বা ডাউনলোড করে রাখুন।'); }
+    renderConversationList();
+  }
+  function renderConversationList() {
+    const host = $('chatHistoryList'); if (!host) return;
+    host.replaceChildren();
+    if (!conversations.length) {
+      const empty=document.createElement('p'); empty.className='chat-history-empty'; empty.textContent='এখনো কোনো পুরোনো চ্যাট নেই'; host.append(empty); return;
+    }
+    conversations.forEach(item => {
+      const row=document.createElement('div'); row.className='chat-history-row';
+      const open=document.createElement('button'); open.type='button'; open.className='chat-history-open'; open.textContent=item.title||'New chat'; open.title=item.title||'New chat';
+      open.addEventListener('click',()=>{
+        saveCurrentConversation(); currentConversationId=item.id;
+        chatHistory=Array.isArray(item.apiMessages)?item.apiMessages:item.messages.slice(-20);
+        visibleHistory=item.messages.slice(-80); movieTranscript=item.movieTranscript||'';
+        chatMessages.replaceChildren(); visibleHistory.forEach(message=>addChatBubble(message.role,message.content,false));
+        persistChatState(); renderConversationList(); setChatNotice('আগের চ্যাট খোলা হয়েছে।'); closeChatMenu(); chatInput.focus();
+      });
+      const remove=document.createElement('button'); remove.type='button'; remove.className='chat-history-delete'; remove.textContent='×'; remove.setAttribute('aria-label','Delete chat');
+      remove.addEventListener('click',()=>{
+        conversations=conversations.filter(entry=>entry.id!==item.id);
+        try{localStorage.setItem(CONVERSATIONS_KEY,JSON.stringify(conversations));}catch{}
+        if(currentConversationId===item.id){currentConversationId=makeConversationId();chatHistory=[];visibleHistory=[];movieTranscript='';chatMessages.replaceChildren();addChatBubble('assistant','Hello! I’m SYNORA AI. What would you like help with today?');persistChatState();}
+        renderConversationList();
+      });
+      row.append(open,remove); host.append(row);
+    });
+  }
+  function closeChatMenu() {
+    const menu=$('navDropdown'),toggle=$('menuToggle'); if(menu)menu.hidden=true;
+    if(toggle){toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Open navigation menu');}
+  }
   const MOVIE_STORAGE_KEY = 'synora.movieTranscript.v1';
   let chatHistory = [];
   let visibleHistory = [];
@@ -281,6 +334,7 @@
       localStorage.setItem('synora.visibleChat.v1', JSON.stringify(visibleHistory.slice(-40)));
       if (movieTranscript) localStorage.setItem(MOVIE_STORAGE_KEY, movieTranscript);
       else localStorage.removeItem(MOVIE_STORAGE_KEY);
+      saveCurrentConversation();
     } catch { setChatNotice('এই ব্রাউজারে মেমোরি সংরক্ষণ করা যায়নি। ডাউনলোড করে রাখুন।'); }
   }
   function addChatBubble(role, content, record = true) {
@@ -325,7 +379,13 @@
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
   function restoreVisibleChat() {
-    if (!chatHistory.length) return;
+    conversations = readConversations();
+    if (!conversations.length && visibleHistory.length) {
+      conversations.unshift({id:currentConversationId,title:conversationTitle(visibleHistory),messages:visibleHistory.slice(-80),apiMessages:chatHistory.slice(-20),movieTranscript,updatedAt:new Date().toISOString()});
+      try { localStorage.setItem(CONVERSATIONS_KEY,JSON.stringify(conversations)); } catch {}
+    }
+    renderConversationList();
+    if (!chatHistory.length && !visibleHistory.length) return;
     chatMessages.replaceChildren();
     visibleHistory.forEach(item => addChatBubble(item.role, item.content, false));
     if (movieTranscript) renderMovieDownloadButton();
@@ -343,6 +403,8 @@
   // Chat actions available from the navigation menu.
   const newChatAction = $('newChatAction');
   if (newChatAction) newChatAction.addEventListener('click', () => {
+    saveCurrentConversation();
+    currentConversationId = makeConversationId();
     chatHistory = [];
     visibleHistory = [];
     movieTranscript = '';
@@ -355,10 +417,8 @@
     addChatBubble('assistant', 'Hello! I’m SYNORA AI. What would you like help with today?');
     persistChatState();
     setChatNotice('নতুন চ্যাট শুরু হয়েছে।');
-    const menu = $('navDropdown');
-    const toggle = $('menuToggle');
-    if (menu) menu.hidden = true;
-    if (toggle) toggle.setAttribute('aria-expanded', 'false');
+    renderConversationList();
+    closeChatMenu();
     chatInput.focus();
   });
   const downloadChatAction = $('downloadChatAction');
@@ -370,10 +430,7 @@
       downloadTextFile(transcript, 'synora-chat.txt');
       setChatNotice('চ্যাট TXT ফাইল হিসেবে ডাউনলোড করা হয়েছে।');
     }
-    const menu = $('navDropdown');
-    const toggle = $('menuToggle');
-    if (menu) menu.hidden = true;
-    if (toggle) toggle.setAttribute('aria-expanded', 'false');
+    closeChatMenu();
   });
 
   let chatImageData = '';
