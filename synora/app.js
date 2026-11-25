@@ -423,6 +423,17 @@
     closeChatMenu();
     chatInput.focus();
   });
+  const upgradePremiumAction = $('upgradePremiumAction');
+  function explainPremiumSetup() {
+    setChatNotice('Premium plan: up to 100 saved conversations. Secure billing and server-side subscription verification are not connected yet, so upgrades and payments are not available. No charge has been made.');
+    closeChatMenu();
+    const plans = $('plans');
+    if (plans) { document.body.classList.remove('chat-home'); plans.scrollIntoView({behavior:'smooth',block:'start'}); }
+  }
+  if (upgradePremiumAction) upgradePremiumAction.addEventListener('click', explainPremiumSetup);
+  const planUpgradeButton = $('planUpgradeButton');
+  if (planUpgradeButton) planUpgradeButton.addEventListener('click', explainPremiumSetup);
+
   const downloadChatAction = $('downloadChatAction');
   if (downloadChatAction) downloadChatAction.addEventListener('click', () => {
     const transcript = visibleHistory.map(item => (item.role === 'user' ? 'You' : 'SYNORA AI') + ':\n' + item.content).join('\n\n');
