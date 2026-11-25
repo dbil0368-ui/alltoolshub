@@ -848,3 +848,7 @@ body.chat-home .chat-form{padding-bottom:max(12px,env(safe-area-inset-bottom))}
 }
 .speak-message-btn:hover{background:var(--surface);color:var(--text)}
 @media(prefers-reduced-motion:reduce){.voice-input-btn.voice-listening{animation:none}}
+
+
+/* Clean outline microphone icon */
+.voice-mic-icon{width:21px;height:21px;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
