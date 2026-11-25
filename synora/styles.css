@@ -805,3 +805,15 @@ body.chat-home .nav-dropdown{max-height:75dvh;overflow:auto}
 }
 body.chat-home .chat-messages{scrollbar-width:thin}
 body.chat-home .chat-form{padding-bottom:max(12px,env(safe-area-inset-bottom))}
+
+
+/* Copy action on assistant replies */
+.chat-bubble{position:relative;padding-bottom:37px}
+.chat-message-text{display:block;white-space:pre-wrap;overflow-wrap:anywhere}
+.copy-message-btn{
+  position:absolute;left:12px;bottom:7px;padding:5px 10px;
+  border:1px solid var(--line);border-radius:8px;background:transparent;
+  color:var(--muted);font-size:10px;font-weight:700;cursor:pointer;
+}
+.copy-message-btn:hover{background:var(--surface);color:var(--text)}
+.user-bubble .copy-message-btn{display:none}
