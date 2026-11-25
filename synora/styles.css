@@ -817,3 +817,13 @@ body.chat-home .chat-form{padding-bottom:max(12px,env(safe-area-inset-bottom))}
 }
 .copy-message-btn:hover{background:var(--surface);color:var(--text)}
 .user-bubble .copy-message-btn{display:none}
+
+/* Local conversation history */
+.chat-history-heading{padding:12px 13px 5px;border-top:1px solid var(--line);margin-top:5px;color:#786b91;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.chat-history-list{display:flex;flex-direction:column;gap:4px;padding:3px 5px 8px}
+.chat-history-empty{margin:4px 8px 8px;color:#81798d;font-size:12px}
+.chat-history-row{display:flex;align-items:center;gap:4px;min-width:0}
+.chat-history-open{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left;padding:10px 9px;border:0;border-radius:9px;background:transparent;color:#332d43;font-size:12px;cursor:pointer}
+.chat-history-open:hover,.chat-history-open:focus{background:#f3efff;color:#684bd1}
+.chat-history-delete{flex:0 0 30px;width:30px;height:30px;border:0;border-radius:8px;background:transparent;color:#92899d;font-size:19px;cursor:pointer}
+.chat-history-delete:hover{background:#fff0f0;color:#bd4242}
