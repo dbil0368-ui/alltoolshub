@@ -333,7 +333,7 @@
   });
   const downloadChatAction = $('downloadChatAction');
   if (downloadChatAction) downloadChatAction.addEventListener('click', () => {
-    const transcript = visibleHistory.map(item => (item.role === 'user' ? 'You' : 'SYNORA AI') + ':\\n' + item.content).join('\\n\\n');
+    const transcript = visibleHistory.map(item => (item.role === 'user' ? 'You' : 'SYNORA AI') + ':\n' + item.content).join('\n\n');
     if (!transcript.trim()) {
       setChatNotice('ডাউনলোড করার মতো চ্যাট এখনো নেই।');
     } else {
