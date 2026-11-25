@@ -311,6 +311,7 @@
   }
 
   let chatImageData = '';
+  let lastGeneratedImage = '';
   const chatImageInput = $('chatImage');
   const chatImageName = $('chatImageName');
   const chatImagePreview = $('chatImagePreview');
@@ -519,11 +520,60 @@
     return text || 'Enhance this image while preserving the main subject and overall composition.';
   }
 
+  function isImageCreationRequest(text) {
+    return /(ছবি|ফটো|চবি|চবি|চিত্র|মেয়ের|মেয়ের|মেইয়ে|মাইয়ে|মেয়ে|মেয়ে|শাড়ি|শাড়ি|সারি|chobi|chhobi|photo|picture|image|tasveer|saree|sari|ladki|mujer|imagen|foto)/i.test(text) &&
+      /(দাও|দেখাও|বানাও|তৈরি|আঁকো|করো|চাই|পড়|পরা|পরানো|generate|create|make|draw|give|show|edit|photo|picture|image|chobi|saree|sari)/i.test(text);
+  }
+  function isImageFollowUp(text) {
+    return /(সুন্দর|আরও ভালো|আরো ভালো|আরও সুন্দর|আরো সুন্দর|সাজাও|পরিবর্তন|বদলে|চেঞ্জ|ব্যাকগ্রাউন্ড|পেছনের দৃশ্য|শুধু মেয়ে|শুধু মেয়ে|শুধু মেয়েটা|শুধু মুখ|শাড়ি|শাড়ি|সারি|shundor|sundor|aro bhalo|aro sundor|make it|improve|enhance|edit|change|replace|remove|add|background|saree|sari)/i.test(text);
+  }
+  function makeDirectImagePrompt(text) {
+    if (/(শাড়ি|শাড়ি|সারি|saree|sari)/i.test(text)) return "A respectful, photorealistic portrait of an adult South Asian woman wearing a clearly visible elegant traditional saree. Main subject centered, natural pose, tasteful background. User request: " + text;
+    if (/(মেয়|মেয়ে|মেইয়ে|মাইয়ে|girl|woman|ladki)/i.test(text)) return "A respectful, photorealistic portrait of an adult South Asian woman, clearly visible as the main subject, natural expression, tasteful clothing, uncluttered background. User request: " + text;
+    return "Create a clear, high-quality image showing exactly the subject and scene requested. Do not substitute an unrelated landscape. User request: " + text;
+  }
+  async function runDirectImageTask(userText, sourceImage) {
+    const editing = Boolean(sourceImage);
+    chatSend.disabled = true;
+    chatSend.textContent = editing ? 'Editing…' : 'Creating…';
+    setChatNotice(editing ? 'SYNORA আগের ছবিটি সম্পাদনা করছে…' : 'SYNORA আপনার ছবি তৈরি করছে…');
+    try {
+      const response = await fetch(editing ? '/api/image-edit' : '/api/image-generate', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(editing
+          ? {image:sourceImage, prompt:"Edit the supplied image according to this exact instruction: " + userText + ". Preserve the same main subject, identity, face, pose and clothing unless the user explicitly asks to change them. Change only what the user requested. Do not replace the subject with an unrelated scene."}
+          : {prompt:makeDirectImagePrompt(userText)})
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload.error || 'Image service is unavailable.');
+      if (typeof payload.image !== 'string' || !payload.image.startsWith('data:image/')) throw new Error('Image service returned no image.');
+      lastGeneratedImage = payload.image;
+      addChatBubble('assistant', editing ? 'আপনার সম্পাদিত ছবিটি তৈরি হয়েছে।' : 'আপনার ছবিটি তৈরি হয়েছে।');
+      addChatImageBubble(payload.image);
+      setChatNotice('ছবি তৈরি সম্পন্ন।', false);
+    } catch (error) {
+      addChatBubble('assistant', 'দুঃখিত, ছবিটি তৈরি/সম্পাদনা করা যায়নি। ' + (error.message || 'আবার চেষ্টা করুন।'));
+      setChatNotice(error.message || 'Image generation failed.');
+    } finally {
+      chatSend.disabled = false;
+      chatSend.textContent = 'Send ↗';
+      chatInput.focus();
+    }
+  }
+
   chatForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const message = chatInput.value.trim();
     const imageToSend = chatImageData;
     if ((!message && !imageToSend) || chatSend.disabled) return;
+
+    if (!imageToSend && message && (isImageCreationRequest(message) || (lastGeneratedImage && isImageFollowUp(message)))) {
+      chatInput.value = '';
+      addChatBubble('user', message);
+      await runDirectImageTask(message, lastGeneratedImage && isImageFollowUp(message) ? lastGeneratedImage : '');
+      return;
+    }
 
     if (imageToSend) {
       chatInput.value = '';
@@ -608,6 +658,14 @@
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(payload.error || 'AI service is unavailable right now.');
       if (typeof payload.reply !== 'string' || !payload.reply.trim()) throw new Error('The AI service returned an empty reply.');
+      const looksLikeLeakedToolJson = /^\\s*\\{[\\s\\S]{0,1200}"action"\\s*:\\s*"(?:dalle\\.|image|tool)/i.test(payload.reply);
+      if (looksLikeLeakedToolJson) {
+        chatHistory.pop();
+        addChatBubble('assistant', 'আমি আপনার অনুরোধ বুঝেছি, কিন্তু এই মুহূর্তে ছবির কাজটি সরাসরি সম্পন্ন করতে পারছি না। অনুগ্রহ করে আবার বলুন বা ছবিটি আপলোড করুন।');
+        persistChatState();
+        setChatNotice('অভ্যন্তরীণ টুল নির্দেশনা লুকানো হয়েছে; কোনো JSON দেখানো হবে না.', false);
+        return;
+      }
       chatHistory.push({role:'assistant', content:payload.reply});
       chatHistory = chatHistory.slice(-10);
       const websiteHtml = buildWebsite ? extractWebsiteHtml(payload.reply) : '';
