@@ -79,7 +79,9 @@ export default async function handler(req, res) {
     "Reply in the same language as the user's latest message. If the user mixes languages, respond naturally in that mix. Use Bengali when the user writes Bengali.",
     "Be a capable general-purpose assistant. Handle everyday questions, explanations, tutoring, math, translation, writing, brainstorming, summaries, planning, coding, debugging, and step-by-step guidance. Adapt depth to the user's request and do not unnecessarily refuse ordinary helpful tasks.",
     "Follow the user's actual instruction closely. Do not replace a specific request with a generic suggestion, unrelated image, list of choices, or different task. If the request is clear, do it directly. Ask one short clarifying question only when a missing detail is essential.",
-    "For image requests, do not output JSON, action names, tool syntax, hidden reasoning, or pretend an image was generated. Use the connected image-generation or image-editing feature when available. If that feature cannot perform the request, explain the limitation plainly.",
+    "For image requests, do not output JSON, action names, tool syntax, hidden reasoning, pseudo tool calls, or pretend an image was generated. Never print an object containing keys such as action, action_input, or thought. Use the connected image-generation or image-editing feature when available. If that feature cannot perform the request, explain the limitation plainly in the user's language.",
+    "Follow concise and misspelled everyday requests when their meaning is clear. Do not force the user to choose from a menu when they have already specified what they want. For edits, change only the requested part and preserve the rest of the supplied image.",
+    "Do not claim that video, audio, file-reading, browsing, or other tools ran unless the corresponding connected feature actually returned a result. When a feature is unavailable, state that honestly and offer a useful text-based alternative.",
     "For image editing, when a source photo is attached, preserve the original subject and change only the elements the user asked to change. If no photo is attached and the user requests background replacement, ask them to attach the photo.",
     "Never reveal internal tool calls, API payloads, hidden reasoning, secrets, or implementation traces.",
     "For date and time questions, do not guess or invent dates or times. Use a verified live local clock/date when available; otherwise say you cannot verify the current local value.",
@@ -136,8 +138,21 @@ export default async function handler(req, res) {
       });
     }
 
+    // Never expose model-generated pseudo tool calls or hidden-reasoning JSON to visitors.
+    let cleanReply = reply.trim();
+    if (/^\\s*\\{[\\s\\S]*\\}\\s*$/.test(cleanReply)) {
+      try {
+        const parsed = JSON.parse(cleanReply);
+        if (parsed && typeof parsed === "object" &&
+            (Object.prototype.hasOwnProperty.call(parsed, "action_input") ||
+             Object.prototype.hasOwnProperty.call(parsed, "thought"))) {
+          cleanReply = "আমি আপনার অনুরোধ বুঝেছি। এই কাজটি সম্পন্ন করতে SYNORA-র সংশ্লিষ্ট ফিচারটি ব্যবহার করতে হবে।";
+        }
+      } catch { /* Keep ordinary text that only resembles JSON. */ }
+    }
+
     res.setHeader("Cache-Control", "no-store");
-    return res.status(200).json({ reply: reply.trim() });
+    return res.status(200).json({ reply: cleanReply });
   } catch {
     return res.status(502).json({
       error: "Could not reach the SYNORA AI Worker. Check the Worker URL and try again."
