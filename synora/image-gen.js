@@ -8,6 +8,25 @@
 
   const imageIntent = /(image|photo|picture|portrait|wallpaper|illustration|draw|paint|generate.*(image|photo|picture)|create.*(image|photo|picture)|make.*(image|photo|picture)|ছবি|ফটো|চিত্র|আঁকো|আঁকা|ছবি বানাও|ছবি তৈরি|ফটো বানাও|ছবি দাও|একটা ছবি|একটি ছবি|तस्वीर|फोटो|चित्र|बनाओ|तस्वीर बनाओ|फोटो बनाओ|imagen|foto|dibuja|crée.*image)/i;
 
+  function makeImagePrompt(original) {
+    const p = original.toLowerCase();
+    // FLUX Schnell follows concise English subject descriptions more reliably
+    // than short Bengali/Hindi requests. Keep the user's requested subject first.
+    if (/(মেয়ে|মেয়ের|মহিলা|নারী|স্ত্রী|woman|women|girl|female|ladki|mahila|mujer)/i.test(p)) {
+      return "Create exactly this subject: a respectful, photorealistic head-and-shoulders portrait of an adult South Asian woman, looking toward the camera, natural expression, tasteful everyday clothing, softly lit uncluttered background. The woman must be clearly visible and be the main subject. Do not create a landscape, mountains, buildings, or an unrelated scene. User request: " + original;
+    }
+    if (/(গোলাপ|ফুল|ফুলের|rose|flower|फूल|गुलाब|flor|rosa)/i.test(p)) {
+      return "Create exactly this subject: a beautiful close-up photograph of a single fresh rose flower in full bloom, clearly visible petals, natural botanical detail, soft daylight, simple softly blurred garden background. The flower must fill most of the frame. Do not create people, mountains, buildings, or an unrelated landscape. User request: " + original;
+    }
+    if (/(বিড়াল|বিড়াল|cat|kitten|बिल्ली|gato)/i.test(p)) {
+      return "Create exactly this subject: a clear, charming photorealistic close-up of a cat, with the cat as the central subject and a simple background. Do not create a landscape or unrelated subject. User request: " + original;
+    }
+    if (/(কুকুর|dog|puppy|कुत्ता|perro)/i.test(p)) {
+      return "Create exactly this subject: a clear, charming photorealistic image of a dog, with the dog as the central subject and a simple background. Do not create a landscape or unrelated subject. User request: " + original;
+    }
+    return "Create an image that depicts exactly the subject and scene requested here. Make the main requested subject large, clear, and central. Do not substitute a landscape or unrelated subject. Request: " + original;
+  }
+
   function bubble(text) {
     const node = document.createElement('div');
     node.className = 'chat-bubble assistant-bubble';
@@ -73,7 +92,7 @@
       const response = await fetch('/api/image-generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt })
+        body: JSON.stringify({ prompt: makeImagePrompt(prompt) })
       });
       const result = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(result.error || 'Image generation failed.');
