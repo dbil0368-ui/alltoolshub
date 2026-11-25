@@ -525,7 +525,7 @@
       /(দাও|দেখাও|বানাও|তৈরি|আঁকো|করো|চাই|পড়|পরা|পরানো|generate|create|make|draw|give|show|edit|photo|picture|image|chobi|saree|sari)/i.test(text);
   }
   function isImageFollowUp(text) {
-    return /(সুন্দর|আরও ভালো|আরো ভালো|আরও সুন্দর|আরো সুন্দর|সাজাও|পরিবর্তন|বদলে|চেঞ্জ|ব্যাকগ্রাউন্ড|পেছনের দৃশ্য|শুধু মেয়ে|শুধু মেয়ে|শুধু মেয়েটা|শুধু মুখ|শাড়ি|শাড়ি|সারি|shundor|sundor|aro bhalo|aro sundor|make it|improve|enhance|edit|change|replace|remove|add|background|saree|sari)/i.test(text);
+    return /(সুন্দর|আরও ভালো|আরো ভালো|আরও সুন্দর|আরো সুন্দর|সাজাও|পরিবর্তন|বদলে|চেঞ্জ|ব্যাকগ্রাউন্ড|পেছনের দৃশ্য|শুধু মেয়ে|শুধু মেয়ে|শুধু মাইয়ে|শুধু মেইয়ে|শুধু মেয়েটা|শুধু মুখ|শাড়ি|শাড়ি|সারি|shundor|sundor|aro bhalo|aro sundor|make it|improve|enhance|edit|change|replace|remove|add|background|saree|sari)/i.test(text);
   }
   function makeDirectImagePrompt(text) {
     if (/(শাড়ি|শাড়ি|সারি|saree|sari)/i.test(text)) return "A respectful, photorealistic portrait of an adult South Asian woman wearing a clearly visible elegant traditional saree. Main subject centered, natural pose, tasteful background. User request: " + text;
@@ -658,7 +658,7 @@
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(payload.error || 'AI service is unavailable right now.');
       if (typeof payload.reply !== 'string' || !payload.reply.trim()) throw new Error('The AI service returned an empty reply.');
-      const looksLikeLeakedToolJson = /^\\s*\\{[\\s\\S]{0,1200}"action"\\s*:\\s*"(?:dalle\\.|image|tool)/i.test(payload.reply);
+      const looksLikeLeakedToolJson = /^\s*\{[\s\S]{0,1200}"action"\s*:\s*"(?:dalle\.|image|tool)/i.test(payload.reply);
       if (looksLikeLeakedToolJson) {
         chatHistory.pop();
         addChatBubble('assistant', 'আমি আপনার অনুরোধ বুঝেছি, কিন্তু এই মুহূর্তে ছবির কাজটি সরাসরি সম্পন্ন করতে পারছি না। অনুগ্রহ করে আবার বলুন বা ছবিটি আপলোড করুন।');
