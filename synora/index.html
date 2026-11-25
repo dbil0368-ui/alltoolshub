@@ -98,7 +98,38 @@
     <footer><a class="brand footer-brand" href="#"><span class="brand-mark">S</span><span>SYNORA</span></a><span>Intelligence Without Limits</span><span>Early preview · Built for ideas</span></footer>
   </main>
   <script src="app.js?v=21"></script>
-  <script src="plus-menu.js?v=8"></script>
+  <script src="plus-menu.js?v=9"></script>
+
+  <script>
+    // Reliable navigation fallback: handle the menu before any older listener.
+    (() => {
+      const button = document.getElementById('menuToggle');
+      const menu = document.getElementById('navDropdown');
+      if (!button || !menu) return;
+      button.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        const open = menu.hasAttribute('hidden');
+        if (open) menu.removeAttribute('hidden'); else menu.setAttribute('hidden', '');
+        button.setAttribute('aria-expanded', String(open));
+        button.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+      }, true);
+      document.addEventListener('click', (event) => {
+        if (!menu.hasAttribute('hidden') && !menu.contains(event.target) && !button.contains(event.target)) {
+          menu.setAttribute('hidden', '');
+          button.setAttribute('aria-expanded', 'false');
+          button.setAttribute('aria-label', 'Open navigation menu');
+        }
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          menu.setAttribute('hidden', '');
+          button.setAttribute('aria-expanded', 'false');
+          button.setAttribute('aria-label', 'Open navigation menu');
+        }
+      });
+    })();
+  </script>
   <script>if("serviceWorker" in navigator && location.hostname !== "localhost"){navigator.serviceWorker.register("/synora/sw.js?v=22").catch(()=>{});}</script>
 </body>
 </html>
