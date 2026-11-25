@@ -7,7 +7,7 @@
   <title>SYNORA AI — Your AI Assistant</title>
   <link rel="manifest" href="/synora/manifest.webmanifest">
   <meta name="theme-color" content="#f7f5ff">
-  <link rel="stylesheet" href="styles.css?v=14">
+  <link rel="stylesheet" href="styles.css?v=15">
 </head>
 <body>
   <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
@@ -29,6 +29,16 @@
         <div class="orbit orbit-a"></div><div class="orbit orbit-b"></div><div class="orb"><span>✦</span></div>
         <div class="float-card float-top"><span class="float-icon">▧</span><span><b>Image Studio</b><small>Visual ideas</small></span></div>
         <div class="float-card float-bottom"><span class="float-icon">▷</span><span><b>Video Studio</b><small>Stories in motion</small></span></div>
+      </div>
+    </sect
+
+    <section class="section ai-assistant-section" id="ai-assistant">
+      <div class="section-head"><div><div class="eyebrow">YOUR CREATIVE COPILOT</div><h2>SYNORA AI Assistant</h2></div><span class="demo-pill">TEXT AI · SERVER REQUIRED</span></div>
+      <div class="chat-panel">
+        <div class="chat-intro"><div class="aside-icon">✦</div><div><h3>Your AI workspace</h3><p>Chat, ask questions, plan ideas and create. Image tools work when the secure Cloudflare connection is configured. Other tools depend on their connected services.</p></div></div>
+        <div class="chat-messages" id="chatMessages" aria-live="polite"><div class="chat-bubble assistant-bubble">Hello! I’m SYNORA AI. I can help you develop creative ideas and prompts. What would you like to make?</div></div>
+        <form class="chat-form" id="chatForm"><label class="sr-only" for="chatInput">Message SYNORA AI</label><textarea id="chatInput" rows="2" maxlength="5000" placeholder="Ask SYNORA AI to help with an idea..."></textarea><div class="chat-attach-row"><div class="plus-wrap"><button class="plus-button" id="plusMenuButton" type="button" aria-label="Open attachments" aria-expanded="false">＋</button><div class="plus-menu" id="plusMenu" hidden><button type="button" id="choosePhoto"><span class="plus-menu-icon">▧</span><span><b>Photos</b><small>Choose an image</small></span></button><button type="button" id="takePhoto"><span class="plus-menu-icon">◎</span><span><b>Camera</b><small>Take a photo</small></span></button><button type="button" id="chooseVideo"><span class="plus-menu-icon">▷</span><span><b>Video</b><small>Choose a video</small></span></button><button type="button" id="chooseDocument"><span class="plus-menu-icon">▤</span><span><b>Files</b><small>Choose a document</small></span></button></div></div><input id="chatImage" type="file" accept="image/jpeg,image/png,image/webp" hidden><input id="chatCamera" type="file" accept="image/*" capture="environment" hidden><input id="chatVideo" type="file" accept="video/*" hidden><input id="chatDocument" type="file" accept=".pdf,.doc,.docx,.txt,.rtf,.xls,.xlsx,.ppt,.pptx,application/pdf,text/plain" hidden><span id="chatImageName" hidden></span><button class="primary-btn" id="chatSend" type="submit">Send ↗</button></div><div id="chatImagePreview" class="chat-image-preview" hidden><img id="chatImageThumb" alt="Selected image preview"><button type="button" id="removeChatImage">Remove photo</button></div></form>
+        <p class="notice" id="chatNotice" role="status" hidden></p>
       </div>
     </section>
 
@@ -75,15 +85,7 @@
       </div>
     </section>
 
-    <section class="section ai-assistant-section" id="ai-assistant">
-      <div class="section-head"><div><div class="eyebrow">YOUR CREATIVE COPILOT</div><h2>SYNORA AI Assistant</h2></div><span class="demo-pill">TEXT AI · SERVER REQUIRED</span></div>
-      <div class="chat-panel">
-        <div class="chat-intro"><div class="aside-icon">✦</div><div><h3>Ask, plan, and refine ideas</h3><p>Get help with scripts, prompts, concepts and writing. This chat connects to the secure server when SYNORA is deployed on Vercel and its AI key is configured.</p></div></div>
-        <div class="chat-messages" id="chatMessages" aria-live="polite"><div class="chat-bubble assistant-bubble">Hello! I’m SYNORA AI. I can help you develop creative ideas and prompts. What would you like to make?</div></div>
-        <form class="chat-form" id="chatForm"><label class="sr-only" for="chatInput">Message SYNORA AI</label><textarea id="chatInput" rows="2" maxlength="5000" placeholder="Ask SYNORA AI to help with an idea..."></textarea><div class="chat-attach-row"><div class="plus-wrap"><button class="plus-button" id="plusMenuButton" type="button" aria-label="Open attachments" aria-expanded="false">＋</button><div class="plus-menu" id="plusMenu" hidden><button type="button" id="choosePhoto"><span class="plus-menu-icon">▧</span><span><b>Photos</b><small>Choose an image</small></span></button><button type="button" id="takePhoto"><span class="plus-menu-icon">◎</span><span><b>Camera</b><small>Take a photo</small></span></button><button type="button" id="chooseVideo"><span class="plus-menu-icon">▷</span><span><b>Video</b><small>Choose a video</small></span></button><button type="button" id="chooseDocument"><span class="plus-menu-icon">▤</span><span><b>Files</b><small>Choose a document</small></span></button></div></div><input id="chatImage" type="file" accept="image/jpeg,image/png,image/webp" hidden><input id="chatCamera" type="file" accept="image/*" capture="environment" hidden><input id="chatVideo" type="file" accept="video/*" hidden><input id="chatDocument" type="file" accept=".pdf,.doc,.docx,.txt,.rtf,.xls,.xlsx,.ppt,.pptx,application/pdf,text/plain" hidden><span id="chatImageName" hidden></span><button class="primary-btn" id="chatSend" type="submit">Send ↗</button></div><div id="chatImagePreview" class="chat-image-preview" hidden><img id="chatImageThumb" alt="Selected image preview"><button type="button" id="removeChatImage">Remove photo</button></div></form>
-        <p class="notice" id="chatNotice" role="status" hidden></p>
-      </div>
-    </section>
+ion>
 
     <section class="section" id="projects">
       <div class="section-head"><div><div class="eyebrow">PICK UP WHERE YOU LEFT OFF</div><h2>My projects</h2></div><div class="project-tools"><input id="projectSearch" class="project-search" type="search" placeholder="Search projects" aria-label="Search projects"><button class="sort-btn" id="sortBtn" type="button" aria-label="Sort projects, newest first"><span class="sort-icon">⇅</span><span id="sortLabel">Newest</span></button><button class="text-btn" id="importBtn" type="button">Import ↑</button><input id="importFile" type="file" accept="application/json,.json" hidden><button class="text-btn" id="exportBtn" type="button">Export ↓</button></div></div>
@@ -99,8 +101,8 @@
     </section>
     <footer><a class="brand footer-brand" href="#"><span class="brand-mark">S</span><span>SYNORA</span></a><span>Intelligence Without Limits</span><span>Early preview · Built for ideas</span></footer>
   </main>
-  <script src="app.js?v=13"></script>
+  <script src="app.js?v=14"></script>
   <script src="plus-menu.js?v=6"></script>
-  <script>if("serviceWorker" in navigator && location.hostname !== "localhost"){navigator.serviceWorker.register("/synora/sw.js?v=13").catch(()=>{});}</script>
+  <script>if("serviceWorker" in navigator && location.hostname !== "localhost"){navigator.serviceWorker.register("/synora/sw.js?v=14").catch(()=>{});}</script>
 </body>
 </html>
