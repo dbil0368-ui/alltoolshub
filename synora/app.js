@@ -482,15 +482,26 @@
 
   function getLocalTimeReply(message) {
     const text = String(message || '').toLowerCase();
-    const asksTime = /\b(time|what time|current time|clock|kitna time|kitne baje|samay|waqt|abhi time|time kya)\b/.test(text) ||
-      /সময়|সময়|কটা বাজে|কয়টা বাজে|কত বাজে|এখন কয়টা|এখন কত/.test(text) ||
-      /\b(kitna|kitne|baje|baj rahe|samay|waqt|abhi)\b/.test(text);
-    if (!asksTime) return '';
-    const now = new Date();
     const isBengali = /[\u0980-\u09FF]/.test(message);
     const isHindi = /[\u0900-\u097F]/.test(message);
     const isRomanHindi = /\b(kitna|kitne|baje|baj rahe|samay|waqt|abhi)\b/.test(text);
     const locale = isBengali ? 'bn-IN' : (isHindi || isRomanHindi ? 'hi-IN' : 'en-IN');
+    const now = new Date();
+    const asksDate = /\b(date|today|day|what date)\b/.test(text) ||
+      /তারিখ|আজ কয় তারিখ|আজকের তারিখ|আজ কি বার|কোন বার|কোন তারিখ/.test(text) ||
+      /\b(aaj ki tareekh|aaj ka date|tareekh|tarikh)\b/.test(text);
+    if (asksDate) {
+      const formattedDate = new Intl.DateTimeFormat(locale, {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+      }).format(now);
+      if (isBengali) return 'আজকের তারিখ ' + formattedDate + '। (আপনার স্থানীয় তারিখ)';
+      if (isHindi || isRomanHindi) return 'Aaj ki tareekh ' + formattedDate + ' hai. (Aapki local date)';
+      return 'Today is ' + formattedDate + ' (your local date).';
+    }
+    const asksTime = /\b(time|what time|current time|clock|kitna time|kitne baje|samay|waqt|abhi time|time kya)\b/.test(text) ||
+      /সময়|সময়|কটা বাজে|কয়টা বাজে|কত বাজে|এখন কয়টা|এখন কত/.test(text) ||
+      /\b(kitna|kitne|baje|baj rahe|samay|waqt|abhi)\b/.test(text);
+    if (!asksTime) return '';
     const formatted = new Intl.DateTimeFormat(locale, {
       hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true
     }).format(now);
