@@ -526,13 +526,16 @@
   function isImageCreationRequest(text) {
     const subject = /(ছবি|ফটো|চবি|চিত্র|মেয়ের|মেয়ের|মেইয়ে|মাইয়ে|মেয়ে|মেয়ে|শাড়ি|শাড়ি|সারি|chobi|chhobi|photo|picture|image|tasveer|saree|sari|ladki|mujer|imagen|foto|ফুল|বিড়াল|বিড়াল|কুকুর|cat|dog|flower|rose)/i.test(text);
     const action = /(দাও|দেখাও|বানাও|তৈরি|আঁকো|করো|চাই|পড়|পরা|পরানো|generate|create|make|draw|give|show|edit|চেঞ্জ|পরিবর্তন)/i.test(text);
-    return subject && action;
+    const shortPhotoRequest = /(ছবি|ফটো|চবি|চিত্র|photo|picture|image)/i.test(text) &&
+      /(মেয়|মেয়ে|মেইয়ে|মাইয়ে|girl|woman|ladki|নারী|মহিলা|18\\s*বছর|১৮\\s*বছর|18-year-old|18 year old)/i.test(text);
+    return subject && (action || shortPhotoRequest);
   }
   function isImageFollowUp(text) {
     return /(সুন্দর|আরও ভালো|আরো ভালো|আরও সুন্দর|আরো সুন্দর|সাজাও|পরিবর্তন|বদলে|চেঞ্জ|ব্যাক\\s*গ্রাউন্ড|বাগরাউন্ড|ব্যাকগ্রাউন্ড|পেছনের দৃশ্য|শুধু মেয়ে|শুধু মেয়ে|শুধু মাইয়ে|শুধু মেইয়ে|শুধু মেয়েটা|শুধু মুখ|শাড়ি|শাড়ি|সারি|shundor|sundor|aro bhalo|aro sundor|make it|improve|enhance|edit|change|replace|remove|add|background|saree|sari)/i.test(text);
   }
   function makeDirectImagePrompt(text) {
     if (/(শাড়ি|শাড়ি|সারি|saree|sari)/i.test(text)) return "Create exactly what the user requested: a respectful, photorealistic portrait of an adult South Asian woman wearing a clearly visible traditional saree. Keep the woman and saree as the central subject; do not substitute a landscape. Details requested: " + text;
+    if (/(18\\s*বছর|১৮\\s*বছর|18-year-old|18 year old)/i.test(text) && /(মেয়|মেয়ে|মেইয়ে|মাইয়ে|girl|woman|ladki|নারী|মহিলা)/i.test(text)) return "Create exactly what the user requested: a respectful, non-sexual, photorealistic portrait of an 18-year-old adult South Asian woman, clearly visible as the main subject, natural expression and age-appropriate tasteful clothing. Do not substitute scenery or unrelated objects. Details requested: " + text;
     if (/(মেয়|মেয়ে|মেইয়ে|মাইয়ে|girl|woman|ladki)/i.test(text)) return "Create exactly what the user requested: a respectful, photorealistic portrait of an adult South Asian woman, clearly visible as the main subject, natural expression and tasteful clothing. Do not substitute scenery or unrelated objects. Details requested: " + text;
     return "Create an image that follows the user's exact request. Make the requested subject large, clear and central. Do not replace it with an unrelated landscape or subject. User request: " + text;
   }
