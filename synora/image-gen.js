@@ -9,6 +9,8 @@
   const imageIntent = /(image|photo|picture|portrait|wallpaper|illustration|draw|paint|generate.*(image|photo|picture)|create.*(image|photo|picture)|make.*(image|photo|picture)|ছবি|ফটো|চিত্র|আঁকো|আঁকা|ছবি বানাও|ছবি তৈরি|ফটো বানাও|ছবি দাও|একটা ছবি|একটি ছবি|तस्वीर|फोटो|चित्र|बनाओ|तस्वीर बनाओ|फोटो बनाओ|imagen|foto|dibuja|crée.*image)/i;
 
   const backgroundIntent = /(background|back\s*ground|ব্যাকগ্রাউন্ড|পেছনের দৃশ্য|পটভূমি|पृष्ठभूमि|फोटो का बैकग्राउंड|fondo)/i;
+  const editIntent = /(সুন্দর করো|আরও সুন্দর|সাজাও|পরিবর্তন করো|বদলে দাও|মুছে দাও|যোগ করো|রং বদলাও|লাইট ঠিক|চেঞ্জ করো|edit|make it|improve|enhance|change|replace|remove|add|retouch|background change|cambiar|mejora|editar)/i;
+  let lastGeneratedImage = "";
 
   function makeImagePrompt(original) {
     const p = original.toLowerCase();
@@ -78,7 +80,7 @@
     if (event.target !== form) return;
     const prompt = input.value.trim();
     const attachedImage = document.getElementById('chatImage');
-    if (prompt && backgroundIntent.test(prompt) && !(attachedImage && attachedImage.files && attachedImage.files.length)) {
+    if (prompt && backgroundIntent.test(prompt) && !(attachedImage && attachedImage.files && attachedImage.files.length) && !lastGeneratedImage) {
       event.preventDefault();
       event.stopImmediatePropagation();
       const user = document.createElement('div');
@@ -90,7 +92,58 @@
       messages.scrollTop = messages.scrollHeight;
       return;
     }
-    if (!prompt || !imageIntent.test(prompt) || (attachedImage && attachedImage.files && attachedImage.files.length)) return;
+    if (!prompt || (attachedImage && attachedImage.files && attachedImage.files.length)) return;
+
+    // Treat short follow-up instructions as edits to the most recently generated image.
+    if (lastGeneratedImage && editIntent.test(prompt)) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (send.disabled) return;
+      const user = document.createElement('div');
+      user.className = 'chat-bubble user-bubble';
+      user.textContent = prompt;
+      messages.append(user);
+      input.value = '';
+      send.disabled = true;
+      send.textContent = 'Editing…';
+      if (notice) {
+        notice.hidden = false;
+        notice.textContent = 'SYNORA is editing your previous image…';
+      }
+      try {
+        const response = await fetch('/api/image-edit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            image: lastGeneratedImage,
+            prompt: "Edit the supplied image according to this exact user instruction: " + prompt + ". Preserve the original main subject, identity, pose, clothing, and composition unless the user explicitly asks to change them. Do not replace the subject with an unrelated scene. Return only the edited image."
+          })
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.error || 'Image editing failed.');
+        if (typeof result.image !== 'string' || !result.image.startsWith('data:image/')) {
+          throw new Error('The image editor returned no image.');
+        }
+        lastGeneratedImage = result.image;
+        bubble('Your edited image is ready.');
+        showGeneratedImage(result.image);
+        if (notice) notice.hidden = true;
+      } catch (error) {
+        bubble('I could not edit the image. ' + (error.message || 'Please try again.'));
+        if (notice) {
+          notice.hidden = false;
+          notice.textContent = error.message || 'Image editing failed.';
+        }
+        input.value = prompt;
+      } finally {
+        send.disabled = false;
+        send.textContent = 'Send ↗';
+        input.focus();
+      }
+      return;
+    }
+
+    if (!imageIntent.test(prompt)) return;
 
     event.preventDefault();
     event.stopImmediatePropagation();
@@ -119,6 +172,7 @@
       if (typeof result.image !== 'string' || !result.image.startsWith('data:image/')) {
         throw new Error('The image service returned no image.');
       }
+      lastGeneratedImage = result.image;
       bubble('Your image is ready.');
       showGeneratedImage(result.image);
       if (notice) notice.hidden = true;
