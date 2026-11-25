@@ -269,7 +269,9 @@
   function setVoiceButtonState(listening) {
     isVoiceListening = listening;
     if (!voiceInputButton) return;
-    voiceInputButton.textContent = listening ? '■' : '🎙';
+    voiceInputButton.innerHTML = listening
+      ? '<svg class="voice-mic-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"></rect></svg>'
+      : '<svg class="voice-mic-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2.5" width="6" height="12" rx="3"></rect><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3.5M8.5 21.5h7"></path></svg>';
     voiceInputButton.setAttribute('aria-label', listening ? 'Stop voice input' : 'Speak to SYNORA');
     voiceInputButton.title = listening ? 'Stop listening' : 'Speak to SYNORA';
     voiceInputButton.classList.toggle('voice-listening', listening);
