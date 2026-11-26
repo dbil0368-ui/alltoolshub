@@ -903,3 +903,9 @@ body.chat-home .chat-form{padding-bottom:max(12px,env(safe-area-inset-bottom))}
 .template-samples p{margin:4px 0;color:var(--muted);font-size:11px}
 .template-samples button{margin-top:4px}
 @media(max-width:560px){.revenue-demo{padding:11px}.brand-preview small{max-width:85px}}
+
+/* Template Store category filters and local draft builder */
+.template-builder{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.template-builder>h4{margin:0 0 6px;color:var(--text);font-size:13px}
+.template-builder textarea{width:100%;min-height:84px;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--text);font:inherit;font-size:12px;resize:vertical}
+.template-builder button:disabled{opacity:.45;cursor:not-allowed}
