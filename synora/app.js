@@ -565,8 +565,32 @@
         if (title) title.textContent = name;
         if (preview) preview.style.setProperty('--brand-accent', color);
       };
+      const brandOutput = whiteDemo.querySelector('[data-brand-output]');
+      const brandBrief = () => {
+        const name = (nameInput?.value || '').trim() || 'Your workspace';
+        const color = colorInput?.value || '#7652c9';
+        return 'SYNORA White-label Brand Brief\\nBrand name: ' + name + '\\nAccent colour: ' + color + '\\nStatus: Local planning preview only. No tenant, customer site, deployment, contract or payment is active.';
+      };
       nameInput?.addEventListener('input', refreshBrand);
       colorInput?.addEventListener('change', refreshBrand);
+      whiteDemo.querySelector('[data-action="save-brand"]')?.addEventListener('click', () => {
+        try {
+          localStorage.setItem('synora-white-label-brand', JSON.stringify({name:(nameInput?.value || '').trim() || 'Your workspace', color:colorInput?.value || '#7652c9'}));
+          if (brandOutput) brandOutput.textContent = 'Brand settings saved in this browser on this device.';
+        } catch {
+          if (brandOutput) brandOutput.textContent = 'Could not save in this browser. You can still copy the brand brief.';
+        }
+      });
+      whiteDemo.querySelector('[data-action="copy-brand"]')?.addEventListener('click', () => {
+        copyDemoText(brandBrief(), '[data-brand-output]', 'Brand brief copied. It is an informational preview, not a live white-label deployment.');
+      });
+      try {
+        const saved = JSON.parse(localStorage.getItem('synora-white-label-brand') || 'null');
+        if (saved && typeof saved.name === 'string' && typeof saved.color === 'string') {
+          if (nameInput) nameInput.value = saved.name.slice(0, 36);
+          if (colorInput && [...colorInput.options].some(option => option.value === saved.color)) colorInput.value = saved.color;
+        }
+      } catch {}
       refreshBrand();
     }
 
