@@ -865,3 +865,16 @@ body.chat-home .chat-form{padding-bottom:max(12px,env(safe-area-inset-bottom))}
 .revenue-status{display:inline-block;padding:5px 9px;border:1px solid var(--line);border-radius:20px;color:var(--muted);font-size:10px;font-weight:700}
 .revenue-footnote{margin:18px 0 0;color:var(--muted);font-size:11px;line-height:1.6}
 @media(max-width:620px){.revenue-grid{grid-template-columns:1fr}.revenue-card{padding:17px}}
+
+
+/* Expandable Revenue Center model guides */
+.revenue-details{margin-top:14px;border-top:1px solid var(--line);padding-top:11px}
+.revenue-details summary{display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;list-style:none;color:var(--accent,#7652c9);font-size:12px;font-weight:750}
+.revenue-details summary::-webkit-details-marker{display:none}
+.revenue-details summary::after{content:"＋";font-size:16px;line-height:1}
+.revenue-details[open] summary::after{content:"−"}
+.revenue-details summary:focus-visible{outline:2px solid var(--accent,#7652c9);outline-offset:4px;border-radius:4px}
+.revenue-detail-content{padding:12px 0 2px}
+.revenue-detail-content h4{margin:12px 0 5px;color:var(--text);font-size:12px}
+.revenue-detail-content h4:first-child{margin-top:0}
+.revenue-detail-content p{margin:0;color:var(--muted);font-size:12px;line-height:1.65}
