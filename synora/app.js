@@ -363,7 +363,7 @@
       const open=document.createElement('button'); open.type='button'; open.className='chat-history-open'; open.textContent=item.title||'New chat'; open.title=item.title||'New chat';
       open.addEventListener('click',()=>{
         saveCurrentConversation(); currentConversationId=item.id;
-        chatHistory=Array.isArray(item.apiMessages)?item.apiMessages:item.messages.slice(-20);
+        chatHistory=cleanApiMessages(Array.isArray(item.apiMessages)?item.apiMessages:item.messages);
         visibleHistory=item.messages.slice(-80); movieTranscript=item.movieTranscript||'';
         chatMessages.replaceChildren(); visibleHistory.forEach(message=>addChatBubble(message.role,message.content,false));
         persistChatState(); renderConversationList(); setChatNotice('আগের চ্যাট খোলা হয়েছে।'); closeChatMenu(); chatInput.focus();
@@ -385,12 +385,17 @@
   const MOVIE_STORAGE_KEY = 'synora.movieTranscript.v1';
   let chatHistory = [];
   let visibleHistory = [];
+  function cleanApiMessages(items) {
+    if (!Array.isArray(items)) return [];
+    return items.filter(item =>
+      item && ['user','assistant'].includes(item.role) &&
+      typeof item.content === 'string' && item.content.trim().length > 0
+    ).map(item => ({ role: item.role, content: item.content.slice(0, 5000) })).slice(-10);
+  }
   let movieTranscript = '';
   try {
     const savedChat = JSON.parse(localStorage.getItem(CHAT_STORAGE_KEY) || '[]');
-    if (Array.isArray(savedChat)) chatHistory = savedChat.filter(item =>
-      item && ['user','assistant'].includes(item.role) && typeof item.content === 'string'
-    ).slice(-10);
+    if (Array.isArray(savedChat)) chatHistory = cleanApiMessages(savedChat);
     const savedVisible = JSON.parse(localStorage.getItem('synora.visibleChat.v1') || '[]');
     if (Array.isArray(savedVisible)) visibleHistory = savedVisible.filter(item => item && ['user','assistant'].includes(item.role) && typeof item.content === 'string').slice(-40);
     movieTranscript = localStorage.getItem(MOVIE_STORAGE_KEY) || '';
@@ -878,7 +883,9 @@
         : (buildMovie
           ? message + lineBreak + lineBreak + 'Act as SYNORA AI Movie Studio. Target runtime is exactly 120 minutes (2 hours). This workflow is free planning and screenplay assistance only: do not claim that video clips or an MP4 have been rendered. Create a production-ready package in the user’s language: title, genre, 120-minute logline and premise, character bible, visual continuity guide, visual style, three-act timeline that adds to exactly 120 minutes, and a numbered scene list with scene numbers and durations that add to exactly 120 minutes. For each listed scene include a concise visual summary. Then write only the opening 5–8 minutes as a complete screenplay with scene headings, action and age-appropriate dialogue. After the screenplay, add a “FREE VIDEO CLIP PROMPTS” section with 6–10 short, standalone text-to-video prompts for the opening scenes; each prompt should specify subject, setting, action, camera framing/movement, lighting, mood, and continuity details, and should avoid copyrighted characters or existing movie styles. Clearly label all of this as a plan/script/prompt pack, not a finished movie. Explain that the user can generate short clips with a service’s free allowance, but free quotas and availability vary. Tell the user to type “পরের দৃশ্য” to continue with the next 5–8 minutes and its video prompts.'
           : message));
-    chatHistory.push({role:'user', content:requestContent});
+    chatHistory = cleanApiMessages(chatHistory);
+    chatHistory.push({role:'user', content:requestContent.slice(0, 5000)});
+    chatHistory = cleanApiMessages(chatHistory);
     chatSend.disabled = true;
     chatSend.textContent = 'Thinking…';
     setChatNotice('Connecting securely to SYNORA AI…');
