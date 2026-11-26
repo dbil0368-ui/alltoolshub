@@ -852,3 +852,16 @@ body.chat-home .chat-form{padding-bottom:max(12px,env(safe-area-inset-bottom))}
 
 /* Clean outline microphone icon */
 .voice-mic-icon{width:21px;height:21px;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+
+/* Revenue Center — eight planned business models */
+.revenue-center-section{scroll-margin-top:84px}
+.revenue-intro{max-width:780px;margin:0 0 22px;color:var(--muted);font-size:14px;line-height:1.7}
+.revenue-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.revenue-card{position:relative;min-width:0;padding:20px;border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:0 8px 24px rgba(40,25,70,.045)}
+.revenue-number{display:inline-grid;place-items:center;width:34px;height:30px;margin-bottom:12px;border-radius:9px;background:#f0eaff;color:#7652c9;font-size:11px;font-weight:800}
+.revenue-card h3{margin:0 0 8px;color:var(--text);font-size:16px}
+.revenue-card p{margin:0 0 14px;color:var(--muted);font-size:13px;line-height:1.65}
+.revenue-status{display:inline-block;padding:5px 9px;border:1px solid var(--line);border-radius:20px;color:var(--muted);font-size:10px;font-weight:700}
+.revenue-footnote{margin:18px 0 0;color:var(--muted);font-size:11px;line-height:1.6}
+@media(max-width:620px){.revenue-grid{grid-template-columns:1fr}.revenue-card{padding:17px}}
