@@ -639,9 +639,34 @@
       } catch {}
     }
 
-    revenueSection.querySelector('[data-action="copy-api"]')?.addEventListener('click', () => {
-      copyDemoText('GET /api/v1/status\\nAccept: application/json', '[data-api-output]', 'Example copied. This was not sent to a live API.');
-    });
+    const apiDemo = revenueSection.querySelector('[data-demo="api"]');
+    if (apiDemo) {
+      const endpoint = apiDemo.querySelector('[data-api-endpoint]');
+      const request = apiDemo.querySelector('[data-api-request]');
+      const output = apiDemo.querySelector('[data-api-output]');
+      const examples = {
+        status: { path: '/api/v1/status', response: { success: true, service: 'SYNORA API', status: 'example-only', note: 'Illustrative response; no live service was contacted.' } },
+        profile: { path: '/api/v1/profile', response: { success: true, user: { id: 'demo-user', plan: 'sample' }, note: 'Fictional sample data only.' } },
+        usage: { path: '/api/v1/usage', response: { success: true, usage: { requests: 0, period: 'sample-month' }, note: 'Fictional sample data only.' } }
+      };
+      const current = () => examples[endpoint?.value] || examples.status;
+      const refreshRequest = () => {
+        if (request) request.textContent = 'GET ' + current().path + '\\nAccept: application/json';
+      };
+      endpoint?.addEventListener('change', refreshRequest);
+      apiDemo.querySelector('[data-action="preview-api"]')?.addEventListener('click', () => {
+        if (output) output.textContent = '200 OK — illustrative sample only\\n' + JSON.stringify(current().response, null, 2) + '\\nNo request was sent.';
+      });
+      apiDemo.querySelector('[data-action="copy-api"]')?.addEventListener('click', () => {
+        copyDemoText('curl -X GET "https://api.example.invalid' + current().path + '" -H "Accept: application/json"', '[data-api-output]', 'Example cURL copied. It uses a reserved example domain and will not call SYNORA.');
+      });
+      apiDemo.querySelectorAll('input[type="checkbox"]').forEach(box => box.addEventListener('change', () => {
+        const boxes = [...apiDemo.querySelectorAll('input[type="checkbox"]')];
+        const done = boxes.filter(item => item.checked).length;
+        setDemoText('[data-api-progress]', done + ' of ' + boxes.length + ' API launch checks complete. Checklist only; API access is not live.');
+      }));
+      refreshRequest();
+    }
 
     const templateDemo = revenueSection.querySelector('[data-demo="templates"]');
     if (templateDemo) {
