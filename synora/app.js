@@ -517,6 +517,118 @@
     const section = $('revenue-center');
     if (section) setTimeout(() => section.scrollIntoView({behavior:'smooth',block:'start'}), 40);
   });
+
+  // Revenue Center demos: local-only previews, no billing or live API calls.
+  const revenueSection = $('revenue-center');
+  if (revenueSection) {
+    const setDemoText = (selector, value) => {
+      const node = revenueSection.querySelector(selector);
+      if (node) node.textContent = value;
+    };
+    const copyDemoText = async (value, outputSelector, successText) => {
+      const output = revenueSection.querySelector(outputSelector);
+      try {
+        if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error('Clipboard unavailable');
+        await navigator.clipboard.writeText(value);
+        if (output) output.textContent = successText;
+      } catch {
+        if (output) output.textContent = 'Copy was not available in this browser. Select the example text and copy it manually.';
+      }
+    };
+    const updateChecklist = (demoSelector, outputSelector) => {
+      const demo = revenueSection.querySelector(demoSelector);
+      if (!demo) return;
+      const boxes = [...demo.querySelectorAll('input[type="checkbox"]')];
+      const done = boxes.filter(box => box.checked).length;
+      setDemoText(outputSelector, done + ' of ' + boxes.length + ' preparation steps complete.');
+    };
+
+    const licenseDemo = revenueSection.querySelector('[data-demo="license"]');
+    if (licenseDemo) {
+      licenseDemo.querySelector('[data-action="license-preview"]')?.addEventListener('click', () => {
+        const product = licenseDemo.querySelector('[data-license-product]')?.value.trim() || 'Unnamed product';
+        const users = licenseDemo.querySelector('[data-license-users]')?.value || 'Not specified';
+        const out = licenseDemo.querySelector('[data-license-output]');
+        if (out) out.textContent = 'Sample scope: ' + product + ' · Permitted use: ' + users + '. This is a planning summary only, not a legal licence or offer.';
+      });
+    }
+
+    const whiteDemo = revenueSection.querySelector('[data-demo="whitelabel"]');
+    if (whiteDemo) {
+      const nameInput = whiteDemo.querySelector('[data-brand-name]');
+      const colorInput = whiteDemo.querySelector('[data-brand-color]');
+      const preview = whiteDemo.querySelector('[data-brand-preview]');
+      const refreshBrand = () => {
+        const name = (nameInput?.value || '').trim() || 'Your workspace';
+        const color = colorInput?.value || '#7652c9';
+        const title = whiteDemo.querySelector('[data-brand-preview-name]');
+        if (title) title.textContent = name;
+        if (preview) preview.style.setProperty('--brand-accent', color);
+      };
+      nameInput?.addEventListener('input', refreshBrand);
+      colorInput?.addEventListener('change', refreshBrand);
+      refreshBrand();
+    }
+
+    const resellerDemo = revenueSection.querySelector('[data-demo="reseller"]');
+    resellerDemo?.querySelectorAll('input[type="checkbox"]').forEach(box => box.addEventListener('change', () => {
+      const boxes = [...resellerDemo.querySelectorAll('input[type="checkbox"]')];
+      const done = boxes.filter(item => item.checked).length;
+      setDemoText('[data-check-progress]', done + ' of ' + boxes.length + ' preparation steps complete. This is a planning checklist, not partner registration.');
+    }));
+
+    revenueSection.querySelector('[data-action="copy-api"]')?.addEventListener('click', () => {
+      copyDemoText('GET /api/v1/status\\nAccept: application/json', '[data-api-output]', 'Example copied. This was not sent to a live API.');
+    });
+
+    const templateDemo = revenueSection.querySelector('[data-demo="templates"]');
+    if (templateDemo) {
+      const search = templateDemo.querySelector('[data-template-search]');
+      search?.addEventListener('input', () => {
+        const term = search.value.toLowerCase().trim();
+        templateDemo.querySelectorAll('[data-template-card]').forEach(card => {
+          card.hidden = !card.textContent.toLowerCase().includes(term);
+        });
+      });
+      templateDemo.querySelectorAll('[data-copy-template]').forEach(button => button.addEventListener('click', () => {
+        copyDemoText(button.getAttribute('data-copy-template') || '', '[data-template-output]', 'Original sample prompt copied. You can paste it into the SYNORA chat.');
+      }));
+    }
+
+    const businessDemo = revenueSection.querySelector('[data-demo="business"]');
+    if (businessDemo) {
+      const updateTeam = () => {
+        const input = businessDemo.querySelector('[data-team-size]');
+        const count = Math.min(500, Math.max(1, Number.parseInt(input?.value || '1', 10) || 1));
+        if (input) input.value = String(count);
+        const type = businessDemo.querySelector('[data-team-type]')?.value || 'Small team';
+        setDemoText('[data-team-output]', count + ' members · ' + type + ' workspace preview. No accounts or invitations are created.');
+      };
+      businessDemo.querySelector('[data-team-size]')?.addEventListener('input', updateTeam);
+      businessDemo.querySelector('[data-team-type]')?.addEventListener('change', updateTeam);
+      updateTeam();
+    }
+
+    const developerDemo = revenueSection.querySelector('[data-demo="developer"]');
+    developerDemo?.querySelector('[data-action="run-mock"]')?.addEventListener('click', () => {
+      const endpoint = developerDemo.querySelector('[data-dev-endpoint]')?.value || '/api/v1/status';
+      const mock = {
+        '/api/v1/status': {demo: true, service: 'SYNORA API', status: 'preview-only', billing: 'disabled'},
+        '/api/v1/models': {demo: true, models: [], note: 'No live model catalogue is connected.'},
+        '/api/v1/usage': {demo: true, requests: 0, billable: false, note: 'Illustrative usage only.'}
+      };
+      const output = developerDemo.querySelector('[data-dev-output]');
+      if (output) output.textContent = JSON.stringify({request: endpoint, response: mock[endpoint] || mock['/api/v1/status']}, null, 2);
+    });
+
+    const trainingDemo = revenueSection.querySelector('[data-demo="training"]');
+    trainingDemo?.querySelectorAll('input[type="checkbox"]').forEach(box => box.addEventListener('change', () => {
+      const boxes = [...trainingDemo.querySelectorAll('input[type="checkbox"]')];
+      const done = boxes.filter(item => item.checked).length;
+      setDemoText('[data-training-progress]', done + ' of ' + boxes.length + ' preparation steps complete.');
+    }));
+  }
+
   const upgradePremiumAction = $('upgradePremiumAction');
   function explainPremiumSetup() {
     setChatNotice('Premium plan: up to 100 saved conversations. Secure billing and server-side subscription verification are not connected yet, so upgrades and payments are not available. No charge has been made.');
