@@ -667,3 +667,251 @@ body:not(.menu-page) .chat-panel>.notice{
 
 /* Hide the introductory banner so the full-screen conversation has room */
 body:not(.menu-page) .chat-intro{display:none!important}
+
+
+/* SYNORA AI: focused, full-screen chat home */
+html,body{height:100%;min-height:100%;overflow:hidden}
+body{background:#fbfaff;color:#29233b}
+.topbar{height:64px;min-height:64px;padding:0 18px;background:rgba(255,255,255,.96);border-bottom:1px solid #e9e4f1;box-shadow:0 2px 14px rgba(45,30,75,.04)}
+.brand{color:#34264f;font-size:18px;letter-spacing:.6px}
+.brand-mark{width:32px;height:32px}
+.top-actions{margin-left:auto}
+.nav-dropdown{right:0;max-height:calc(100dvh - 82px);overflow:auto}
+.shell{width:100%;max-width:none;height:calc(100dvh - 64px);min-height:0;margin:0;padding:0 0 10px;display:flex;flex-direction:column}
+.shell>.hero,.shell>footer{display:none!important}
+.shell>.section{display:none}
+.shell>.section.ai-assistant-section{display:flex;flex:1;flex-direction:column;min-height:0;width:100%;padding:0;max-width:920px;margin:0 auto}
+.shell>.section.active-menu-page{display:block;flex:1;overflow:auto;width:100%;max-width:1180px;padding:28px 24px}
+.ai-assistant-section>.section-head{display:none}
+.chat-panel{display:flex;flex:1;flex-direction:column;min-height:0;gap:0;padding:0 18px 10px;border:0;border-radius:0;background:transparent;box-shadow:none}
+.chat-intro{display:none!important}
+.chat-messages{display:flex;flex:1;flex-direction:column;min-height:0;max-height:none;overflow-y:auto;gap:16px;padding:24px 6px 20px;border:0;border-radius:0;background:transparent;overscroll-behavior:contain}
+.chat-bubble{max-width:min(90%,760px);padding:14px 17px;font-size:15px;line-height:1.7;border-radius:18px}
+.assistant-bubble{background:#f2eff9;border:1px solid #e9e3f3;color:#302742;border-bottom-left-radius:6px}
+.user-bubble{background:#7652c9;color:white;border-bottom-right-radius:6px}
+.chat-form{position:relative;display:flex;align-items:flex-end;flex-direction:row;gap:10px;width:100%;padding:10px;border:1px solid #e4dced;border-radius:22px;background:#fff;box-shadow:0 8px 30px rgba(48,32,78,.09)}
+.chat-form textarea{flex:1;min-height:46px;max-height:140px;resize:none;padding:12px 10px;border:0;background:transparent;color:#29233b;font-size:15px;outline:none;box-shadow:none}
+.chat-form textarea:focus{border:0;box-shadow:none}
+.chat-form .primary-btn{width:auto;min-height:44px;padding:11px 17px;border-radius:14px}
+.chat-attach-row{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.plus-button{width:42px;height:42px;border:1px solid #e4dced;border-radius:14px;background:#f7f4fc;color:#6545a9;font-size:25px;cursor:pointer}
+.plus-menu{bottom:calc(100% + 12px);top:auto;left:0;z-index:50}
+.chat-image-preview{padding:10px 4px}
+.chat-image-preview img{max-width:120px;max-height:120px;border-radius:12px}
+#chatNotice{padding:0 8px 5px;margin:4px 0 0;color:#716783;font-size:11px}
+@media(max-width:600px){
+ .topbar{height:58px;min-height:58px;padding:0 13px}
+ .shell{height:calc(100dvh - 58px);padding-bottom:env(safe-area-inset-bottom)}
+ .brand{font-size:16px}
+ .chat-panel{padding:0 10px 8px}
+ .chat-messages{padding:16px 3px}
+ .chat-bubble{max-width:94%;font-size:14px;padding:12px 14px}
+ .chat-form{flex-direction:row;align-items:flex-end;gap:7px;padding:7px;border-radius:19px}
+ .chat-form textarea{min-height:42px;padding:10px 6px;font-size:14px}
+ .chat-form .primary-btn{width:auto;min-height:42px;padding:10px 12px;font-size:12px}
+ .chat-attach-row{gap:6px}
+ .plus-button{width:39px;height:39px}
+ .shell>.section.active-menu-page{padding:22px 15px}
+}
+
+
+/* Final preview guard: keep the default route focused on the full-screen chat. */
+@media (min-width: 0px) {
+  body:not(.menu-page) .shell > .hero,
+  body:not(.menu-page) .shell > footer,
+  body:not(.menu-page) .shell > .section:not(.ai-assistant-section) {
+    display: none !important;
+  }
+  body:not(.menu-page) .shell > .ai-assistant-section {
+    display: flex !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+  body:not(.menu-page) .ai-assistant-section > .section-head,
+  body:not(.menu-page) .chat-intro {
+    display: none !important;
+  }
+}
+
+
+/* SYNORA chat-first home layout */
+.ai-assistant-section{margin:24px 0 54px;scroll-margin-top:90px}
+.ai-assistant-section>.section-head{margin-bottom:14px}
+.ai-assistant-section .chat-panel{min-height:calc(100svh - 190px);display:flex;flex-direction:column}
+.ai-assistant-section .chat-messages{flex:1;min-height:260px;max-height:calc(100svh - 390px)}
+.ai-assistant-section .chat-intro p{max-width:900px}
+@media(max-width:700px){
+ .ai-assistant-section{margin:12px 0 38px}
+ .ai-assistant-section .chat-panel{min-height:calc(100svh - 150px)}
+ .ai-assistant-section .chat-messages{min-height:42svh;max-height:58svh}
+}
+
+
+/* SYNORA chat-first home: assistant opens as the full-screen first view. */
+body.chat-home .shell{max-width:none;width:100%;padding:0 18px}
+body.chat-home .hero,body.chat-home #studios,body.chat-home #trend-hub,body.chat-home #workspace,body.chat-home #projects,body.chat-home #plans,body.chat-home footer{display:none!important}
+body.chat-home .ai-assistant-section{display:flex;flex-direction:column;min-height:calc(100dvh - 76px);height:calc(100dvh - 76px);padding:16px 0 12px;margin:0}
+body.chat-home .ai-assistant-section>.section-head{display:none}
+body.chat-home .chat-panel{display:flex;flex:1;min-height:0;flex-direction:column;gap:12px;border:0;border-radius:0;background:transparent;box-shadow:none;padding:0}
+body.chat-home .chat-intro{display:none!important}
+body.chat-home .chat-messages{flex:1;min-height:180px;overflow-y:auto;padding:16px 4px 24px;scroll-behavior:smooth}
+body.chat-home .chat-form{position:sticky;bottom:0;z-index:5;margin:0;padding:12px;border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.96);box-shadow:0 12px 35px rgba(40,25,70,.12);backdrop-filter:blur(18px)}
+body.chat-home #chatInput{min-height:54px;max-height:160px}
+body.chat-home .notice{margin:5px 4px 0}
+body.chat-home .nav-dropdown{max-height:75dvh;overflow:auto}
+@media(max-width:560px){body.chat-home .topbar{height:62px;padding:0 14px}body.chat-home .shell{padding:0 12px}body.chat-home .ai-assistant-section{height:calc(100dvh - 62px);min-height:calc(100dvh - 62px);padding:10px 0 8px}body.chat-home .chat-form{border-radius:18px;padding:9px}body.chat-home .chat-messages{padding:12px 2px 18px}}
+
+
+/* Fix visible hamburger glyph: the navigation button contains a single ☰ character. */
+.nav-menu-wrap .menu-toggle span{
+  display:block!important;
+  width:auto!important;
+  min-width:0!important;
+  height:auto!important;
+  background:transparent!important;
+  color:inherit!important;
+  font-family:Arial,sans-serif!important;
+  font-size:25px!important;
+  font-weight:700!important;
+  line-height:1!important;
+  transform:none!important;
+  opacity:1!important;
+  letter-spacing:0!important;
+}
+.nav-menu-wrap .menu-toggle[aria-expanded="true"] span{
+  transform:none!important;
+}
+.nav-menu-wrap .menu-toggle{
+  position:relative!important;
+  z-index:102!important;
+  touch-action:manipulation;
+}
+.nav-menu-wrap .nav-dropdown:not([hidden]){
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
+
+
+/* SYNORA navigation chat actions */
+.nav-dropdown .nav-action{
+  display:block;width:100%;text-align:left;padding:12px 13px;
+  border:0;border-radius:9px;background:transparent;color:#302b45;
+  font:600 13px 'DM Sans',sans-serif;cursor:pointer;
+}
+.nav-dropdown .nav-action:hover,.nav-dropdown .nav-action:focus{
+  background:#f3efff;color:#684bd1;
+}
+body.chat-home .chat-messages{scrollbar-width:thin}
+body.chat-home .chat-form{padding-bottom:max(12px,env(safe-area-inset-bottom))}
+
+
+/* Copy action on assistant replies */
+.chat-bubble{position:relative;padding-bottom:37px}
+.chat-message-text{display:block;white-space:pre-wrap;overflow-wrap:anywhere}
+.copy-message-btn{
+  position:absolute;left:12px;bottom:7px;padding:5px 10px;
+  border:1px solid var(--line);border-radius:8px;background:transparent;
+  color:var(--muted);font-size:10px;font-weight:700;cursor:pointer;
+}
+.copy-message-btn:hover{background:var(--surface);color:var(--text)}
+.user-bubble .copy-message-btn{display:none}
+
+/* Local conversation history */
+.chat-history-heading{padding:12px 13px 5px;border-top:1px solid var(--line);margin-top:5px;color:#786b91;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.chat-history-list{display:flex;flex-direction:column;gap:4px;padding:3px 5px 8px}
+.chat-history-empty{margin:4px 8px 8px;color:#81798d;font-size:12px}
+.chat-history-row{display:flex;align-items:center;gap:4px;min-width:0}
+.chat-history-open{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left;padding:10px 9px;border:0;border-radius:9px;background:transparent;color:#332d43;font-size:12px;cursor:pointer}
+.chat-history-open:hover,.chat-history-open:focus{background:#f3efff;color:#684bd1}
+.chat-history-delete{flex:0 0 30px;width:30px;height:30px;border:0;border-radius:8px;background:transparent;color:#92899d;font-size:19px;cursor:pointer}
+.chat-history-delete:hover{background:#fff0f0;color:#bd4242}
+
+.premium-note{display:block;margin-top:10px;color:var(--muted);font-size:11px;line-height:1.5}
+.plan-card .primary-btn{margin-top:12px;cursor:pointer}
+
+
+/* Browser-native voice input and spoken replies */
+.voice-input-btn{
+  width:42px;height:42px;flex:0 0 42px;border:1px solid var(--line);
+  border-radius:13px;background:var(--surface);color:var(--text);
+  font-size:18px;cursor:pointer;touch-action:manipulation;
+}
+.voice-input-btn:disabled{opacity:.45;cursor:not-allowed}
+.voice-input-btn.voice-listening{background:#f2eaff;border-color:#9a7be8;color:#684bd1;animation:synora-voice-pulse 1.2s ease-in-out infinite}
+@keyframes synora-voice-pulse{50%{box-shadow:0 0 0 5px rgba(126,91,210,.13)}}
+.speak-message-btn{
+  position:absolute;right:12px;bottom:7px;padding:5px 10px;
+  border:1px solid var(--line);border-radius:8px;background:transparent;
+  color:var(--muted);font-size:10px;font-weight:700;cursor:pointer;
+}
+.speak-message-btn:hover{background:var(--surface);color:var(--text)}
+@media(prefers-reduced-motion:reduce){.voice-input-btn.voice-listening{animation:none}}
+
+
+/* Clean outline microphone icon */
+.voice-mic-icon{width:21px;height:21px;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+
+/* Revenue Center — eight planned business models */
+.revenue-center-section{scroll-margin-top:84px}
+.revenue-intro{max-width:780px;margin:0 0 22px;color:var(--muted);font-size:14px;line-height:1.7}
+.revenue-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.revenue-card{position:relative;min-width:0;padding:20px;border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:0 8px 24px rgba(40,25,70,.045)}
+.revenue-number{display:inline-grid;place-items:center;width:34px;height:30px;margin-bottom:12px;border-radius:9px;background:#f0eaff;color:#7652c9;font-size:11px;font-weight:800}
+.revenue-card h3{margin:0 0 8px;color:var(--text);font-size:16px}
+.revenue-card p{margin:0 0 14px;color:var(--muted);font-size:13px;line-height:1.65}
+.revenue-status{display:inline-block;padding:5px 9px;border:1px solid var(--line);border-radius:20px;color:var(--muted);font-size:10px;font-weight:700}
+.revenue-footnote{margin:18px 0 0;color:var(--muted);font-size:11px;line-height:1.6}
+@media(max-width:620px){.revenue-grid{grid-template-columns:1fr}.revenue-card{padding:17px}}
+
+
+/* Expandable Revenue Center model guides */
+.revenue-details{margin-top:14px;border-top:1px solid var(--line);padding-top:11px}
+.revenue-details summary{display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;list-style:none;color:var(--accent,#7652c9);font-size:12px;font-weight:750}
+.revenue-details summary::-webkit-details-marker{display:none}
+.revenue-details summary::after{content:"＋";font-size:16px;line-height:1}
+.revenue-details[open] summary::after{content:"−"}
+.revenue-details summary:focus-visible{outline:2px solid var(--accent,#7652c9);outline-offset:4px;border-radius:4px}
+.revenue-detail-content{padding:12px 0 2px}
+.revenue-detail-content h4{margin:12px 0 5px;color:var(--text);font-size:12px}
+.revenue-detail-content h4:first-child{margin-top:0}
+.revenue-detail-content p{margin:0;color:var(--muted);font-size:12px;line-height:1.65}
+
+
+/* Interactive, local-only Revenue Center previews */
+.revenue-demo{margin-top:15px;padding:14px;border:1px solid var(--line);border-radius:13px;background:var(--surface-soft,rgba(120,100,160,.055))}
+.revenue-demo>h4{margin:0 0 11px;font-size:13px;color:var(--text)}
+.revenue-demo label:not(.revenue-check){display:grid;gap:6px;margin:10px 0;color:var(--muted);font-size:11px;font-weight:650}
+.revenue-demo input:not([type=checkbox]),.revenue-demo select{width:100%;min-height:38px;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--text);font:inherit}
+.revenue-demo-button,.template-samples button{margin-top:8px;padding:9px 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--text);font-size:11px;font-weight:750;cursor:pointer}
+.revenue-demo-button:hover,.template-samples button:hover{border-color:var(--accent,#7652c9)}
+.revenue-demo-output{margin:10px 0 0;padding:9px 10px;border-radius:8px;background:var(--surface);color:var(--muted);font-size:11px;line-height:1.6;overflow-wrap:anywhere}
+.revenue-demo-hint{margin:9px 0 0;color:var(--muted);font-size:10px;line-height:1.6}
+.revenue-check{display:flex;align-items:flex-start;gap:8px;margin:9px 0;color:var(--muted);font-size:11px;line-height:1.5}
+.revenue-check input{margin-top:2px;accent-color:var(--accent,#7652c9)}
+.brand-preview{display:flex;align-items:center;gap:9px;margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--text)}
+.brand-preview-mark{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:var(--brand-accent,#7652c9);color:white;font-weight:800}
+.brand-preview strong{font-size:12px}
+.brand-preview small{display:block;margin-left:auto;max-width:110px;color:var(--muted);font-size:9px;text-align:right}
+.revenue-code{margin:9px 0;padding:12px;border-radius:9px;background:#171522;color:#eee;font-size:11px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+.template-samples{display:grid;gap:8px}
+.template-samples article{padding:10px;border:1px solid var(--line);border-radius:9px;background:var(--surface)}
+.template-samples article[hidden]{display:none}
+.template-samples strong{font-size:12px;color:var(--text)}
+.template-samples p{margin:4px 0;color:var(--muted);font-size:11px}
+.template-samples button{margin-top:4px}
+@media(max-width:560px){.revenue-demo{padding:11px}.brand-preview small{max-width:85px}}
+
+/* Template Store category filters and local draft builder */
+.template-builder{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.template-builder>h4{margin:0 0 6px;color:var(--text);font-size:13px}
+.template-builder textarea{width:100%;min-height:84px;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--text);font:inherit;font-size:12px;resize:vertical}
+.template-builder button:disabled{opacity:.45;cursor:not-allowed}
+
+/* Saved template draft library */
+.template-samples [data-saved-drafts]{} 
+[data-saved-drafts] article{padding:10px;margin:8px 0;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+[data-saved-drafts] article strong{display:block;color:var(--text);font-size:12px}
+[data-saved-drafts] article p{margin:5px 0 8px;font-size:11px;color:var(--muted)}
