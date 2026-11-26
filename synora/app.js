@@ -645,13 +645,17 @@
       const request = apiDemo.querySelector('[data-api-request]');
       const output = apiDemo.querySelector('[data-api-output]');
       const examples = {
-        status: { path: '/api/v1/status', response: { success: true, service: 'SYNORA API', status: 'example-only', note: 'Illustrative response; no live service was contacted.' } },
-        profile: { path: '/api/v1/profile', response: { success: true, user: { id: 'demo-user', plan: 'sample' }, note: 'Fictional sample data only.' } },
-        usage: { path: '/api/v1/usage', response: { success: true, usage: { requests: 0, period: 'sample-month' }, note: 'Fictional sample data only.' } }
+        status: { method: 'GET', path: '/api/v1/status', response: { success: true, service: 'SYNORA API', version: 'v1', status: 'online', note: 'This route checks the deployed API gateway.' } },
+        chat: { method: 'POST', path: '/api/v1/chat', response: { success: true, version: 'v1', reply: 'Hello! This is an illustrative response. A valid Bearer API key and configured AI backend are required.' } }
       };
       const current = () => examples[endpoint?.value] || examples.status;
       const refreshRequest = () => {
-        if (request) request.textContent = 'GET ' + current().path + '\\nAccept: application/json';
+        if (!request) return;
+        if (current().method === 'POST') {
+          request.textContent = 'POST ' + current().path + '\\nAuthorization: Bearer YOUR_API_KEY\\nContent-Type: application/json\\n\\n{"messages":[{"role":"user","content":"Hello SYNORA"}]}';
+        } else {
+          request.textContent = 'GET ' + current().path + '\\nAccept: application/json';
+        }
       };
       endpoint?.addEventListener('change', refreshRequest);
       apiDemo.querySelector('[data-action="live-api-status"]')?.addEventListener('click', async () => {
@@ -666,10 +670,14 @@
         }
       });
       apiDemo.querySelector('[data-action="preview-api"]')?.addEventListener('click', () => {
-        if (output) output.textContent = '200 OK — illustrative sample only\\n' + JSON.stringify(current().response, null, 2) + '\\nNo request was sent.';
+        if (output) output.textContent = 'Illustrative response only — no request was sent.\\n' + JSON.stringify(current().response, null, 2);
       });
       apiDemo.querySelector('[data-action="copy-api"]')?.addEventListener('click', () => {
-        copyDemoText('curl -X GET "https://api.example.invalid' + current().path + '" -H "Accept: application/json"', '[data-api-output]', 'Example cURL copied. It uses a reserved example domain and will not call SYNORA.');
+        const base = 'https://YOUR-SYNORA-DOMAIN';
+        const curl = current().method === 'POST'
+          ? 'curl -X POST "' + base + current().path + '" -H "Authorization: Bearer YOUR_API_KEY" -H "Content-Type: application/json" -d \'{"messages":[{"role":"user","content":"Hello SYNORA"}]}\''
+          : 'curl -X GET "' + base + current().path + '" -H "Accept: application/json"';
+        copyDemoText(curl, '[data-api-output]', 'cURL template copied. Replace the domain and private key placeholder before use.');
       });
       apiDemo.querySelectorAll('input[type="checkbox"]').forEach(box => box.addEventListener('change', () => {
         const boxes = [...apiDemo.querySelectorAll('input[type="checkbox"]')];
