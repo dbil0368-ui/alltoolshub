@@ -584,15 +584,44 @@
     const templateDemo = revenueSection.querySelector('[data-demo="templates"]');
     if (templateDemo) {
       const search = templateDemo.querySelector('[data-template-search]');
-      search?.addEventListener('input', () => {
-        const term = search.value.toLowerCase().trim();
+      const category = templateDemo.querySelector('[data-template-category]');
+      const filterTemplates = () => {
+        const term = (search?.value || '').toLowerCase().trim();
+        const selected = category?.value || 'all';
         templateDemo.querySelectorAll('[data-template-card]').forEach(card => {
-          card.hidden = !card.textContent.toLowerCase().includes(term);
+          const matchesText = card.textContent.toLowerCase().includes(term);
+          const matchesCategory = selected === 'all' || card.dataset.category === selected;
+          card.hidden = !(matchesText && matchesCategory);
         });
-      });
+      };
+      search?.addEventListener('input', filterTemplates);
+      category?.addEventListener('change', filterTemplates);
       templateDemo.querySelectorAll('[data-copy-template]').forEach(button => button.addEventListener('click', () => {
         copyDemoText(button.getAttribute('data-copy-template') || '', '[data-template-output]', 'Original sample prompt copied. You can paste it into the SYNORA chat.');
       }));
+      const title = templateDemo.querySelector('[data-draft-title]');
+      const draftCategory = templateDemo.querySelector('[data-draft-category]');
+      const prompt = templateDemo.querySelector('[data-draft-prompt]');
+      const previewButton = templateDemo.querySelector('[data-action="preview-template"]');
+      const copyButton = templateDemo.querySelector('[data-action="copy-draft"]');
+      const draftOutput = templateDemo.querySelector('[data-draft-output]');
+      let draftText = '';
+      previewButton?.addEventListener('click', () => {
+        const safeTitle = (title?.value || '').trim().slice(0, 60);
+        const safePrompt = (prompt?.value || '').trim().slice(0, 700);
+        if (!safeTitle || !safePrompt) {
+          if (draftOutput) draftOutput.textContent = 'Please enter a title and describe your original template before previewing.';
+          if (copyButton) copyButton.disabled = true;
+          draftText = '';
+          return;
+        }
+        draftText = 'Template title: ' + safeTitle + '\nCategory: ' + (draftCategory?.value || 'Other') + '\nInstructions: ' + safePrompt;
+        if (draftOutput) draftOutput.textContent = draftText + '\n\nDraft preview only — not uploaded or published.';
+        if (copyButton) copyButton.disabled = false;
+      });
+      copyButton?.addEventListener('click', () => {
+        if (draftText) copyDemoText(draftText, '[data-draft-output]', 'Your template draft prompt was copied. It has not been submitted or published.');
+      });
     }
 
     const businessDemo = revenueSection.querySelector('[data-demo="business"]');
