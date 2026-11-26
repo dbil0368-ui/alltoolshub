@@ -691,24 +691,87 @@
       const prompt = templateDemo.querySelector('[data-draft-prompt]');
       const previewButton = templateDemo.querySelector('[data-action="preview-template"]');
       const copyButton = templateDemo.querySelector('[data-action="copy-draft"]');
+      const saveButton = templateDemo.querySelector('[data-action="save-draft"]');
       const draftOutput = templateDemo.querySelector('[data-draft-output]');
+      const savedDrafts = templateDemo.querySelector('[data-saved-drafts]');
       let draftText = '';
+      const readDrafts = () => {
+        try {
+          const value = JSON.parse(localStorage.getItem('synora-template-drafts') || '[]');
+          return Array.isArray(value) ? value.filter(item => item && typeof item.title === 'string' && typeof item.prompt === 'string').slice(0, 30) : [];
+        } catch { return []; }
+      };
+      const renderDrafts = () => {
+        if (!savedDrafts) return;
+        savedDrafts.replaceChildren();
+        const drafts = readDrafts();
+        if (!drafts.length) {
+          const empty = document.createElement('p');
+          empty.className = 'revenue-demo-hint';
+          empty.textContent = 'No saved drafts yet. Save a draft to keep it on this device.';
+          savedDrafts.append(empty);
+          return;
+        }
+        drafts.forEach((item, index) => {
+          const card = document.createElement('article');
+          const heading = document.createElement('strong');
+          heading.textContent = item.title;
+          const description = document.createElement('p');
+          description.textContent = item.category + ' · ' + item.prompt.slice(0, 150);
+          const copy = document.createElement('button');
+          copy.type = 'button';
+          copy.className = 'revenue-demo-button';
+          copy.textContent = 'Copy prompt';
+          copy.addEventListener('click', () => copyDemoText('Template title: ' + item.title + '\\nCategory: ' + item.category + '\\nInstructions: ' + item.prompt, '[data-template-output]', 'Saved draft prompt copied.'));
+          const remove = document.createElement('button');
+          remove.type = 'button';
+          remove.className = 'revenue-demo-button';
+          remove.textContent = 'Delete draft';
+          remove.addEventListener('click', () => {
+            const next = readDrafts();
+            next.splice(index, 1);
+            try { localStorage.setItem('synora-template-drafts', JSON.stringify(next)); renderDrafts(); }
+            catch { if (draftOutput) draftOutput.textContent = 'Could not update saved drafts in this browser.'; }
+          });
+          card.append(heading, description, copy, remove);
+          savedDrafts.append(card);
+        });
+      };
       previewButton?.addEventListener('click', () => {
         const safeTitle = (title?.value || '').trim().slice(0, 60);
         const safePrompt = (prompt?.value || '').trim().slice(0, 700);
         if (!safeTitle || !safePrompt) {
           if (draftOutput) draftOutput.textContent = 'Please enter a title and describe your original template before previewing.';
           if (copyButton) copyButton.disabled = true;
+          if (saveButton) saveButton.disabled = true;
           draftText = '';
           return;
         }
-        draftText = 'Template title: ' + safeTitle + '\nCategory: ' + (draftCategory?.value || 'Other') + '\nInstructions: ' + safePrompt;
-        if (draftOutput) draftOutput.textContent = draftText + '\n\nDraft preview only — not uploaded or published.';
+        draftText = 'Template title: ' + safeTitle + '\\nCategory: ' + (draftCategory?.value || 'Other') + '\\nInstructions: ' + safePrompt;
+        if (draftOutput) draftOutput.textContent = draftText + '\\n\\nDraft preview only — not uploaded or published.';
         if (copyButton) copyButton.disabled = false;
+        if (saveButton) saveButton.disabled = false;
       });
       copyButton?.addEventListener('click', () => {
         if (draftText) copyDemoText(draftText, '[data-draft-output]', 'Your template draft prompt was copied. It has not been submitted or published.');
       });
+      saveButton?.addEventListener('click', () => {
+        if (!draftText) return;
+        const next = readDrafts();
+        if (next.length >= 30) {
+          if (draftOutput) draftOutput.textContent = 'This local demo supports up to 30 saved drafts. Delete one before saving another.';
+          return;
+        }
+        try {
+          next.unshift({ title: (title?.value || '').trim().slice(0, 60), category: draftCategory?.value || 'Other', prompt: (prompt?.value || '').trim().slice(0, 700), savedAt: new Date().toISOString() });
+          localStorage.setItem('synora-template-drafts', JSON.stringify(next));
+          if (draftOutput) draftOutput.textContent = 'Draft saved in My drafts on this device. It has not been uploaded or published.';
+          renderDrafts();
+        } catch {
+          if (draftOutput) draftOutput.textContent = 'Could not save this draft in the browser. You can still copy the prompt.';
+        }
+      });
+      renderDrafts();
     }
 
     const businessDemo = revenueSection.querySelector('[data-demo="business"]');
