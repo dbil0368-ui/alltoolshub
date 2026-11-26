@@ -654,6 +654,17 @@
         if (request) request.textContent = 'GET ' + current().path + '\\nAccept: application/json';
       };
       endpoint?.addEventListener('change', refreshRequest);
+      apiDemo.querySelector('[data-action="live-api-status"]')?.addEventListener('click', async () => {
+        if (output) output.textContent = 'Checking the live SYNORA API endpoint…';
+        try {
+          const response = await fetch('/api/v1/status', { method: 'GET', headers: { Accept: 'application/json' }, cache: 'no-store' });
+          const data = await response.json();
+          if (!response.ok || !data.success) throw new Error(data.error || 'API status check failed.');
+          if (output) output.textContent = 'LIVE ENDPOINT REACHED\\n' + JSON.stringify(data, null, 2) + '\\nAuthenticated chat requires the project administrator to configure SYNORA_API_KEY in Vercel.';
+        } catch (error) {
+          if (output) output.textContent = 'Could not reach the live API endpoint. ' + (error?.message || 'Please try again after deployment.');
+        }
+      });
       apiDemo.querySelector('[data-action="preview-api"]')?.addEventListener('click', () => {
         if (output) output.textContent = '200 OK — illustrative sample only\\n' + JSON.stringify(current().response, null, 2) + '\\nNo request was sent.';
       });
