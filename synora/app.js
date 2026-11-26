@@ -1028,7 +1028,9 @@
     const isRomanHindi = /\b(kitna|kitne|baje|baj rahe|samay|waqt|abhi)\b/.test(text);
     const locale = isBengali ? 'bn-IN' : (isHindi || isRomanHindi ? 'hi-IN' : 'en-IN');
     const now = new Date();
-    const asksDate = /\b(date|today|day|what date)\b/.test(text) ||
+    const asksDate = /\b(date|today|day|what date|current date)\b/.test(text) ||
+      /\btoday(?:'s|s)?\s+(?:date|day)\b/.test(text) ||
+      /\bwhat(?:'s| is)\s+(?:the\s+)?date\b/.test(text) ||
       /তারিখ|আজ কয় তারিখ|আজকের তারিখ|আজ কি বার|কোন বার|কোন তারিখ|কোই তারিখ|কয় তারিখ|কয়টা তারিখ|আজকের ডেট/.test(text) ||
       /\b(aaj ki tareekh|aaj ka date|tareekh|tarikh)\b/.test(text);
     if (asksDate) {
