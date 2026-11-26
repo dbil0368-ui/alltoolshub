@@ -127,3 +127,13 @@ CREATE TABLE IF NOT EXISTS revenue_audit_events (
   created_at INTEGER NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_revenue_audit_created ON revenue_audit_events(created_at);
+
+INSERT OR IGNORE INTO offerings (code, title, offering_type, availability, description, updated_at) VALUES
+('one_time_license', 'One-time License', 'one_time_license', 'planned', 'Version-scoped licence record; commercial terms are not active.', unixepoch()),
+('white_label', 'White-label', 'white_label', 'planned', 'Branding and deployment request workflow.', unixepoch()),
+('reseller', 'Reseller Program', 'reseller', 'planned', 'Reseller application and review workflow.', unixepoch()),
+('api_access', 'API Access', 'api_access', 'planned', 'Test API client registration and usage tracking; access remains disabled by default.', unixepoch()),
+('template_store', 'Template Store', 'template_store', 'planned', 'Template submission and review workflow.', unixepoch()),
+('business_plan', 'Business Plans', 'business_plan', 'planned', 'Business plan enquiry and review workflow.', unixepoch()),
+('developer_tools', 'Developer Tools', 'developer_tools', 'planned', 'Developer project workspace metadata.', unixepoch()),
+('setup_training', 'Setup & Training', 'setup_training', 'planned', 'Setup, training, integration, and support request workflow.', unixepoch());
