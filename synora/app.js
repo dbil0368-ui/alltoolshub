@@ -600,6 +600,44 @@
       const done = boxes.filter(item => item.checked).length;
       setDemoText('[data-check-progress]', done + ' of ' + boxes.length + ' preparation steps complete. This is a planning checklist, not partner registration.');
     }));
+    if (resellerDemo) {
+      const partnerBrief = () => {
+        const name = resellerDemo.querySelector('[data-partner-name]')?.value.trim() || 'Unnamed organisation';
+        const model = resellerDemo.querySelector('[data-partner-model]')?.value || 'Referral partner';
+        const support = resellerDemo.querySelector('[data-partner-support]')?.value || 'To be agreed';
+        return 'SYNORA RESELLER PROGRAMME — PLANNING BRIEF\\nOrganisation: ' + name + '\\nPartner model: ' + model + '\\nSupport approach: ' + support + '\\nStatus: Draft only. No registration, approval, contract, commission, payment or reseller access is active.';
+      };
+      const output = resellerDemo.querySelector('[data-partner-output]');
+      resellerDemo.querySelector('[data-action="partner-preview"]')?.addEventListener('click', () => {
+        if (output) output.textContent = partnerBrief();
+      });
+      resellerDemo.querySelector('[data-action="partner-save"]')?.addEventListener('click', () => {
+        try {
+          localStorage.setItem('synora-reseller-draft', JSON.stringify({
+            name: resellerDemo.querySelector('[data-partner-name]')?.value.trim() || '',
+            model: resellerDemo.querySelector('[data-partner-model]')?.value || 'Referral partner',
+            support: resellerDemo.querySelector('[data-partner-support]')?.value || 'SYNORA handles product support'
+          }));
+          if (output) output.textContent = partnerBrief() + '\\n\\nSaved in this browser on this device.';
+        } catch {
+          if (output) output.textContent = 'Could not save this draft in the browser. You can still create or copy the brief.';
+        }
+      });
+      resellerDemo.querySelector('[data-action="partner-copy"]')?.addEventListener('click', () => {
+        copyDemoText(partnerBrief(), '[data-partner-output]', 'Partner brief copied. This is not a registration or approval.');
+      });
+      try {
+        const saved = JSON.parse(localStorage.getItem('synora-reseller-draft') || 'null');
+        if (saved && typeof saved === 'object') {
+          const name = resellerDemo.querySelector('[data-partner-name]');
+          const model = resellerDemo.querySelector('[data-partner-model]');
+          const support = resellerDemo.querySelector('[data-partner-support]');
+          if (name && typeof saved.name === 'string') name.value = saved.name.slice(0, 60);
+          if (model && [...model.options].some(option => option.value === saved.model)) model.value = saved.model;
+          if (support && [...support.options].some(option => option.value === saved.support)) support.value = saved.support;
+        }
+      } catch {}
+    }
 
     revenueSection.querySelector('[data-action="copy-api"]')?.addEventListener('click', () => {
       copyDemoText('GET /api/v1/status\\nAccept: application/json', '[data-api-output]', 'Example copied. This was not sent to a live API.');
