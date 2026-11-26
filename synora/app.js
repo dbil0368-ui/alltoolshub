@@ -342,6 +342,25 @@
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
 
+  function getLocalDateReply(message) {
+    const text = String(message || '').toLowerCase();
+    const asksDate = /\\b(date|today|day|what date|current date)\\b/.test(text) ||
+      /\\btoday(?:'s|s)?\\s+(?:date|day)\\b/.test(text) ||
+      /\\bwhat(?:'s| is)\\s+(?:the\\s+)?date\\b/.test(text) ||
+      /তারিখ|আজ কয় তারিখ|আজকের তারিখ|আজ কি বার|কোন বার|কোন তারিখ|আজকের ডেট/.test(text) ||
+      /\\b(aaj ki tareekh|aaj ka date|tareekh|tarikh)\\b/.test(text);
+    if (!asksDate) return '';
+    const isBengali = /[\\u0980-\\u09FF]/.test(text);
+    const isHindi = /[\\u0900-\\u097F]/.test(text);
+    const locale = isBengali ? 'bn-IN' : (isHindi ? 'hi-IN' : 'en-IN');
+    const formatted = new Intl.DateTimeFormat(locale, {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    }).format(new Date());
+    if (isBengali) return 'আজ ' + formatted + '।';
+    if (isHindi) return 'आज ' + formatted + '।';
+    return 'Today is ' + formatted + ' (your local date).';
+  }
+
   function isWebsiteBuildRequest(text) {
     return /(website|web site|webpage|web page|ওয়েবসাইট|ওয়েবসাইট|ওয়েব পেজ|ওয়েব পেজ|সাইট বানাও|সাইট তৈরি|ওয়েব অ্যাপ|ওয়েব অ্যাপ)/i.test(text);
   }
@@ -436,6 +455,14 @@
         chatSend.textContent = 'Send ↗';
         chatInput.focus();
       }
+      return;
+    }
+
+    const localDateReply = getLocalDateReply(message);
+    if (localDateReply) {
+      chatInput.value = '';
+      addChatBubble('user', message);
+      addChatBubble('assistant', localDateReply);
       return;
     }
 
