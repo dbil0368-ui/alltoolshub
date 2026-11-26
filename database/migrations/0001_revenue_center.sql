@@ -1,6 +1,5 @@
 -- SYNORA Revenue Center: free-first D1 foundation
 -- Migration 0001. No payment processing, billing, contracts, or live customer onboarding.
-PRAGMA foreign_keys = ON;
 
 CREATE TABLE IF NOT EXISTS organizations (
   id TEXT PRIMARY KEY,
