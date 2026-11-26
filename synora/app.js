@@ -318,9 +318,9 @@
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = /[\\u0980-\\u09FF]/.test(text) ? 'bn-IN' : 'en-IN';
     utterance.rate = 1;
-    utterance.onstart = () => { if (button) button.textContent = '■ Stop'; };
-    utterance.onend = utterance.onerror = () => { if (button) button.textContent = '🔊 Read aloud'; };
-    if (button) button.textContent = '■ Stop';
+    utterance.onstart = () => { if (button) { button.textContent = '■ Stop'; button.setAttribute('aria-label', 'Stop reading this SYNORA reply'); } };
+    utterance.onend = utterance.onerror = () => { if (button) { button.textContent = '🔊 Read aloud'; button.setAttribute('aria-label', 'Read aloud — this SYNORA reply'); } };
+    if (button) { button.textContent = '■ Stop'; button.setAttribute('aria-label', 'Stop reading this SYNORA reply'); }
     window.speechSynthesis.speak(utterance);
   }
   function setChatNotice(message, visible = true) {
@@ -445,11 +445,12 @@
       speakButton.type = 'button';
       speakButton.className = 'speak-message-btn';
       speakButton.textContent = '🔊 Read aloud';
-      speakButton.setAttribute('aria-label', 'Read this SYNORA reply aloud');
+      speakButton.setAttribute('aria-label', 'Read aloud — this SYNORA reply');
       speakButton.addEventListener('click', () => {
         if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
           window.speechSynthesis.cancel();
           speakButton.textContent = '🔊 Read aloud';
+          speakButton.setAttribute('aria-label', 'Read aloud — this SYNORA reply');
         } else {
           speakAssistantReply(content, speakButton);
         }
