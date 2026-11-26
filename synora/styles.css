@@ -878,3 +878,28 @@ body.chat-home .chat-form{padding-bottom:max(12px,env(safe-area-inset-bottom))}
 .revenue-detail-content h4{margin:12px 0 5px;color:var(--text);font-size:12px}
 .revenue-detail-content h4:first-child{margin-top:0}
 .revenue-detail-content p{margin:0;color:var(--muted);font-size:12px;line-height:1.65}
+
+
+/* Interactive, local-only Revenue Center previews */
+.revenue-demo{margin-top:15px;padding:14px;border:1px solid var(--line);border-radius:13px;background:var(--surface-soft,rgba(120,100,160,.055))}
+.revenue-demo>h4{margin:0 0 11px;font-size:13px;color:var(--text)}
+.revenue-demo label:not(.revenue-check){display:grid;gap:6px;margin:10px 0;color:var(--muted);font-size:11px;font-weight:650}
+.revenue-demo input:not([type=checkbox]),.revenue-demo select{width:100%;min-height:38px;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--text);font:inherit}
+.revenue-demo-button,.template-samples button{margin-top:8px;padding:9px 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--text);font-size:11px;font-weight:750;cursor:pointer}
+.revenue-demo-button:hover,.template-samples button:hover{border-color:var(--accent,#7652c9)}
+.revenue-demo-output{margin:10px 0 0;padding:9px 10px;border-radius:8px;background:var(--surface);color:var(--muted);font-size:11px;line-height:1.6;overflow-wrap:anywhere}
+.revenue-demo-hint{margin:9px 0 0;color:var(--muted);font-size:10px;line-height:1.6}
+.revenue-check{display:flex;align-items:flex-start;gap:8px;margin:9px 0;color:var(--muted);font-size:11px;line-height:1.5}
+.revenue-check input{margin-top:2px;accent-color:var(--accent,#7652c9)}
+.brand-preview{display:flex;align-items:center;gap:9px;margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--text)}
+.brand-preview-mark{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:var(--brand-accent,#7652c9);color:white;font-weight:800}
+.brand-preview strong{font-size:12px}
+.brand-preview small{display:block;margin-left:auto;max-width:110px;color:var(--muted);font-size:9px;text-align:right}
+.revenue-code{margin:9px 0;padding:12px;border-radius:9px;background:#171522;color:#eee;font-size:11px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+.template-samples{display:grid;gap:8px}
+.template-samples article{padding:10px;border:1px solid var(--line);border-radius:9px;background:var(--surface)}
+.template-samples article[hidden]{display:none}
+.template-samples strong{font-size:12px;color:var(--text)}
+.template-samples p{margin:4px 0;color:var(--muted);font-size:11px}
+.template-samples button{margin-top:4px}
+@media(max-width:560px){.revenue-demo{padding:11px}.brand-preview small{max-width:85px}}
