@@ -1,5 +1,3 @@
-import { requireApiKey } from "../../lib/api-auth.js";
-
 export default function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");
   res.setHeader("X-Content-Type-Options", "nosniff");
