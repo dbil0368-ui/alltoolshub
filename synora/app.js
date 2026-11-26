@@ -510,6 +510,13 @@
     closeChatMenu();
     chatInput.focus();
   });
+  const revenueCenterAction = $('revenueCenterAction');
+  if (revenueCenterAction) revenueCenterAction.addEventListener('click', () => {
+    closeChatMenu();
+    document.body.classList.remove('chat-home');
+    const section = $('revenue-center');
+    if (section) setTimeout(() => section.scrollIntoView({behavior:'smooth',block:'start'}), 40);
+  });
   const upgradePremiumAction = $('upgradePremiumAction');
   function explainPremiumSetup() {
     setChatNotice('Premium plan: up to 100 saved conversations. Secure billing and server-side subscription verification are not connected yet, so upgrades and payments are not available. No charge has been made.');
